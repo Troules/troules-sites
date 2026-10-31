@@ -1,5 +1,12 @@
 # @troules/index
 
+## 0.2.1
+
+### Patch Changes
+
+- [`1cbbaa9`](https://github.com/Troules/troules-sites/commit/1cbbaa98d7c9397bb4c23c9ab8fe335a5b94e69d) Thanks [@Troules](https://github.com/Troules)! - Static background: the slow drift animation re-rendered every glass panel's backdrop (including the CPU-bound SVG
+  refraction filter) on each frame, adding up to ~1 s of main-thread blocking on slow devices.
+
 ## 0.2.0
 
 ### Minor Changes
