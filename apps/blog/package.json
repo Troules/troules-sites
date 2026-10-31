@@ -51,7 +51,7 @@
     "@types/react-dom": "catalog:",
     "babel-plugin-react-compiler": "catalog:",
     "eslint": "catalog:",
-    "jsdom": "^27.0.0",
+    "jsdom": "^30.1.3",
     "tailwindcss": "catalog:",
     "typescript": "catalog:",
     "vitest": "catalog:"
