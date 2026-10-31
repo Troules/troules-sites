@@ -16,8 +16,8 @@ strictPeerDependencies: false
 catalog:
   next: 16.4.3
   eslint-config-next: 16.4.3
-  react: 19.3.0
-  react-dom: 19.3.0
+  react: 19.3.1
+  react-dom: 19.3.1
   "@types/react": ^19
   "@types/react-dom": ^19
   "@types/node": ^24
