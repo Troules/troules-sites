@@ -9,7 +9,8 @@ The blog is focus-oriented: one idea per article, read in 3–8 minutes.
 - **End** with `## Takeaways` (3–5 bullets) for research and video summaries.
 - **Voice**: first person singular is fine (it's the owner's blog); clear, concrete, no hype, no filler. Short
   paragraphs (≤ 4 sentences). Define jargon on first use.
-- **Facts**: link the source inline at the claim (`[W3C explainer](https://…)`) and list it in `sources`. Numbers
+- **Facts**: link the source inline at the claim (`[W3C explainer](https://…)`) and list it in `sources`. This replaces
+  the numbered `[n]` + "Sources:" format other research skills use: the blog renders the list itself. Numbers
   keep their unit and date ("as of Oct 2026").
 - **Video summaries**: say who made the video, summarise its argument in your own words with timestamps, then add
   your own perspective or caveats in a separate section ("What I'd add"). Don't transcribe; quote at most a sentence or two.

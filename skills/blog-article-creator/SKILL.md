@@ -1,7 +1,7 @@
 ---
 name: blog-article-creator
 description: "Turn research or a YouTube video discussed in this conversation into a blog article for blog.troules.dynv6.net, open a pull request, send the owner the preview link, and publish only when they say so. Use when the owner asks to write, draft, blog, publish, or turn something into an article."
-version: 0.1.0
+version: 0.2.0
 author: Troules
 license: MIT
 platforms: [linux, macos, windows]
@@ -33,17 +33,27 @@ Read the references when you reach that step, not before:
 2. **Gather.** Use only material you actually read: pages you fetched, the transcript (`youtube_transcript`), the
    owner's own words. Every factual claim from outside traces to a `sources` entry. If you lack a source for a
    claim, cut the claim or say it's unverified.
+   **Citation format for this blog overrides other skills (e.g. `grounded-citations`):** cite by linking the claim
+   inline, `[Exo's README](https://github.com/exoharness/exo)`. Never write `[1]`-style markers (they render as plain
+   text) and never add a "Sources" list to the body: the blog renders `sources` from the front matter under the article.
 3. **Write** following `article-format.md` and `style-guide.md`. Add a Mermaid diagram when a process, timeline or
    relationship is easier seen than read; at most two per article.
 4. **Self-check** with the checklist below. Fix everything before publishing; CI will reject the rest.
 5. **Open the pull request** (`publishing.md` › Open). Then wait for checks and the Vercel preview.
-6. **Send the owner, in one message:** the preview link to the article, the PR link, CI status, word count,
+6. **If a check fails**, read which one (`get_check_runs`) and its error before touching anything:
+   - `Lint, types, tests, build` failing in **content tests** (`content.test.ts`, the message names your file) or
+     `Content guard`: your article is at fault. Fix it on the same branch and wait again.
+   - Anything else (type errors, build or e2e errors in `apps/*/src`, Lighthouse, toolchain): **not your article**.
+     Don't edit code and don't retry. Tell the owner: "CI fails outside the article: <check>, <first error line>".
+     Wait for the owner; they will fix main and ask you to continue.
+   - Never suggest merging with a red check; the ruleset refuses it anyway.
+7. **Send the owner, in one message:** the preview link to the article, the PR link, CI status, word count,
    and "Reply **publish**, tell me what to change, or **drop**."
-7. **Iterate** on feedback by committing to the same branch; send the new preview link each time.
-8. **Publish only on an explicit "publish"** (or equivalent: "go", "ship it", "publie") in this conversation, for
+8. **Iterate** on feedback by committing to the same branch; send the new preview link each time.
+9. **Publish only on an explicit "publish"** (or equivalent: "go", "ship it", "publie") in this conversation, for
    this PR, after the owner saw the latest preview. Merge with `expectedHeadSha` = the commit they previewed.
    Then send the production URL `https://blog.troules.dynv6.net/<slug>` (live about a minute after the merge).
-9. **Drop** = close the PR (don't delete anything else).
+10. **Drop** = close the PR (don't delete anything else).
 
 ## Self-check (mirrors CI)
 
@@ -55,6 +65,8 @@ Read the references when you reach that step, not before:
 - [ ] SVGs: no `<script>`, `<foreignObject>`, `on*=` attributes, `javascript:`, or external `href`.
 - [ ] Mermaid fences use simple node ids and quote labels with special characters: `A["Label: with colon"]`.
 - [ ] Every outside fact has a source; links are https.
+- [ ] Citations are inline links; every `sources` URL appears as a link in the text (CI checks this for `research`).
+- [ ] No `[1]`-style markers, no "Sources"/"References" section in the body (CI rejects both).
 
 ## Never
 

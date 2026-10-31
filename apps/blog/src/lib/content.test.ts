@@ -70,6 +70,22 @@ describe.each(slugs)("content/%s", (slug) => {
     for (const c of charts) await expect(mermaid.parse(c), c.slice(0, 60)).resolves.toBeTruthy();
   });
 
+  // Sources live in front matter and are rendered as a numbered list under the article.
+  it("cites sources as inline links, without [n] markers or a Sources list in the body", () => {
+    const { meta, body } = readPostSource(slug);
+    const prose = body.replace(/```[\s\S]*?```/g, "").replace(/`[^`]*`/g, "");
+    const markers = prose.match(/\[\d{1,3}\](?![(:[])/g) ?? [];
+    expect(markers, 'bare citation markers like "[1]": link the claim instead, e.g. [README](https://…)').toEqual([]);
+    expect(prose, "no Sources/References section in the body: it's rendered from front matter").not.toMatch(
+      /^(#{1,6}\s*)?(\*\*)?(sources|references|sources et références|références)(\*\*)?\s*:?\s*$/im,
+    );
+    if (meta.kind === "research") {
+      for (const s of meta.sources) {
+        expect(prose.includes(`](${s.url})`), `source not linked in the text: ${s.url}`).toBe(true);
+      }
+    }
+  });
+
   it("starts at h2 (the title is the h1) and doesn't skip heading levels", () => {
     const { body } = readPostSource(slug);
     const levels = [...body.replace(/```[\s\S]*?```/g, "").matchAll(/^(#{1,6})\s/gm)].map((m) => m[1]!.length);

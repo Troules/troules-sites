@@ -21,8 +21,9 @@ Your token can read/write contents and pull requests on this repo only. It can't
   Required: `Lint, types, tests, build` and `Content guard` succeed (skipped jobs are fine).
 - The Vercel preview URL is in the Vercel bot comment (`pull_request_read`, `method: "get_comments"`) or the
   `target_url` of the Vercel status for the blog project. Article URL = `<preview-url>/<slug>`.
-- If a check fails: read the failure from the check output, fix with `push_files` to the same branch, and wait again.
-  After 2 failed attempts, tell the owner what fails and stop.
+- If a check fails, apply SKILL.md step 6: fix only failures caused by your article (content tests naming your file,
+  `Content guard`) with `push_files` to the same branch; after 2 failed attempts, stop and tell the owner. Any other
+  failure (type errors, build, e2e, Lighthouse, toolchain) is outside the article: report it and wait.
 
 ## Revise
 

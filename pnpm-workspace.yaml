@@ -10,7 +10,7 @@ allowBuilds:
   unrs-resolver: false
   lefthook: true
   esbuild: true
-strictPeerDependencies: false
+strictPeerDependencies: true
 
 # One version per dependency across every site: upgrade here, not in each package.json.
 catalog:
@@ -21,8 +21,8 @@ catalog:
   "@types/react": ^19
   "@types/react-dom": ^19
   "@types/node": ^24
-  typescript: 7.0.2
-  eslint: ^10.13.0
+  typescript: 5.9.3
+  eslint: ^9.39.5
   tailwindcss: ^4.3.3
   "@tailwindcss/turbopack": ^4.3.3
   babel-plugin-react-compiler: 1.0.0

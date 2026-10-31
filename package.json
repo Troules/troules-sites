@@ -12,14 +12,15 @@
     "typecheck": "turbo run typecheck",
     "test": "turbo run test",
     "e2e": "turbo run e2e",
-    "check": "turbo run lint typecheck test && pnpm format:check",
+    "check": "node scripts/check-toolchain.mjs && turbo run lint typecheck test && pnpm format:check",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "changeset": "changeset",
     "version-packages": "changeset version && pnpm install --lockfile-only && prettier --write \"**/CHANGELOG.md\" \"**/package.json\" >/dev/null",
     "prepare": "lefthook install",
     "lighthouse": "bash scripts/lighthouse.sh",
-    "uptime": "bash scripts/uptime-probe.sh"
+    "uptime": "bash scripts/uptime-probe.sh",
+    "check:toolchain": "node scripts/check-toolchain.mjs"
   },
   "devDependencies": {
     "@changesets/changelog-github": "^1.0.1",
@@ -30,6 +31,7 @@
     "lefthook": "2.2.2",
     "prettier": "3.9.10",
     "prettier-plugin-tailwindcss": "^0.8.1",
+    "semver": "^7.8.5",
     "turbo": "2.11.10"
   }
 }

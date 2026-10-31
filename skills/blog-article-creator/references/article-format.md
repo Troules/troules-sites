@@ -42,6 +42,9 @@ Unknown keys are rejected.
   ```
   Also `[!TIP]`, `[!IMPORTANT]`, `[!WARNING]`, `[!CAUTION]`.
 - Images: `![Alt text describing it](./diagram.svg "Optional caption")`.
+- Citations: link the claim itself, `according to [Exo's README](https://github.com/exoharness/exo), …`.
+  Not `[1]` (renders as plain text), not a "Sources" section (already rendered from front matter). Footnotes `[^1]`
+  are for asides, not citations.
 - YouTube timestamps for video summaries: `[12:34](https://youtu.be/VIDEO_ID?t=754)`.
 
 Raw HTML is stripped. There is no MDX, JSX, embed or iframe.

@@ -26,6 +26,13 @@ Why not the usual bot "Version packages" PR or a bot commit on main: PRs opened 
 bypass actor (GitHub: "must be part of the ruleset source or owner organization"). The other bypasses would be a
 deploy key (a new long-lived credential) or the admin role (which Hermes's token has). Bumping inside the PR needs none.
 
+**Toolchain compatibility** (`scripts/check-toolchain.mjs`, first step of CI and `pnpm check`): fails when the
+installed TypeScript or ESLint is outside the peer range of typescript-eslint and Next's lint plugins. pnpm doesn't
+flag these (optional peers). Added after Dependabot PR #2 (TypeScript 7.0.2 + ESLint 10, grouped, CI green by cache
+luck) broke the blog's typecheck: TS 7's parallel checkers intermittently lose Next's generated global `PageProps`
+types (0 errors with `--checkers 1`). TypeScript and ESLint majors are ignored by Dependabot until supported, and
+Dependabot groups only bundle minor/patch updates, so every major gets its own PR.
+
 **Supply chain**: actions pinned to commit SHAs; `persist-credentials: false` where no push is needed; pnpm
 `minimumReleaseAge` 7 days and an install-script allow-list; Dependabot weekly, grouped, 7-day cooldown; CodeQL
 default setup (public repo); lockfile frozen in CI. Agent skills pinned by hash in `skills-lock.json`.
