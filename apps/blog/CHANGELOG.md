@@ -1,5 +1,11 @@
 # @troules/blog
 
+## 0.3.0
+
+### Minor Changes
+
+- [#11](https://github.com/Troules/troules-sites/pull/11) [`86360dd`](https://github.com/Troules/troules-sites/commit/86360dde06d4132ee28fa1b69854655d7e19de78) Thanks [@Troules](https://github.com/Troules)! - Paginate the article list, 10 per page: `/` is page 1, `/page/<n>` the older ones (unknown pages return 404, `/page/1` redirects to `/`). Article folders can no longer use reserved route names (`page`, `tags`, …).
+
 ## 0.2.1
 
 ### Patch Changes
