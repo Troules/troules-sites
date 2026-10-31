@@ -16,12 +16,3 @@ body {
   min-height: 100dvh;
   color: #f5f3ff;
 }
-
-@keyframes drift {
-  from {
-    transform: scale(1.06) translate3d(-1%, -1%, 0);
-  }
-  to {
-    transform: scale(1.12) translate3d(1%, 1%, 0);
-  }
-}

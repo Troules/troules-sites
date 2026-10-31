@@ -10,15 +10,7 @@ export default function Home() {
   return (
     <>
       <div aria-hidden="true" className="fixed inset-0 -z-10">
-        <Image
-          src={supernova}
-          alt=""
-          fill
-          priority
-          placeholder="blur"
-          sizes="100vw"
-          className="object-cover motion-safe:animate-[drift_60s_ease-in-out_infinite_alternate]"
-        />
+        <Image src={supernova} alt="" fill priority placeholder="blur" sizes="100vw" className="object-cover" />
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_0%,rgb(5_4_10/0.35)_55%,rgb(5_4_10/0.85)_100%)]" />
       </div>
 

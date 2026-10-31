@@ -13,7 +13,10 @@
    `backdrop-filter: url(#troules-liquid)`. Only Chromium renders that; Safari parses it and draws nothing, so
    `@supports` can't detect it: `GlassFilter` sets `data-refraction` when `navigator.userAgentData` exists.
 3. No backdrop-filter → near-opaque panel; `prefers-reduced-transparency` → solid panel; `prefers-reduced-motion` →
-   no hover motion and no background drift.
+   no hover motion.
+4. **The background never animates.** A first version slowly zoomed it (60 s loop): every frame then re-rendered each
+   panel's backdrop, including the CPU-bound SVG refraction, for 320–1090 ms Total Blocking Time on CI runners
+   (Lighthouse 0.71–0.86) and 2× TBT on a throttled mobile profile. Anything moving _behind_ glass has this cost.
 
 Background: Webb NIRCam image of Cassiopeia A (ESA/Webb, CC BY 4.0; credit shown in the footer as required), cropped
 square to 2400 px WebP (565 kB), served through `next/image` with a blur placeholder.
