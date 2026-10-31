@@ -9,7 +9,7 @@ next to it. Max 1.5 MB per file. Through the GitHub tools you can only write tex
 ---
 title: "Why WebGPU changes in-browser ML"
 description: "One or two sentences (20–200 chars) shown in lists, feeds and link previews."
-date: "2026-11-02"
+date: "2026-11-02T14:30" # now, Europe/Paris; the time only orders same-day posts
 lang: "en" # "en" or "fr"
 kind: "research" # "research" | "video-summary" | "note"
 tags: ["webgpu", "machine-learning"]

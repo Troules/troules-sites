@@ -3,7 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Markdown } from "@/components/markdown";
 import { getAllPosts, getPost } from "@/lib/content";
-import { formatDate, KIND_LABEL } from "@/lib/site";
+import { day, formatDate, KIND_LABEL } from "@/lib/site";
 
 export async function generateStaticParams() {
   return (await getAllPosts()).map((p) => ({ slug: p.slug }));
@@ -20,8 +20,8 @@ export async function generateMetadata({ params }: PageProps<"/[slug]">): Promis
       type: "article",
       title: post.title,
       description: post.description,
-      publishedTime: post.date,
-      modifiedTime: post.updated ?? post.date,
+      publishedTime: day(post.date),
+      modifiedTime: post.updated ?? day(post.date),
       tags: post.tags,
       ...(post.cover ? { images: [`/content/${post.slug}/${post.cover.src.slice(2)}`] } : {}),
     },
@@ -37,7 +37,7 @@ export default async function PostPage({ params }: PageProps<"/[slug]">) {
     <article lang={post.lang} className="mt-10">
       <div className="progress" aria-hidden="true" />
       <p className="text-muted font-mono text-xs">
-        <time dateTime={post.date}>{formatDate(post.date, post.lang)}</time>
+        <time dateTime={day(post.date)}>{formatDate(post.date, post.lang)}</time>
         {post.updated ? (
           <>
             {" "}

@@ -1,6 +1,6 @@
 import Link from "next/link";
 import type { PostMeta } from "@/lib/content";
-import { formatDate, KIND_LABEL } from "@/lib/site";
+import { day, formatDate, KIND_LABEL } from "@/lib/site";
 
 export function PostList({ posts }: { posts: PostMeta[] }) {
   if (posts.length === 0) return <p className="text-muted">Nothing here yet.</p>;
@@ -10,7 +10,7 @@ export function PostList({ posts }: { posts: PostMeta[] }) {
         <li key={p.slug} className="py-7">
           <article lang={p.lang}>
             <p className="text-muted font-mono text-xs">
-              <time dateTime={p.date}>{formatDate(p.date, p.lang)}</time> · {KIND_LABEL[p.kind]} · {p.minutes} min
+              <time dateTime={day(p.date)}>{formatDate(p.date, p.lang)}</time> · {KIND_LABEL[p.kind]} · {p.minutes} min
               {p.draft ? (
                 <span className="ml-2 rounded bg-amber-500/15 px-1.5 text-amber-700 dark:text-amber-300">draft</span>
               ) : null}

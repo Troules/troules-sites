@@ -1,7 +1,7 @@
 ---
 title: "Self-improving agent harnesses: three approaches in 2026"
 description: "Exo, ModularRSI and agentskill take different routes to better agent harnesses. None I checked combines self-improvement with mining a repo's history."
-date: "2026-10-31"
+date: "2026-10-31T23:55"
 lang: "en"
 kind: "research"
 tags: ["agents", "agent-harness", "self-improvement", "llm"]
