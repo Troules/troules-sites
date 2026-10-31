@@ -21,6 +21,8 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: ./.github/actions/setup
       - name: Apply pending changesets
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # changelog-github reads PR/author info
         run: |
           if ! ls .changeset/*.md 2>/dev/null | grep -qv README.md; then echo "No pending changesets."; exit 0; fi
           pnpm changeset version

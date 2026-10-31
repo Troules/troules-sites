@@ -1,6 +1,7 @@
 import type { Element, Root } from "hast";
 import { toString } from "hast-util-to-string";
-import rehypeShiki from "@shikijs/rehype";
+import rehypeShikiFromHighlighter from "@shikijs/rehype/core";
+import { createHighlighter, type Highlighter } from "shiki";
 import rehypeAutolinkHeadings from "rehype-autolink-headings";
 import rehypeSlug from "rehype-slug";
 import remarkGfm from "remark-gfm";
@@ -11,6 +12,30 @@ import { unified } from "unified";
 import { visit } from "unist-util-visit";
 
 export type Heading = { depth: 2 | 3; id: string; text: string };
+
+/** Languages articles may highlight; anything else renders as plain text. One highlighter per process. */
+export const CODE_LANGS = [
+  "bash",
+  "css",
+  "diff",
+  "html",
+  "javascript",
+  "json",
+  "jsx",
+  "markdown",
+  "python",
+  "rust",
+  "sql",
+  "toml",
+  "tsx",
+  "typescript",
+  "yaml",
+] as const;
+let highlighter: Promise<Highlighter> | undefined;
+function getHighlighter(): Promise<Highlighter> {
+  highlighter ??= createHighlighter({ themes: ["github-light", "github-dark"], langs: [...CODE_LANGS] });
+  return highlighter;
+}
 
 /** ```mermaid fences → <mermaid-diagram chart="…">, rendered client-side. Runs before Shiki. */
 function rehypeMermaid() {
@@ -61,6 +86,7 @@ function rehypeCollectHeadings(out: Heading[]) {
  */
 export async function renderMarkdown(markdown: string, slug: string): Promise<{ tree: Root; headings: Heading[] }> {
   const headings: Heading[] = [];
+  const shiki = await getHighlighter();
   const processor = unified()
     .use(remarkParse)
     .use(remarkGfm)
@@ -71,7 +97,7 @@ export async function renderMarkdown(markdown: string, slug: string): Promise<{ 
     .use(rehypeSlug)
     .use(rehypeAutolinkHeadings, { behavior: "wrap" })
     .use(rehypeCollectHeadings(headings))
-    .use(rehypeShiki, {
+    .use(rehypeShikiFromHighlighter, shiki, {
       themes: { light: "github-light", dark: "github-dark" },
       defaultColor: false,
       fallbackLanguage: "text",
