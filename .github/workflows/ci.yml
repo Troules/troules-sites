@@ -32,10 +32,11 @@ jobs:
       - name: Hermes branches may only change apps/blog/content/
         env:
           HEAD_REF: ${{ github.head_ref }}
-          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+        # HEAD is the PR's test merge commit; HEAD^1 is the base branch as it is now. pull_request.base.sha is NOT
+        # updated when the base moves, so diffing against it counts other merged PRs as this PR's changes.
         run: |
           case "$HEAD_REF" in hermes/*) ;; *) echo "Not a Hermes branch: skipped."; exit 0 ;; esac
-          bad=$(git diff --name-only "$BASE_SHA"...HEAD | grep -v '^apps/blog/content/' || true)
+          bad=$(git diff --name-only HEAD^1 HEAD | grep -v '^apps/blog/content/' || true)
           if [ -n "$bad" ]; then
             echo "::error::Hermes branches may only change apps/blog/content/. Outside files:"; echo "$bad"; exit 1
           fi
@@ -53,10 +54,8 @@ jobs:
           fetch-depth: 0
           persist-credentials: false
       - name: Code changes must bump versions
-        env:
-          BASE_SHA: ${{ github.event.pull_request.base.sha }}
         run: |
-          files=$(git diff --name-only "$BASE_SHA"...HEAD)
+          files=$(git diff --name-only HEAD^1 HEAD)
           code=$(echo "$files" | grep -E '^(apps|packages)/' | grep -vE '^apps/blog/content/|\.(test|spec)\.|/e2e/|CHANGELOG\.md$' || true)
           [ -z "$code" ] && { echo "No app/package code changed."; exit 0; }
           pending=$(ls .changeset/*.md 2>/dev/null | grep -v README.md || true)
