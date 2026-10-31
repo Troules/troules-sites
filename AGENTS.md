@@ -31,17 +31,18 @@ pnpm dev                     # all apps; or: pnpm --filter @troules/blog dev
 pnpm check                   # lint + typecheck + unit tests + prettier: run before every commit
 pnpm build && pnpm e2e       # production builds + Playwright e2e/axe (needs `playwright install chromium` once)
 pnpm lighthouse              # Lighthouse budgets on production builds (perf ≥ 90, a11y ≥ 95, BP ≥ 90, SEO ≥ 90)
-pnpm changeset               # describe a code change (required by CI for apps/ and packages/ changes)
+pnpm changeset               # describe a code change, then:
+pnpm version-packages        # apply it in the same PR (bumps versions + CHANGELOG; CI requires it for apps/, packages/)
 ```
 
 ## Rules
 
 - **Dependencies**: shared versions live in the `catalog:` of `pnpm-workspace.yaml`; reference them with `"catalog:"`.
   pnpm refuses versions younger than 7 days (`minimumReleaseAge`); don't lower it to get a fresh release.
-- **Definition of done**: `pnpm check` and `pnpm build` pass, e2e pass for the apps you touched, a changeset exists,
-  docs/ADR updated if behaviour or architecture changed.
+- **Definition of done**: `pnpm check` and `pnpm build` pass, e2e pass for the apps you touched, versions bumped
+  (`pnpm changeset` + `pnpm version-packages`), docs/ADR updated if behaviour or architecture changed.
 - **Commits and PR titles**: Conventional Commits (`feat(blog): …`, `fix(ui): …`, `chore: …`). Enforced by commitlint
-  and CI. `main` only changes through PRs with green CI (ruleset, no bypass except the release bot).
+  and CI. `main` only changes through squash-merged PRs with green CI (ruleset, **no bypass for anyone**).
 - **Branches**: `hermes/*` is reserved for Hermes and may only touch `apps/blog/content/` (CI `Content guard`).
 - **Secrets**: none in this repo, ever. Runtime config goes in Vercel env vars. The pre-commit hook blocks common token shapes.
 - **Articles are untrusted input**: plain Markdown rendered without raw HTML or MDX. Don't add `rehype-raw`, MDX, or

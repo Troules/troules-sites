@@ -1,9 +1,8 @@
 name: Release
 
-# After a merge to main: if changesets are pending, bump each package.json version, write CHANGELOG.md files,
-# and commit that straight to main as github-actions[bot] (the only ruleset bypass actor; see docs/adr/0005).
-# Why not the usual "Version packages" PR: PRs opened with GITHUB_TOKEN don't trigger CI, so required checks
-# would never run on it. Deploys themselves are done by Vercel's Git integration.
+# Versions are bumped inside each PR (`pnpm changeset` + `pnpm version-packages`), so main only ever receives reviewed,
+# CI-green commits and the ruleset needs no bypass (ADR 0005). After a merge this job tags every package version that
+# has no tag yet (`@troules/blog@0.3.0`, …). Tags aren't covered by the branch ruleset. Vercel deploys on its own.
 on:
   push:
     branches: [main]
@@ -17,23 +16,16 @@ env:
   LEFTHOOK: 0
 
 jobs:
-  version:
-    if: github.actor != 'github-actions[bot]'
+  tag:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
       - uses: ./.github/actions/setup
-      - name: Apply pending changesets
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # changelog-github reads PR/author info
+      - name: Tag new package versions
         run: |
-          if ! ls .changeset/*.md 2>/dev/null | grep -qv README.md; then echo "No pending changesets."; exit 0; fi
-          pnpm changeset version
-          pnpm install --lockfile-only
-          pnpm exec prettier --write "**/CHANGELOG.md" "**/package.json" >/dev/null
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -A
-          versions=$(git diff --cached --name-only -- '*/package.json' | xargs -r -I{} node -p "const p=require('./{}');p.name+'@'+p.version" | paste -sd ' ')
-          git commit -m "chore(release): version packages" -m "${versions}"
-          git push
+          pnpm changeset tag
+          git push origin --tags

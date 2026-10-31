@@ -33,8 +33,8 @@ sequenceDiagram
   (no _Workflows_, no _Administration_). Hermes's MCP config exposes only: `get_file_contents`, `create_branch`,
   `push_files`, `create_or_update_file`, `create_pull_request`, `update_pull_request`, `pull_request_read`,
   `merge_pull_request`; `trust: untrusted`, so every write asks the owner in Telegram.
-- Ruleset on `main`: PR required, required checks, no force push/deletion, **no bypass** except the GitHub Actions
-  app (release commits). So the token can't push to `main` even though its owner is an admin.
+- Ruleset on `main`: PR required, required checks, no force push/deletion, **no bypass actors**. So the token can't
+  push to `main` even though its owner is an admin.
 - CI `Content guard`: a `hermes/*` branch touching anything outside `apps/blog/content/` fails.
 - Merge uses `expectedHeadSha`: GitHub refuses if commits were added after the owner's preview.
 
