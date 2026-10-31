@@ -91,6 +91,8 @@ jobs:
           path: .turbo/cache
           key: turbo-${{ runner.os }}-${{ github.sha }}
           restore-keys: turbo-${{ runner.os }}-
+      - name: Toolchain compatibility (TypeScript/ESLint vs lint plugins)
+        run: pnpm check:toolchain
       - run: pnpm format:check
       - run: pnpm turbo run lint typecheck test build --cache-dir=.turbo/cache
       - name: Install Playwright Chromium

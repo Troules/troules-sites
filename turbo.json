@@ -4,7 +4,7 @@
   "globalDependencies": [".prettierrc.json", "tsconfig.base.json"],
   "tasks": {
     "build": {
-      "dependsOn": ["^build"],
+      "dependsOn": ["^build", "typecheck"],
       "inputs": ["$TURBO_DEFAULT$", "!**/*.test.*", "!e2e/**"],
       "outputs": [".next/**", "!.next/cache/**", "public/content/**", "src/generated/**"]
     },

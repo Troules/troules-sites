@@ -9,10 +9,18 @@ updates:
       # @types/node follows the Node major we run (24, see .nvmrc); bump it together with Node.
       - dependency-name: "@types/node"
         update-types: ["version-update:semver-major"]
+      # TypeScript and ESLint majors wait until typescript-eslint / Next's lint plugins support them
+      # (scripts/check-toolchain.mjs). PR #2 (TS 7 + ESLint 10) broke the blog's typecheck.
+      - dependency-name: "typescript"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "eslint"
+        update-types: ["version-update:semver-major"]
     groups:
       next-react:
+        update-types: ["minor", "patch"]
         patterns: ["next", "eslint-config-next", "react", "react-dom", "@types/react*"]
       tooling:
+        update-types: ["minor", "patch"]
         patterns:
           [
             "*eslint*",
@@ -26,6 +34,7 @@ updates:
             "@commitlint/*",
           ]
       content:
+        update-types: ["minor", "patch"]
         patterns: ["unified", "remark-*", "rehype-*", "@shikijs/*", "mermaid", "hast-*", "unist-*", "yaml", "zod"]
   - package-ecosystem: github-actions
     directory: /
