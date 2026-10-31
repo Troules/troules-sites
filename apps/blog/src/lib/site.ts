@@ -17,3 +17,4 @@ export function formatDate(iso: string, lang: "en" | "fr" = "en"): string {
 }
 
 export const KIND_LABEL = { research: "Research", "video-summary": "Video summary", note: "Note" } as const;
+// guard test
