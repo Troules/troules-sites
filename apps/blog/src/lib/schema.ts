@@ -3,6 +3,9 @@ import { z } from "zod";
 /** Article slug = folder name under content/. Lowercase kebab-case, ASCII only. */
 export const SLUG_RE = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 
+/** Top-level routes an article folder must not shadow. */
+export const RESERVED_SLUGS = new Set(["page", "tags", "missing", "content", "feed", "sitemap", "robots"]);
+
 const isoDate = z
   .string()
   .regex(/^\d{4}-\d{2}-\d{2}$/, "use YYYY-MM-DD")
