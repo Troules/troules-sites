@@ -18,19 +18,19 @@ An agent harness is the layer that owns prompts, model calls, context and tools 
 
 ## Exo lets the agent edit its own harness
 
-Exo is an MIT-licensed agent runtime. Its README describes a split between a harness's semantics (compaction, tool calling, planning) and the infrastructure around it, and it supports Codex, Claude Code and Pi out of the box [1]. The repository describes Exo as able to "safely edit all aspects of itself at runtime to get better at your tasks" [1].
+Exo is an MIT-licensed agent runtime. Its [README](https://github.com/exoharness/exo) describes a split between a harness's semantics (compaction, tool calling, planning) and the infrastructure around it, and it supports Codex, Claude Code and Pi out of the box. The repository describes Exo as able to "safely edit all aspects of itself at runtime to get better at your tasks".
 
-Self-improvement is not the current core. The README points to an archive of earlier Exo versions, which included "a separate harness built on top of Exo as an experiment in self-evolution" [1]. The docs also say they are still being written and that some documented features are not implemented yet [1]. So the claim is real at the design level, but I would treat it as early.
+Self-improvement is not the current core. The README points to an archive of earlier Exo versions, which included "a separate harness built on top of Exo as an experiment in self-evolution". The docs also say they are still being written and that some documented features are not implemented yet. So the claim is real at the design level, but I would treat it as early.
 
 ## ModularRSI evolves a harness from its own trajectories
 
-ModularRSI (arXiv 2609.14857, revised October 2026) is the most concrete research result of the three [2]. It compares successful and failed trajectories for the same task, aggregates evidence across tasks, and evolves five modules: agent loop, tool use, observation management, context management and task completion detection [2].
+ModularRSI ([arXiv 2609.14857](https://arxiv.org/abs/2609.14857), revised October 2026) is the most concrete research result of the three. It compares successful and failed trajectories for the same task, aggregates evidence across tasks, and evolves five modules: agent loop, tool use, observation management, context management and task completion detection.
 
-Two design choices stand out. Each module evolves inside a restricted scope, which makes changes easier to attribute. The evolution tasks are also drawn from sources disjoint from the evaluation benchmarks, to avoid tuning to the test. The paper reports consistent gains on TB2.0 and SWE-Bench Verified, including on unseen tasks and across foundation models [2]. The learning signal here is runs, not a codebase's history.
+Two design choices stand out. Each module evolves inside a restricted scope, which makes changes easier to attribute. The evolution tasks are also drawn from sources disjoint from the evaluation benchmarks, to avoid tuning to the test. The paper reports consistent gains on TB2.0 and SWE-Bench Verified, including on unseen tasks and across foundation models. The learning signal here is runs, not a codebase's history.
 
 ## agentskill reads a repo's conventions
 
-agentskill turns a codebase into an `AGENTS.md` playbook. Its README calls it a forensic extraction tool: it walks a repository, measures source conventions, reads formatter and linter configuration, inspects Git history, and analyzes imports, symbols and tests, then emits structured evidence for an LLM [3]. It does not change its own behaviour. Its job is to give a coding agent an accurate picture of an existing project before it starts working in it [3].
+[agentskill](https://github.com/airscripts/agentskill) turns a codebase into an `AGENTS.md` playbook. Its README calls it a forensic extraction tool: it walks a repository, measures source conventions, reads formatter and linter configuration, inspects Git history, and analyzes imports, symbols and tests, then emits structured evidence for an LLM. It does not change its own behaviour. Its job is to give a coding agent an accurate picture of an existing project before it starts working in it.
 
 ## What is missing
 
@@ -40,12 +40,7 @@ That combination is a plausible design, not a tested one. The obvious risks are 
 
 ## Takeaways
 
-- Exo makes self-editing a runtime property, but its self-evolution work was in an earlier, separate experiment [1].
-- ModularRSI shows that contrasting successful and failed trajectories, and evolving modules separately, can transfer to unseen tasks and models [2].
-- agentskill extracts conventions and history from a repo, but does not learn from outcomes [3].
+- Exo makes self-editing a runtime property, but its self-evolution work was in an earlier, separate experiment.
+- ModularRSI shows that contrasting successful and failed trajectories, and evolving modules separately, can transfer to unseen tasks and models.
+- agentskill extracts conventions and history from a repo, but does not learn from outcomes.
 - No project I checked combines repository-history analysis with outcome-driven self-improvement.
-
-Sources:
-[1] exoharness/exo README: https://github.com/exoharness/exo
-[2] ModularRSI, arXiv 2609.14857: https://arxiv.org/abs/2609.14857
-[3] airscripts/agentskill README: https://github.com/airscripts/agentskill
