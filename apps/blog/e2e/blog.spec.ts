@@ -1,5 +1,6 @@
 import AxeBuilder from "@axe-core/playwright";
 import { expect, test } from "@playwright/test";
+import { PAGE_SIZE } from "../src/lib/pagination";
 
 const POST = "/how-this-blog-works";
 
@@ -49,6 +50,23 @@ test("unknown articles and tags return a real 404 page", async ({ request }) => 
     expect(res.status(), path).toBe(404);
     expect(await res.text()).toContain("Not found");
   }
+});
+
+test("paginates the article list", async ({ page, request }) => {
+  const first = await request.get("/page/1", { maxRedirects: 0 });
+  expect(first.status()).toBe(308);
+  expect(first.headers()["location"]).toMatch(/\/$/);
+  for (const path of ["/page/0", "/page/02", "/page/999", "/page/2/x"]) {
+    expect((await request.get(path)).status(), path).toBe(404);
+  }
+  await page.goto("/");
+  expect(await page.locator("main ol > li").count()).toBeLessThanOrEqual(PAGE_SIZE);
+  const older = page.getByRole("link", { name: "Older →" });
+  if ((await older.count()) === 0) return; // everything fits on the home page
+  await older.click();
+  await expect(page).toHaveURL(/\/page\/2$/);
+  await expect(page.getByRole("navigation", { name: "Pagination" })).toContainText("Page 2 of");
+  await expect(page.getByRole("link", { name: "← Newer" })).toHaveAttribute("href", "/");
 });
 
 test("sends security headers", async ({ request }) => {

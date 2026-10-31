@@ -3,7 +3,7 @@ import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
 import { join } from "node:path";
 import type { Root } from "hast";
 import { cacheLife } from "next/cache";
-import { frontmatterSchema, SLUG_RE, type Frontmatter } from "./schema";
+import { frontmatterSchema, RESERVED_SLUGS, SLUG_RE, type Frontmatter } from "./schema";
 import { splitFrontmatter } from "./frontmatter";
 import { readingMinutes, renderMarkdown, type Heading } from "./markdown";
 import { byNewest } from "./site";
@@ -31,6 +31,7 @@ export function listSlugs(): string[] {
 /** Reads and validates one article. Throws with the file path and every schema issue. */
 export function readPostSource(slug: string): { meta: PostMeta; body: string } {
   if (!SLUG_RE.test(slug)) throw new Error(`content/${slug}: folder name must be lowercase kebab-case`);
+  if (RESERVED_SLUGS.has(slug)) throw new Error(`content/${slug}: "${slug}" is a reserved route, pick another slug`);
   const { data, body } = splitFrontmatter(readFileSync(join(process.cwd(), "content", slug, "index.md"), "utf8"));
   const parsed = frontmatterSchema.safeParse(data);
   if (!parsed.success) {
