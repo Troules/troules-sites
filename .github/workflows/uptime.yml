@@ -1,0 +1,38 @@
+name: Uptime
+
+# Synthetic check of the production sites every 30 minutes (free on public repos).
+# A failure opens (or comments on) one issue labelled "uptime"; GitHub notifies the owner.
+# Note: GitHub disables scheduled workflows after 60 days without repo activity.
+on:
+  schedule:
+    - cron: "17,47 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Probe sites
+        id: probe
+        run: bash scripts/uptime-probe.sh | tee probe.txt
+        continue-on-error: true
+      - name: Report failure as an issue
+        if: steps.probe.outcome == 'failure'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NTFY_TOPIC: ${{ secrets.NTFY_TOPIC }}
+        run: |
+          body="$(cat probe.txt)"$'\n\n'"Run: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          n=$(gh issue list --label uptime --state open --json number -q '.[0].number')
+          if [ -n "$n" ]; then gh issue comment "$n" --body "$body"; else
+            gh label create uptime --color B60205 --force >/dev/null
+            gh issue create --title "Site down" --label uptime --body "$body"; fi
+          if [ -n "$NTFY_TOPIC" ]; then curl -fsS -H "Title: troules-sites down" -d "$(head -c 400 probe.txt)" "https://ntfy.sh/$NTFY_TOPIC" >/dev/null || true; fi
+          exit 1

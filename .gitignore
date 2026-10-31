@@ -1,0 +1,11 @@
+node_modules/
+.turbo/
+.lighthouseci/
+.env*
+!.env.example
+.vercel
+*.tsbuildinfo
+.DS_Store
+.serena/
+# chrome-launcher on WSL creates Windows-style temp dirs here
+C:*

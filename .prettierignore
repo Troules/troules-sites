@@ -1,0 +1,12 @@
+pnpm-lock.yaml
+**/.next/
+**/public/content/
+**/playwright-report/
+**/test-results/
+.lighthouseci/
+.turbo/
+**/CHANGELOG.md
+.agents/
+.claude/skills/
+# Articles are formatted by their author (Hermes) and checked by the content tests instead.
+apps/blog/content/

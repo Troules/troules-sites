@@ -1,0 +1,33 @@
+packages:
+  - apps/*
+  - packages/*
+
+# Supply chain: refuse versions published less than 7 days ago (most malicious releases are pulled within hours).
+minimumReleaseAge: 10080
+# Only these packages may run install scripts.
+allowBuilds:
+  sharp: false
+  unrs-resolver: false
+  lefthook: true
+  esbuild: true
+strictPeerDependencies: false
+
+# One version per dependency across every site: upgrade here, not in each package.json.
+catalog:
+  next: 16.4.3
+  eslint-config-next: 16.4.3
+  react: 19.3.0
+  react-dom: 19.3.0
+  "@types/react": ^19
+  "@types/react-dom": ^19
+  "@types/node": ^24
+  typescript: 5.9.3
+  eslint: ^9.39.5
+  tailwindcss: ^4.3.3
+  "@tailwindcss/turbopack": ^4.3.3
+  babel-plugin-react-compiler: 1.0.0
+  vitest: ^5.0.5
+  "@playwright/test": 1.64.1
+  "@axe-core/playwright": ^4.14.0
+  "@vercel/analytics": ^2.0.1
+  "@vercel/speed-insights": ^2.0.0

@@ -1,0 +1,26 @@
+# Git hooks (installed by `pnpm install` via the "prepare" script).
+pre-commit:
+  parallel: true
+  jobs:
+    - name: prettier
+      glob: "*.{js,mjs,ts,tsx,json,css,md,yml,yaml}"
+      exclude:
+        - "apps/blog/content/**"
+        - "pnpm-lock.yaml"
+      run: pnpm exec prettier --write --ignore-unknown {staged_files}
+      stage_fixed: true
+    - name: secrets
+      run: |
+        if git diff --cached -U0 -- . ':!lefthook.yml' | grep -E '^\+' | grep -qE 'sb_secret_|github_pat_|ghp_[A-Za-z0-9]{20,}|-----BEGIN [A-Z ]*PRIVATE KEY'; then
+          echo "Possible secret in staged changes. Remove it."; exit 1
+        fi
+
+commit-msg:
+  jobs:
+    - name: commitlint
+      run: pnpm exec commitlint --edit {1}
+
+pre-push:
+  jobs:
+    - name: checks
+      run: pnpm turbo run lint typecheck test

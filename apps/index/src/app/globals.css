@@ -1,0 +1,27 @@
+@import "tailwindcss";
+@import "@troules/ui/glass.css";
+
+@theme {
+  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
+}
+
+:root {
+  color-scheme: dark;
+  background: #05040a;
+}
+
+/* Background only on :root: a body background would paint over the fixed -z-10 image layer. */
+body {
+  min-height: 100dvh;
+  color: #f5f3ff;
+}
+
+@keyframes drift {
+  from {
+    transform: scale(1.06) translate3d(-1%, -1%, 0);
+  }
+  to {
+    transform: scale(1.12) translate3d(1%, 1%, 0);
+  }
+}

@@ -1,0 +1,32 @@
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule: { interval: weekly, day: monday }
+    cooldown: { default-days: 7 }
+    open-pull-requests-limit: 5
+    groups:
+      next-react:
+        patterns: ["next", "eslint-config-next", "react", "react-dom", "@types/react*"]
+      tooling:
+        patterns:
+          [
+            "*eslint*",
+            "prettier*",
+            "typescript",
+            "vitest",
+            "@playwright/*",
+            "turbo",
+            "@changesets/*",
+            "lefthook",
+            "@commitlint/*",
+          ]
+      content:
+        patterns: ["unified", "remark-*", "rehype-*", "@shikijs/*", "mermaid", "hast-*", "unist-*", "yaml", "zod"]
+  - package-ecosystem: github-actions
+    directory: /
+    schedule: { interval: weekly, day: monday }
+    cooldown: { default-days: 7 }
+    groups:
+      actions:
+        patterns: ["*"]
