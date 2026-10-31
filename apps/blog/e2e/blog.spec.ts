@@ -14,8 +14,8 @@ test("article renders images, Mermaid diagrams and alerts", async ({ page }) => 
   await page.goto(POST);
   await expect(page.getByRole("heading", { level: 1 })).toHaveText("How this blog works");
   const img = page.getByRole("img", { name: "The publishing pipeline at a glance" });
-  await expect(img).toBeVisible();
-  expect(await img.evaluate((el: HTMLImageElement) => el.naturalWidth)).toBeGreaterThan(0);
+  await img.scrollIntoViewIfNeeded(); // loading="lazy"
+  await expect.poll(() => img.evaluate((el: HTMLImageElement) => el.complete && el.naturalWidth)).toBeGreaterThan(0);
   await expect(page.locator("figure.mermaid svg")).toBeVisible({ timeout: 15_000 });
   await expect(page.locator(".markdown-alert-note")).toBeVisible();
 });

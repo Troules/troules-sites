@@ -41,25 +41,30 @@ jobs:
           fi
           echo "OK: content-only change."
 
-  # Code changes need a changeset (it bumps package.json versions and writes the CHANGELOG).
+  # Code changes ship as a release inside the PR: `pnpm changeset` then `pnpm version-packages` (bumps package.json
+  # versions, writes CHANGELOG.md, consumes the changeset). No bot pushes to main (ruleset has no bypass; ADR 0005).
   changeset:
     name: Changeset
-    if: github.event_name == 'pull_request' && !startsWith(github.head_ref, 'hermes/') && !startsWith(github.head_ref, 'changeset-release/') && github.actor != 'dependabot[bot]'
+    if: github.event_name == 'pull_request' && !startsWith(github.head_ref, 'hermes/') && github.actor != 'dependabot[bot]'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 0
           persist-credentials: false
-      - name: Require a changeset when apps or packages change
+      - name: Code changes must bump versions
         env:
           BASE_SHA: ${{ github.event.pull_request.base.sha }}
         run: |
           files=$(git diff --name-only "$BASE_SHA"...HEAD)
           code=$(echo "$files" | grep -E '^(apps|packages)/' | grep -vE '^apps/blog/content/|\.(test|spec)\.|/e2e/|CHANGELOG\.md$' || true)
           [ -z "$code" ] && { echo "No app/package code changed."; exit 0; }
-          echo "$files" | grep -E '^\.changeset/.+\.md$' | grep -qv 'README.md' && { echo "Changeset found."; exit 0; }
-          echo "::error::Code changed without a changeset. Run 'pnpm changeset' (patch/minor/major) and commit the file."; exit 1
+          pending=$(ls .changeset/*.md 2>/dev/null | grep -v README.md || true)
+          if [ -n "$pending" ]; then
+            echo "::error::Unapplied changesets: $pending. Run 'pnpm version-packages' and commit the result."; exit 1; fi
+          if ! echo "$files" | grep -qE '^(apps|packages)/[^/]+/CHANGELOG\.md$'; then
+            echo "::error::Code changed without a version bump. Run 'pnpm changeset', then 'pnpm version-packages', and commit."; exit 1; fi
+          echo "Versions bumped:"; echo "$files" | grep -E '/CHANGELOG\.md$'
 
   pr-title:
     name: PR title (Conventional Commits)

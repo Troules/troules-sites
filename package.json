@@ -16,7 +16,7 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "changeset": "changeset",
-    "version-packages": "changeset version",
+    "version-packages": "changeset version && pnpm install --lockfile-only && prettier --write \"**/CHANGELOG.md\" \"**/package.json\" >/dev/null",
     "prepare": "lefthook install",
     "lighthouse": "bash scripts/lighthouse.sh",
     "uptime": "bash scripts/uptime-probe.sh"

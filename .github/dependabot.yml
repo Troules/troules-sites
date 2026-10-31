@@ -5,6 +5,10 @@ updates:
     schedule: { interval: weekly, day: monday }
     cooldown: { default-days: 7 }
     open-pull-requests-limit: 5
+    ignore:
+      # @types/node follows the Node major we run (24, see .nvmrc); bump it together with Node.
+      - dependency-name: "@types/node"
+        update-types: ["version-update:semver-major"]
     groups:
       next-react:
         patterns: ["next", "eslint-config-next", "react", "react-dom", "@types/react*"]
