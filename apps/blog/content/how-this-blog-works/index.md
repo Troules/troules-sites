@@ -1,7 +1,7 @@
 ---
 title: "How this blog works"
 description: "From a Telegram conversation to a published article: research, review on a preview link, one tap to publish."
-date: 2026-10-31
+date: "2026-10-31T22:05"
 lang: en
 kind: note
 tags: [meta, hermes, publishing]

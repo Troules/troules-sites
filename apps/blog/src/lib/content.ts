@@ -6,6 +6,7 @@ import { cacheLife } from "next/cache";
 import { frontmatterSchema, SLUG_RE, type Frontmatter } from "./schema";
 import { splitFrontmatter } from "./frontmatter";
 import { readingMinutes, renderMarkdown, type Heading } from "./markdown";
+import { byNewest } from "./site";
 
 export const CONTENT_DIR = join(process.cwd(), "content");
 
@@ -45,7 +46,7 @@ export async function getAllPosts(): Promise<PostMeta[]> {
   return listSlugs()
     .map((slug) => readPostSource(slug).meta)
     .filter((p) => showDrafts || !p.draft)
-    .sort((a, b) => b.date.localeCompare(a.date) || a.slug.localeCompare(b.slug));
+    .sort(byNewest);
 }
 
 export async function getPost(slug: string): Promise<Post | null> {

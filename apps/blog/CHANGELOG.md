@@ -1,5 +1,11 @@
 # @troules/blog
 
+## 0.2.1
+
+### Patch Changes
+
+- [#10](https://github.com/Troules/troules-sites/pull/10) [`fe0fcc8`](https://github.com/Troules/troules-sites/commit/fe0fcc8430ed4200589bf4ea53d558e4c5adc3f0) Thanks [@Troules](https://github.com/Troules)! - Order same-day articles newest first: front-matter `date` accepts an optional Europe/Paris time (`YYYY-MM-DDTHH:MM`) used only for ordering.
+
 ## 0.2.0
 
 ### Minor Changes

@@ -8,6 +8,12 @@ const isoDate = z
   .regex(/^\d{4}-\d{2}-\d{2}$/, "use YYYY-MM-DD")
   .refine((d) => !Number.isNaN(Date.parse(d)), "not a real date");
 
+/** Publication date, optionally with a Europe/Paris time ("2026-10-31T22:05") that only orders same-day posts. */
+const publishDate = z
+  .string()
+  .regex(/^\d{4}-\d{2}-\d{2}(T\d{2}:\d{2})?$/, "use YYYY-MM-DD or YYYY-MM-DDTHH:MM")
+  .refine((d) => !Number.isNaN(Date.parse(d)), "not a real date");
+
 const httpsUrl = z.url({ protocol: /^https$/, error: "must be an https:// URL" });
 
 /** Local asset path relative to the article folder: "./diagram.svg". No subfolders, no "..". */
@@ -19,7 +25,7 @@ export const frontmatterSchema = z
   .object({
     title: z.string().min(5).max(120),
     description: z.string().min(20).max(200),
-    date: isoDate,
+    date: publishDate,
     updated: isoDate.optional(),
     lang: z.enum(["en", "fr"]).default("en"),
     kind: z.enum(["research", "video-summary", "note"]),
@@ -41,7 +47,7 @@ export const frontmatterSchema = z
       ctx.addIssue({ code: "custom", path: ["sources"], message: `${fm.kind} articles need at least one source` });
     if (fm.kind === "video-summary" && !fm.video)
       ctx.addIssue({ code: "custom", path: ["video"], message: "video-summary articles need a video" });
-    if (fm.updated && fm.updated < fm.date)
+    if (fm.updated && fm.updated < fm.date.slice(0, 10))
       ctx.addIssue({ code: "custom", path: ["updated"], message: "updated is before date" });
   });
 

@@ -1,7 +1,7 @@
 ---
 name: blog-article-creator
 description: "Turn research or a YouTube video discussed in this conversation into a blog article for blog.troules.dynv6.net, open a pull request, send the owner the preview link, and publish only when they say so. Use when the owner asks to write, draft, blog, publish, or turn something into an article."
-version: 0.2.0
+version: 0.3.0
 author: Troules
 license: MIT
 platforms: [linux, macos, windows]
@@ -57,7 +57,8 @@ Read the references when you reach that step, not before:
 
 ## Self-check (mirrors CI)
 
-- [ ] Front matter: every string in double quotes; `date` is today (Europe/Paris) as `YYYY-MM-DD`;
+- [ ] Front matter: every string in double quotes; `date` is now (Europe/Paris) as `YYYY-MM-DDTHH:MM`
+      (the time only orders same-day posts; pages show the day);
       `description` 20–200 chars; tags lowercase-kebab, 1–6; `sources` https only; `video` set for `video-summary`.
 - [ ] Slug = folder name: lowercase kebab-case ASCII, short (≤ 6 words), no date in it.
 - [ ] No `#` heading in the body (the title is the h1); headings go `##` then `###` without skipping.

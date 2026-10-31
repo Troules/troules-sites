@@ -1,5 +1,5 @@
 import { getAllPosts } from "@/lib/content";
-import { SITE } from "@/lib/site";
+import { day, SITE } from "@/lib/site";
 
 const esc = (s: string) => s.replace(/[<>&'"]/g, (c) => `&#${c.charCodeAt(0)};`);
 
@@ -9,7 +9,7 @@ export async function GET() {
     .map(
       (p) =>
         `<item><title>${esc(p.title)}</title><link>${SITE.url}/${p.slug}</link><guid>${SITE.url}/${p.slug}</guid>` +
-        `<pubDate>${new Date(`${p.date}T00:00:00Z`).toUTCString()}</pubDate><description>${esc(p.description)}</description>` +
+        `<pubDate>${new Date(`${day(p.date)}T00:00:00Z`).toUTCString()}</pubDate><description>${esc(p.description)}</description>` +
         p.tags.map((t) => `<category>${esc(t)}</category>`).join("") +
         `</item>`,
     )
