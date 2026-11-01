@@ -18,6 +18,7 @@ branch rulesets and CodeQL only work on **public** repos; Actions minutes are un
 ## Consequences
 
 - A shared change (lint rule, header, component) lands everywhere in one PR and is tested against every site.
-- Vercel builds only affected apps (`turbo-ignore`).
+- Vercel builds only affected apps (Root Directory › _Skip deployments_, which follows the pnpm workspace graph;
+  amended 2026-11-02, replacing the deprecated `turbo-ignore` Ignored Build Step).
 - Everything in the repo is public: no secrets, no private notes. Articles are public anyway.
 - Revisit if a site needs private code (then: separate private repo consuming the public packages).
