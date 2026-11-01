@@ -35,13 +35,13 @@ flowchart LR
 
 ## Limits that matter (free tiers, checked 2026-10)
 
-| Service                      | Limit                                                                                                     | How we stay inside                                                                       |
-| ---------------------------- | --------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------- |
-| Vercel Hobby                 | non-commercial; 100 GB transfer, 1M function invocations, 100 deploys/day, 5k image transformations/month | static pages, proxy only on article/tag URLs, `turbo-ignore` skips unaffected app builds |
-| Vercel Web Analytics (Hobby) | 50k events/month                                                                                          | one pageview event per visit, no custom events                                           |
-| GitHub Actions               | unlimited minutes on public repos                                                                         | —                                                                                        |
-| Scheduled workflows          | disabled after 60 days without repo activity                                                              | Dependabot PRs keep the repo active                                                      |
-| dynv6                        | free, zone + records via UI/API                                                                           | 2 records                                                                                |
+| Service                      | Limit                                                                                                     | How we stay inside                                                                                  |
+| ---------------------------- | --------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------- |
+| Vercel Hobby                 | non-commercial; 100 GB transfer, 1M function invocations, 100 deploys/day, 5k image transformations/month | static pages, proxy only on article/tag URLs, Vercel _Skip deployments_ skips unaffected app builds |
+| Vercel Web Analytics (Hobby) | 50k events/month                                                                                          | one pageview event per visit, no custom events                                                      |
+| GitHub Actions               | unlimited minutes on public repos                                                                         | —                                                                                                   |
+| Scheduled workflows          | disabled after 60 days without repo activity                                                              | Dependabot PRs keep the repo active                                                                 |
+| dynv6                        | free, zone + records via UI/API                                                                           | 2 records                                                                                           |
 
 ## Ports (local)
 
