@@ -20,6 +20,13 @@ export const sites: readonly Site[] = [
     description: "Notes from research and video deep-dives, written with Hermes and published from Telegram.",
     status: "live",
   },
+  {
+    slug: "wf-trade-helper",
+    name: "WF Trade Helper",
+    url: `https://wf-trade-helper.${ROOT_DOMAIN}`,
+    description: "Which Warframe items sell best: plat traded per day, prices and history from warframe.market.",
+    status: "soon",
+  },
 ];
 
 export function liveSites(list: readonly Site[] = sites): Site[] {

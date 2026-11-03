@@ -1,0 +1,39 @@
+{
+  "name": "@troules/wf-trade-helper",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev -p 3002",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint . --max-warnings 0",
+    "typecheck": "next typegen && tsc --noEmit",
+    "test": "vitest run && python3 -m unittest discover -s sweeper",
+    "e2e": "playwright test",
+    "fixtures": "python3 sweeper/wfm_sweep.py fixtures src/fixtures $(node -p \"Object.keys(require('./src/fixtures/market.json').history).join(' ')\")"
+  },
+  "dependencies": {
+    "@troules/registry": "workspace:*",
+    "@troules/ui": "workspace:*",
+    "next": "catalog:",
+    "react": "catalog:",
+    "react-dom": "catalog:",
+    "server-only": "^0.0.1"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "catalog:",
+    "@playwright/test": "catalog:",
+    "@tailwindcss/turbopack": "catalog:",
+    "@troules/eslint-config": "workspace:*",
+    "@troules/next-config": "workspace:*",
+    "@troules/typescript-config": "workspace:*",
+    "@types/node": "catalog:",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
+    "babel-plugin-react-compiler": "catalog:",
+    "eslint": "catalog:",
+    "tailwindcss": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

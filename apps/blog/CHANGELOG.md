@@ -1,5 +1,12 @@
 # @troules/blog
 
+## 0.3.1
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @troules/registry@0.3.0
+
 ## 0.3.0
 
 ### Minor Changes

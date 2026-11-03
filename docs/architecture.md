@@ -32,6 +32,7 @@ flowchart LR
 | Monitoring            | Vercel Web Analytics + Speed Insights, uptime probe → issue + ntfy                    | [0006](adr/0006-monitoring.md)                   |
 | Domains               | dynv6 zone `troules.dynv6.net` → Vercel                                               | [0007](adr/0007-domains-dynv6.md)                |
 | Index design          | Liquid glass as progressive enhancement                                               | [0008](adr/0008-liquid-glass.md)                 |
+| Market data           | wf-trade-helper: VM sweep of warframe.market, sample fixtures until Supabase          | [0009](adr/0009-market-data.md)                  |
 
 ## Limits that matter (free tiers, checked 2026-10)
 
@@ -45,4 +46,4 @@ flowchart LR
 
 ## Ports (local)
 
-`dev`: index 3000, blog 3001. `start` for e2e/Lighthouse: index 3100, blog 3200.
+`dev`: index 3000, blog 3001, wf-trade-helper 3002. `start` for e2e/Lighthouse: index 3100, blog 3200, wf-trade-helper 3300.

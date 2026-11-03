@@ -1,0 +1,56 @@
+@import "tailwindcss";
+@import "@troules/ui/glass.css";
+
+/* Trading-terminal palette from the approved mockup. Rises are blue and drops orange (not green/red), and every
+   delta also carries ▲/▼ text, so colour is never the only signal. */
+@theme {
+  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
+  --color-bg: #0b0d12;
+  --color-panel: #12151c;
+  --color-raised: #1c2230;
+  --color-line: #222734;
+  --color-line-strong: #2c3340;
+  --color-chip: #263043;
+  --color-ink: #e7eaf0;
+  --color-muted: #9aa3b2;
+  --color-accent: #8fd3ff;
+  --color-up: #6cb6ff;
+  --color-down: #ffa657;
+}
+
+:root {
+  color-scheme: dark;
+  background: var(--color-bg);
+}
+
+body {
+  min-height: 100dvh;
+  background: var(--color-bg);
+  color: var(--color-ink);
+}
+
+.num {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+/* Flatter glass for a dense UI: smaller radius and blur than the index site's hero panels. */
+.glass.glass-bar {
+  --glass-radius: 0;
+  --glass-blur: 14px;
+}
+.glass.glass-dialog {
+  --glass-radius: 16px;
+  --glass-blur: 18px;
+  background: rgb(22 26 35 / 0.88);
+}
+
+dialog::backdrop {
+  background: rgb(5 6 10 / 0.6);
+}
