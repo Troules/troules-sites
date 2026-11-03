@@ -2,18 +2,19 @@
 title: "From a YouTube link to a blog post, without leaving Telegram"
 description: "How I send Hermes a YouTube link on Telegram and get back a reviewed, published article, with Supadata fetching the transcript."
 date: "2026-11-03T21:14"
+updated: "2026-11-03"
 lang: "en"
 kind: "note"
 tags: ["hermes", "youtube", "supadata", "publishing", "telegram"]
 sources:
   - title: "Supadata: YouTube transcript API"
-    url: "https://supadata.ai"
+    url: "https://supadata.ai/r/SBW6NDFK"
 ---
 
 Most of the video summaries on this blog start with me pasting a YouTube link into Telegram on my phone.
 A few minutes later I get a preview link to a finished article, and I publish it with a one-word reply.
 This post shows the parts in between and explains why the transcript step goes through
-[Supadata](https://supadata.ai).
+[Supadata](https://supadata.ai/r/SBW6NDFK).
 
 ## The whole flow in one picture
 
@@ -78,3 +79,6 @@ exactly the version I previewed, and the article is live about a minute later.
 - **Cheap**: every piece fits in a free tier, including the transcript API.
 
 For the git and preview side of things, see [How this blog works](/how-this-blog-works).
+
+> [!NOTE]
+> The Supadata links in this post are referral links.
