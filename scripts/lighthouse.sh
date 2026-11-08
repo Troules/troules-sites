@@ -7,7 +7,8 @@ pids=()
 trap 'kill "${pids[@]}" 2>/dev/null || true' EXIT
 (cd apps/index && exec pnpm start -p 3100 >/dev/null 2>&1) & pids+=($!)
 (cd apps/blog && exec pnpm start -p 3200 >/dev/null 2>&1) & pids+=($!)
-for port in 3100 3200; do
+(cd apps/wf-trade-helper && exec pnpm start -p 3300 >/dev/null 2>&1) & pids+=($!)
+for port in 3100 3200 3300; do
   for _ in $(seq 1 60); do curl -fs -o /dev/null "http://localhost:$port/" && break; sleep 0.5; done
 done
 # Warm up like a CDN would: render each page once and request every optimized image it references,
