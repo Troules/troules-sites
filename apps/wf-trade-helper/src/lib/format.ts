@@ -1,6 +1,7 @@
 export const plat = (n: number) => `${Math.round(n).toLocaleString("en-US")}p`;
 
 export function compact(n: number): string {
+  if (n >= 1_000_000) return `${(n / 1_000_000).toFixed(1)}M`;
   if (n >= 1000) return `${(n / 1000).toFixed(1)}k`;
   return Number.isInteger(n) ? String(n) : n.toFixed(1);
 }

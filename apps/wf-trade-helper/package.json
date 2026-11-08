@@ -10,7 +10,8 @@
     "typecheck": "next typegen && tsc --noEmit",
     "test": "vitest run && python3 -m unittest discover -s sweeper",
     "e2e": "playwright test",
-    "fixtures": "python3 sweeper/wfm_sweep.py fixtures src/fixtures $(node -p \"Object.keys(require('./src/fixtures/market.json').history).join(' ')\")"
+    "fixtures": "python3 sweeper/wfm_sweep.py fixtures src/fixtures $(node -p \"Object.keys(require('./src/fixtures/market.json').history).join(' ')\")",
+    "fixtures:full": "python3 sweeper/wfm_sweep.py fixtures .data/full --all"
   },
   "dependencies": {
     "@troules/registry": "workspace:*",

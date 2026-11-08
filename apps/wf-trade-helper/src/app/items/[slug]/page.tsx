@@ -6,10 +6,12 @@ import { PriceChart } from "@/components/charts";
 import { CopyButton } from "@/components/copy-button";
 import { ItemIcon } from "@/components/item-icon";
 import { Tabs } from "@/components/tabs";
+import { Timing } from "@/components/timing";
 import { compact, plat, trendText } from "@/lib/format";
 import { getItemMarket, getMeta, getTrackedSlugs } from "@/lib/market";
 import { variantLabel } from "@/lib/rank";
 import { matching, suggestPrice } from "@/lib/sell";
+import { hourProfile, signalsFor, volatility, weekdayProfile } from "@/lib/signals";
 import type { Book, CatalogItem, Order } from "@/lib/types";
 import { lastDays, variants, type Variant } from "@/lib/variants";
 
@@ -43,8 +45,8 @@ async function ItemDetails({ params }: Pick<PageProps<"/items/[slug]">, "params"
   const { slug } = await params;
   const [data, meta] = await Promise.all([getItemMarket(slug), getMeta()]);
   if (!data) notFound();
-  const { item, summaries, history, book } = data;
-  const vs = variants(item, summaries, history);
+  const { item, summaries, history, hourly, book } = data;
+  const vs = variants(item, summaries, history, hourly);
 
   return (
     <>
@@ -106,6 +108,7 @@ function VariantView({ item, v, book, asOf }: { item: CatalogItem; v: Variant; b
   const id = `v-${v.rank}-${v.subtype}`;
   const ranges = [90, 30, 7].map((n) => ({ n, days: lastDays(v.days, asOf, n) }));
   const range90 = ranges[0]!.days.map((d) => d.median);
+  const sig = s ? signalsFor(range90, s.price7) : null;
 
   return (
     <div className="flex flex-col gap-5">
@@ -125,6 +128,28 @@ function VariantView({ item, v, book, asOf }: { item: CatalogItem; v: Variant; b
         </Stat>
         <Stat label="Median range, 90 days">
           {range90.length ? `${Math.min(...range90)}–${Math.max(...range90)}p` : "—"}
+        </Stat>
+        <Stat label="7d median vs 90 days">
+          {sig?.pos90 != null ? (
+            <>
+              {Math.round(sig.pos90 * 100)}%
+              <span className="text-muted text-[13px]">
+                {sig.pos90 >= 0.8 ? " near the high" : sig.pos90 <= 0.2 ? " near the low" : " mid-range"}
+              </span>
+            </>
+          ) : (
+            "—"
+          )}
+        </Stat>
+        <Stat label="Volatility, 90 days">
+          {sig?.cv90 != null ? (
+            <>
+              {volatility(sig.cv90).label}
+              <span className="text-muted text-[13px]"> ±{Math.round(sig.cv90 * 100)}%</span>
+            </>
+          ) : (
+            "—"
+          )}
         </Stat>
       </section>
 
@@ -151,6 +176,13 @@ function VariantView({ item, v, book, asOf }: { item: CatalogItem; v: Variant; b
           <OrderBook id={`${id}-book`} book={book} v={v} label={label} />
         </aside>
       </div>
+
+      <Timing
+        id={`${id}-timing`}
+        hours={hourProfile(v.hours)}
+        weekdays={weekdayProfile(ranges[0]!.days)}
+        scope={label}
+      />
     </div>
   );
 }

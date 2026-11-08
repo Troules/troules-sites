@@ -45,6 +45,33 @@ class SummarizeTest(unittest.TestCase):
         self.assertEqual((s.subtype, s.trend7), ("intact", None))
 
 
+class HourlyTest(unittest.TestCase):
+    def test_keeps_traded_hours_with_rank_and_subtype(self):
+        hour = lambda h, v, m, **k: {**stat("2026-11-07", v, m, **k), "datetime": f"2026-11-07T{h}:00:00.000+00:00"}
+        p = {"payload": {"statistics_closed": {"90days": [], "48hours": [
+            hour("03", 4, 120, rank=5), hour("04", 0, 0, rank=5), hour("18", 2, 15, subtype="radiant"),
+        ]}}}
+        self.assertEqual(w.parse_hourly(p), [["2026-11-07T03", 5, None, 4, 120.0], ["2026-11-07T18", None, "radiant", 2, 15.0]])
+
+    def test_missing_hourly_bucket_is_empty(self):
+        self.assertEqual(w.parse_hourly({"payload": {"statistics_closed": {"90days": []}}}), [])
+
+
+class OutlierTest(unittest.TestCase):
+    def test_drops_fake_days_but_keeps_real_moves(self):
+        days = [stat(f"2026-10-{d:02d}", 1, p) for d, p in [(1, 5500), (2, 5750), (3, 6000), (4, 4000), (5, 1),
+                                                              (6, 99999), (7, 2000), (8, 5450)]]
+        days.append(stat("2026-10-06", 3, 12, rank=0))  # a different variant, judged on its own
+        kept = w.drop_outliers(w.parse_daily(payload(days)))
+        self.assertEqual([r.median for r in kept], [5500, 5750, 6000, 4000, 2000, 5450, 12])
+
+    def test_hourly_uses_the_daily_reference(self):
+        daily = w.parse_daily(payload([stat(f"2026-10-0{d}", 1, 100) for d in range(1, 4)]))
+        hourly = [["2026-10-03T01", None, None, 9, 99999.0], ["2026-10-03T02", None, None, 1, 110.0],
+                  ["2026-10-03T03", 5, None, 1, 7.0]]
+        self.assertEqual(w.drop_hourly_outliers(hourly, daily), hourly[1:])
+
+
 class ClientTest(unittest.TestCase):
     def make(self, responses):
         log = {"sleeps": [], "requests": 0}

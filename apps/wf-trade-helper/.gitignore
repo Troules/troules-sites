@@ -46,3 +46,6 @@ next-env.d.ts
 
 # python
 __pycache__/
+
+# full local market data (pnpm fixtures:full); only the sample in src/fixtures is committed
+/.data/

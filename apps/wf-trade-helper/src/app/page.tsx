@@ -1,15 +1,18 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
-import { Sparkline } from "@/components/charts";
 import { ItemIcon } from "@/components/item-icon";
+import { MoreRows } from "@/components/more-rows";
 import { Tabs } from "@/components/tabs";
-import { compact, plat, trendText } from "@/lib/format";
-import { getMeta, getRows } from "@/lib/market";
-import { biggestDrop, SORTS, top, variantLabel, type Sort } from "@/lib/rank";
+import { Timing } from "@/components/timing";
+import { TopHead, TopRow, Trend } from "@/components/top-row";
+import { compact, plat } from "@/lib/format";
+import { getMarketProfile, getMeta, getRankUps, getRows } from "@/lib/market";
+import { biggestDrop, FIRST_ROWS, SORTS, TOP_LIMIT, top, variantLabel, type Sort } from "@/lib/rank";
+import type { RankUp } from "@/lib/signals";
 import type { Row } from "@/lib/types";
 
 export default async function Dashboard() {
-  const [rows, meta] = await Promise.all([getRows(), getMeta()]);
+  const [rows, meta, rankUps, profile] = await Promise.all([getRows(), getMeta(), getRankUps(), getMarketProfile()]);
   const byPlat = top(rows, "plat", 1)[0];
   const byVol = top(rows, "volume", 1)[0];
   const rise = top(rows, "trend", 1)[0];
@@ -45,22 +48,35 @@ export default async function Dashboard() {
       </section>
 
       <div className="flex flex-wrap items-start gap-5">
+        <RankUps rows={rankUps.slice(0, 8)} />
+        <div className="min-w-0 flex-[1_1_520px]">
+          <Timing
+            id="timing"
+            hours={profile.hours}
+            weekdays={profile.weekdays}
+            scope="whole market"
+            note={`${profile.items.hourly.toLocaleString("en-US")} items by hour, ${profile.items.weekly.toLocaleString("en-US")} by weekday`}
+          />
+        </div>
+      </div>
+
+      <div className="flex flex-wrap items-start gap-5">
         <section
           aria-labelledby="top10"
           className="border-line bg-panel min-w-0 flex-[999_1_640px] rounded-[14px] border"
         >
           <div className="px-[18px] pt-4">
             <h2 id="top10" className="text-base font-semibold">
-              Top 10
+              Top {TOP_LIMIT}
             </h2>
           </div>
           <Tabs
-            label="Sort the top 10 by"
+            label={`Sort the top ${TOP_LIMIT} by`}
             className="[&>[role=tablist]]:mx-[18px] [&>[role=tablist]]:mt-3"
             tabs={SORTS.map((s) => ({
               id: s.id,
               label: s.label,
-              panel: <TopTable rows={top(rows, s.id)} sort={s.id} hint={s.hint} />,
+              panel: <TopTable rows={top(rows, s.id, TOP_LIMIT)} sort={s.id} hint={s.hint} />,
             }))}
           />
           <p className="border-line text-muted border-t px-[18px] pt-3 pb-4 text-xs">
@@ -113,75 +129,96 @@ function Tile({ label, row, children }: { label: string; row: Row | undefined; c
 
 const Unit = ({ children }: { children: ReactNode }) => <span className="text-muted text-[13px]">{children}</span>;
 
-function Trend({ value }: { value: number }) {
-  return <span className={value >= 0 ? "text-up" : "text-down"}>{trendText(value)}</span>;
-}
-
-const COLS: { id: Sort | null; label: string }[] = [
-  { id: "price", label: "Median" },
-  { id: "volume", label: "Trades/day" },
-  { id: "plat", label: "Plat/day" },
-  { id: "trend", label: "7d" },
-];
-
 function TopTable({ rows, sort, hint }: { rows: Row[]; sort: Sort; hint: string }) {
+  const first = rows.slice(0, FIRST_ROWS);
   return (
     <>
       <p className="text-muted px-[18px] pt-2.5 pb-1 text-xs">{hint}.</p>
-      <div className="overflow-x-auto">
-        <table className="w-full min-w-[720px] border-collapse">
-          <caption className="sr-only">Top 10 items by {SORTS.find((s) => s.id === sort)!.label.toLowerCase()}</caption>
-          <thead>
-            <tr className="text-muted text-right text-xs">
-              <th scope="col" className="w-7 py-2 pr-2.5 pl-[18px] text-left font-medium">
-                #
-              </th>
-              <th scope="col" className="px-2.5 py-2 text-left font-medium">
-                Item
-              </th>
-              {COLS.map((c) => (
-                <th
-                  key={c.label}
-                  scope="col"
-                  aria-sort={c.id === sort ? "descending" : undefined}
-                  className={`px-2.5 py-2 font-medium ${c.id === sort ? "text-ink" : ""}`}
-                >
-                  {c.label}
-                  {c.id === sort ? " ↓" : ""}
-                </th>
-              ))}
-              <th scope="col" className="py-2 pr-[18px] pl-2.5 font-medium">
-                30 days
-              </th>
-            </tr>
-          </thead>
+      <div className="@container">
+        <table className="w-full border-collapse">
+          <caption className="sr-only">
+            Top {rows.length} items by {SORTS.find((s) => s.id === sort)!.label.toLowerCase()}, the first {first.length}{" "}
+            shown, more as you scroll
+          </caption>
+          <TopHead sort={sort} />
           <tbody>
-            {rows.map((r, i) => (
-              <tr key={`${r.slug}-${r.rank}-${r.subtype}`} className="border-line border-t hover:bg-[#161a23]">
-                <td className="num text-muted py-2.5 pr-2.5 pl-[18px]">{i + 1}</td>
-                <td className="p-2.5">
-                  <Link href={`/items/${r.slug}`} className="hover:text-accent flex items-center gap-2.5">
-                    <ItemIcon name={r.name} thumb={r.thumb} />
-                    <span className="flex flex-col">
-                      <span className="font-medium">{r.name}</span>
-                      <span className="num text-muted text-xs">{variantLabel(r, r.maxRank)}</span>
-                    </span>
-                  </Link>
-                </td>
-                <td className="num p-2.5 text-right">{plat(r.price7)}</td>
-                <td className="num p-2.5 text-right">{compact(r.vol7)}</td>
-                <td className="num p-2.5 text-right font-medium">{compact(r.plat7)}</td>
-                <td className="num p-2.5 text-right">
-                  {r.trend7 == null ? <span className="text-muted">new</span> : <Trend value={r.trend7} />}
-                </td>
-                <td className="py-2.5 pr-[18px] pl-2.5 text-right">
-                  <Sparkline values={r.spark30} label={`${r.name}: daily median over the last 30 days`} />
-                </td>
-              </tr>
+            {first.map((r, i) => (
+              <TopRow key={`${r.slug}-${r.rank}-${r.subtype}`} row={r} n={i + 1} sort={sort} />
             ))}
           </tbody>
+          {rows.length > first.length && <MoreRows sort={sort} first={first.length} total={rows.length} />}
         </table>
       </div>
     </>
+  );
+}
+
+function RankUps({ rows }: { rows: RankUp[] }) {
+  return (
+    <section aria-labelledby="rankup" className="border-line bg-panel min-w-0 flex-[1_1_520px] rounded-[14px] border">
+      <div className="px-[18px] pt-4">
+        <h2 id="rankup" className="text-base font-semibold">
+          Rank-up profit · arcanes
+        </h2>
+        <p className="text-muted mt-1 text-xs leading-normal">
+          Buy rank-0 copies at the 7-day median, fuse to max rank, sell at its median. Only arcanes with at least 3
+          rank-0 and 1 max-rank trades a day.
+        </p>
+      </div>
+      {rows.length === 0 ? (
+        <p className="text-muted px-[18px] py-6 text-sm">No arcane pays to rank up right now.</p>
+      ) : (
+        <div className="mt-2 overflow-x-auto">
+          <table className="w-full min-w-[560px] border-collapse">
+            <caption className="sr-only">Arcanes by profit from ranking up, best first</caption>
+            <thead>
+              <tr className="text-muted text-right text-xs">
+                <th scope="col" className="py-2 pr-2.5 pl-[18px] text-left font-medium">
+                  Arcane
+                </th>
+                <th scope="col" className="px-2.5 py-2 font-medium">
+                  Cost
+                </th>
+                <th scope="col" className="px-2.5 py-2 font-medium">
+                  Sells for
+                </th>
+                <th scope="col" aria-sort="descending" className="text-ink px-2.5 py-2 font-medium">
+                  Profit ↓
+                </th>
+                <th scope="col" className="py-2 pr-[18px] pl-2.5 font-medium">
+                  Max-rank trades/day
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {rows.map((r) => (
+                <tr key={r.slug} className="border-line border-t hover:bg-[#161a23]">
+                  <td className="py-2.5 pr-2.5 pl-[18px]">
+                    <Link href={`/items/${r.slug}`} className="hover:text-accent flex items-center gap-2.5">
+                      <ItemIcon name={r.name} thumb={r.thumb} />
+                      <span className="flex flex-col">
+                        <span className="font-medium">{r.name}</span>
+                        <span className="num text-muted text-xs">
+                          {r.copies} × {plat(r.r0)} → rank {r.maxRank}
+                        </span>
+                      </span>
+                    </Link>
+                  </td>
+                  <td className="num p-2.5 text-right">{plat(r.cost)}</td>
+                  <td className="num p-2.5 text-right">{plat(r.max)}</td>
+                  <td className="num text-up p-2.5 text-right font-medium">
+                    +{plat(r.profit)}
+                    <span className="text-muted block text-[11px] font-normal">
+                      {Math.round((r.profit / r.cost) * 100)}% margin
+                    </span>
+                  </td>
+                  <td className="num py-2.5 pr-[18px] pl-2.5 text-right">{compact(r.volMax)}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+    </section>
   );
 }

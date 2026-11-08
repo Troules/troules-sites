@@ -31,6 +31,9 @@ export type Summary = {
 /** [day, rank, subtype, volume, min, max, median] */
 export type DailyRow = [string, number | null, string | null, number, number, number, number];
 
+/** [UTC hour "YYYY-MM-DDTHH", rank, subtype, volume, median]: the last 48 hours of completed trades. */
+export type HourRow = [string, number | null, string | null, number, number];
+
 export type Order = {
   platinum: number;
   quantity: number;
@@ -42,6 +45,16 @@ export type Order = {
 
 export type Book = { sell: Order[]; buy: Order[] };
 
-export type Row = Summary & Pick<CatalogItem, "name" | "thumb" | "kind" | "maxRank">;
+/** 90-day context for one (item, rank, subtype); null fields when it traded on fewer than MIN_SIGNAL_DAYS days. */
+export type Signals = {
+  /** Where price7 sits among the daily medians of the last 90 days: 0 = cheapest day, 1 = dearest. */
+  pos90: number | null;
+  lo90: number | null;
+  hi90: number | null;
+  /** Coefficient of variation of the daily medians (standard deviation / mean). */
+  cv90: number | null;
+};
+
+export type Row = Summary & Pick<CatalogItem, "name" | "thumb" | "kind" | "maxRank"> & Signals;
 
 export const ASSET_BASE = "https://warframe.market/static/assets/";

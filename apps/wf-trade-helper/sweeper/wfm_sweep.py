@@ -3,7 +3,9 @@
 
 Standard library only, so it runs on the VM without a virtualenv. Commands:
 
-  fixtures OUT_DIR SLUG...   write the sample data the site uses in dev, CI and e2e (src/fixtures/)
+  fixtures OUT_DIR SLUG...   write the sample data the site uses in CI and e2e (src/fixtures/, committed)
+  fixtures OUT_DIR --all     the same for every catalog item (.data/full/, local only: about an hour at 2.3 req/s)
+  clean DIR                  re-apply the outlier rule and summaries to DIR/market.json, without any request
 
 The daily Supabase sweep (all items, systemd timer on the VM) reuses the same client and summary code; see
 docs/adr/0009-market-data.md. API rules: https://github.com/42bytes-team/wfm-docs (3 requests/s, honest User-Agent,
@@ -17,6 +19,7 @@ import datetime as dt
 import http.client
 import json
 import os
+import statistics
 import sys
 import time
 from dataclasses import asdict, dataclass
@@ -112,6 +115,49 @@ def parse_daily(payload: dict) -> list[DailyRow]:
         )
         for r in rows
     ]
+
+
+def parse_hourly(payload: dict) -> list[list]:
+    """Completed-trade hourly buckets (v1 statistics_closed.48hours): [UTC hour "YYYY-MM-DDTHH", rank, subtype,
+    volume, median]. Only 48 hours exist, so hour-of-day profiles see each hour twice per sweep."""
+    rows = payload["payload"]["statistics_closed"].get("48hours", [])
+    return [
+        [r["datetime"][:13], r.get("mod_rank"), r.get("subtype"), int(r["volume"]), float(r["median"])]
+        for r in rows
+        if int(r["volume"]) > 0
+    ]
+
+
+OUTLIER_FACTOR = 5.0  # a day whose median is 5x above or below the item's 90-day median of medians is not a market
+
+
+def _variant(r) -> tuple:
+    return (r.rank, r.subtype) if isinstance(r, DailyRow) else (r[1], r[2])
+
+
+def drop_outliers(rows: list[DailyRow]) -> list[DailyRow]:
+    """Drop fake days: players "sell" an item to a friend at 99,999p (or 1p) to move platinum, and one such day
+    becomes the 7-day median. The reference is the median of the variant's daily medians, which a few bad days
+    cannot move. Variants with fewer than 3 days have no reference and are kept."""
+    refs = _refs(rows)
+    return [r for r in rows if _plausible(r.median, refs.get(_variant(r)))]
+
+
+def drop_hourly_outliers(hourly: list[list], daily: list[DailyRow]) -> list[list]:
+    """The same rule for hourly buckets, against the daily reference."""
+    refs = _refs(daily)
+    return [h for h in hourly if _plausible(h[4], refs.get(_variant(h)))]
+
+
+def _refs(rows: list[DailyRow]) -> dict[tuple, float]:
+    groups: dict[tuple, list[float]] = {}
+    for r in rows:
+        groups.setdefault(_variant(r), []).append(r.median)
+    return {k: statistics.median(v) for k, v in groups.items() if len(v) >= 3}
+
+
+def _plausible(median: float, ref: float | None) -> bool:
+    return ref is None or ref / OUTLIER_FACTOR <= median <= ref * OUTLIER_FACTOR
 
 
 @dataclass(frozen=True)
@@ -218,21 +264,27 @@ def dump(path: str, data) -> None:
         f.write("\n")
 
 
-def cmd_fixtures(out_dir: str, slugs: list[str], client: Client) -> None:
+def cmd_fixtures(out_dir: str, slugs: list[str] | None, client: Client) -> None:
+    """Write catalog, slugs and market data for `slugs` (None: every catalog item)."""
     items = client.get("/v2/items")["data"]
     catalog = sorted((catalog_entry(i) for i in items), key=lambda c: c["slug"])
     by_slug = {c["slug"]: c for c in catalog}
     ref = dt.datetime.now(dt.UTC).date() - dt.timedelta(days=1)  # the last complete UTC day
-    summaries, history, orders = [], {}, {}
-    for slug in slugs:
+    if slugs is None:
+        slugs = [c["slug"] for c in catalog]
+    summaries, history, hourly, orders = [], {}, {}, {}
+    for n, slug in enumerate(slugs, 1):
+        if n % 250 == 0:
+            print(f"{n}/{len(slugs)}", file=sys.stderr, flush=True)
         if slug not in by_slug:
             print(f"skip {slug}: not in the catalog", file=sys.stderr)
             continue
         stats = client.get(f"/v1/items/{slug}/statistics")
         if stats is None:
             continue
-        rows = parse_daily(stats)
+        rows = drop_outliers(parse_daily(stats))
         history[slug] = [[r.day, r.rank, r.subtype, r.volume, r.min, r.max, r.median] for r in rows]
+        hourly[slug] = drop_hourly_outliers(parse_hourly(stats), rows)
         summaries += [{"slug": slug, **asdict(s)} for s in summarize(rows, ref)]
         top = client.get(f"/v2/orders/item/{slug}/top", {"Platform": "pc", "Crossplay": "true"})
         # /top without filters mixes ranks; ask for the max rank too so the sell helper has real competitors.
@@ -249,9 +301,29 @@ def cmd_fixtures(out_dir: str, slugs: list[str], client: Client) -> None:
     dump(
         os.path.join(out_dir, "market.json"),
         {"asOf": ref.isoformat(), "fetchedAt": dt.datetime.now(dt.UTC).strftime("%Y-%m-%dT%H:%MZ"),
-         "summaries": summaries, "history": history, "orders": orders},
+         "summaries": summaries, "history": history, "hourly": hourly, "orders": orders},
     )
     print(f"{len(catalog)} catalog items, {len(summaries)} summaries for {len(history)} items -> {out_dir}")
+
+
+def cmd_clean(directory: str) -> None:
+    """Re-run outlier filtering and summaries on stored data, e.g. after changing a rule. No network."""
+    path = os.path.join(directory, "market.json")
+    with open(path, encoding="utf-8") as f:
+        market = json.load(f)
+    ref = dt.date.fromisoformat(market["asOf"])
+    summaries, dropped = [], 0
+    for slug, stored in market["history"].items():
+        rows = [DailyRow(d, rk, st, v, lo, hi, med, med, med) for d, rk, st, v, lo, hi, med in stored]
+        kept = drop_outliers(rows)
+        dropped += len(rows) - len(kept)
+        market["history"][slug] = [[r.day, r.rank, r.subtype, r.volume, r.min, r.max, r.median] for r in kept]
+        if slug in market.get("hourly", {}):
+            market["hourly"][slug] = drop_hourly_outliers(market["hourly"][slug], kept)
+        summaries += [{"slug": slug, **asdict(s)} for s in summarize(kept, ref)]
+    market["summaries"] = summaries
+    dump(path, market)
+    print(f"{dropped} outlier days dropped, {len(summaries)} summaries -> {path}")
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -259,10 +331,17 @@ def main(argv: list[str] | None = None) -> int:
     sub = p.add_subparsers(dest="cmd", required=True)
     f = sub.add_parser("fixtures", help="write sample data for the site")
     f.add_argument("out_dir")
-    f.add_argument("slugs", nargs="+")
+    f.add_argument("slugs", nargs="*", help="item slugs to include")
+    f.add_argument("--all", action="store_true", help="include every catalog item instead")
+    c = sub.add_parser("clean", help="re-apply outlier filtering and summaries to stored data")
+    c.add_argument("dir")
     args = p.parse_args(argv)
+    if args.cmd == "fixtures" and not (args.all or args.slugs):
+        p.error("fixtures needs SLUG... or --all")
+    if args.cmd == "clean":
+        cmd_clean(args.dir)
     if args.cmd == "fixtures":
-        cmd_fixtures(args.out_dir, args.slugs, Client())
+        cmd_fixtures(args.out_dir, None if args.all else args.slugs, Client())
     return 0
 
 
