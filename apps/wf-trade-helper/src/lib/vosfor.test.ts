@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import catalog from "@/fixtures/catalog.json";
 import { COLLECTIONS, DISSOLVE_YIELD, PACK_COST, slugOf } from "./vosfor-data";
 import {
+  action,
   atLeastOne,
   dissolves,
   drops,
@@ -62,6 +63,37 @@ describe("pack value", () => {
     expect(eidolon.priced).toBe(1);
     expect(eidolon.legendary).toBeCloseTo(1 - 0.95 ** 3);
     for (const v of values) expect(v.recyclePack).toBeGreaterThanOrEqual(v.sellPack - 1e-9);
+  });
+});
+
+describe("fusing to max rank", () => {
+  // Rank 0 sells for 5p; rank 5 for 210p, so a copy is worth 210 / 21 = 10p when fused.
+  const tanker = (maxVol: number): [string, Price] => [
+    "arcane_tanker",
+    { slug: "arcane_tanker", name: "", thumb: null, price: 5, vol: 10, maxRank: 5, maxPrice: 210, maxVol },
+  ];
+
+  it("values a kept copy at max-rank price ÷ copies when that beats rank 0", () => {
+    const t = drops(steel, new Map([tanker(2)]), true).find((d) => d.slug === "arcane_tanker")!;
+    expect(t.fused).toBeCloseTo(10);
+    expect(t.fuses).toBe(true);
+    expect(t.sale).toBeCloseTo(10);
+    expect(action(t, 0)).toBe("fuse");
+  });
+
+  it("sells at rank 0 when the option is off or the max rank trades less than once a day", () => {
+    const off = drops(steel, new Map([tanker(2)])).find((d) => d.slug === "arcane_tanker")!;
+    expect(off).toMatchObject({ fuses: false, sale: 5 });
+    expect(action(off, 0)).toBe("sell");
+    const thin = drops(steel, new Map([tanker(0.5)]), true).find((d) => d.slug === "arcane_tanker")!;
+    expect(thin).toMatchObject({ fused: null, fuses: false, sale: 5 });
+  });
+
+  it("raises the pack value and the simulated plat", () => {
+    const on = drops(steel, new Map([tanker(2)]), true);
+    const off = drops(steel, new Map([tanker(2)]));
+    expect(packValue(on)).toBeCloseTo(2 * packValue(off));
+    expect(simulate(on, 2000, "sell", 0).mean).toBeGreaterThan(simulate(off, 2000, "sell", 0).mean);
   });
 });
 

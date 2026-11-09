@@ -77,7 +77,8 @@ market as a whole, not a single page. Facts checked on 2026-11-03:
     Warframe wiki (read 2026-11-09; Ostron uses the wiki's prose split, 10/30/60, where its tables disagree). Unit
     tests check that pools sum to 1 and every arcane maps to a catalog slug, so a renamed or missing arcane fails CI.
     Each pull is valued at its **rank-0** 7-day median (packs give unranked copies). "Sell or dissolve" values
-    Vosfor as a fixed point (λ = pack value(λ) / 200) and dissolves copies worth less than yield × λ. The page is
+    Vosfor as a fixed point (λ = pack value(λ) / 200) and dissolves copies worth less than yield × λ. An opt-in "fuse" toggle values a kept copy at max-rank median ÷ copies
+    needed (`copiesToMax`), only when the max rank trades at least once a day (`MIN_RANKUP_VOLUME.max`). The page is
     static; the seeded Monte Carlo runs in the browser. Update the tables when a game update changes a collection.
 
 ## Consequences

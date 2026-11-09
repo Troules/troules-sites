@@ -1,3 +1,4 @@
+import { copiesToMax, MIN_RANKUP_VOLUME } from "./signals";
 import { DISSOLVE_YIELD, PACK_COST, PULLS_PER_PACK, slugOf, type Collection, type Rarity } from "./vosfor-data";
 
 /**
@@ -5,6 +6,10 @@ import { DISSOLVE_YIELD, PACK_COST, PULLS_PER_PACK, slugOf, type Collection, typ
  * less as Vosfor than as plat and buy more packs with it ("recycle"). Recycling needs a plat value for one Vosfor:
  * if a pack is worth V plat, a Vosfor is worth λ = V / 200, and V itself depends on λ through every dissolved copy.
  * That λ is a fixed point, found by iteration (see vosforValue).
+ *
+ * Optionally ("fuse"), a copy can also be kept and fused: it is then worth its share of a max-rank arcane, the
+ * max-rank median ÷ copies needed (21 for rank 5, 10 for rank 3), when the max rank trades at least once a day.
+ * This assumes the set gets completed, by pulling more or by buying the missing rank-0 copies.
  */
 
 export type Price = {
@@ -26,12 +31,18 @@ export type Drop = Price & {
   chance: number;
   /** Vosfor from dissolving one unranked copy. */
   yield: number;
+  /** Plat per copy when fused to max rank (max-rank median ÷ copies); null when the max rank trades too thinly. */
+  fused: number | null;
+  /** True when fusing pays more than selling at rank 0 (only with the fuse option on). */
+  fuses: boolean;
+  /** Best plat for one copy without dissolving: rank-0 sale, or fused share when `fuses`. */
+  sale: number;
 };
 
 export type Strategy = "sell" | "recycle";
 
 /** Every arcane a collection can give, with its rank-0 7-day median (null without recent trades). */
-export function drops(c: Collection, prices: ReadonlyMap<string, Price>): Drop[] {
+export function drops(c: Collection, prices: ReadonlyMap<string, Price>, fuse = false): Drop[] {
   return c.pools.flatMap((pool) =>
     pool.arcanes.map((name) => {
       const slug = slugOf(name);
@@ -45,22 +56,34 @@ export function drops(c: Collection, prices: ReadonlyMap<string, Price>): Drop[]
         maxPrice: null,
         maxVol: 0,
       };
+      const fused =
+        p.maxRank && p.maxPrice != null && p.maxVol >= MIN_RANKUP_VOLUME.max
+          ? p.maxPrice / copiesToMax(p.maxRank)
+          : null;
+      const fuses = fuse && fused != null && fused > (p.price ?? 0);
       return {
         ...p,
         name,
         rarity: pool.rarity,
         chance: pool.chance / pool.arcanes.length,
         yield: DISSOLVE_YIELD.get(name) ?? 0,
+        fused,
+        fuses,
+        sale: fuses ? fused! : (p.price ?? 0),
       };
     }),
   );
 }
 
-/** What one copy is worth when a Vosfor is worth `lambda` plat: sold, or dissolved if that pays more. */
-export const copyValue = (d: Drop, lambda: number) => Math.max(d.price ?? 0, d.yield * lambda);
+/** What one copy is worth when a Vosfor is worth `lambda` plat: sold (or fused), or dissolved if that pays more. */
+export const copyValue = (d: Drop, lambda: number) => Math.max(d.sale, d.yield * lambda);
 
 /** Should this copy be dissolved rather than sold? Unpriced arcanes always are, once Vosfor has a value. */
-export const dissolves = (d: Drop, lambda: number) => lambda > 0 && d.yield * lambda > (d.price ?? 0);
+export const dissolves = (d: Drop, lambda: number) => lambda > 0 && d.yield * lambda > d.sale;
+
+export type Action = "sell" | "fuse" | "dissolve";
+export const action = (d: Drop, lambda: number): Action =>
+  dissolves(d, lambda) ? "dissolve" : d.fuses ? "fuse" : "sell";
 
 /** Expected plat from one pack. lambda = 0 is "sell everything". */
 export function packValue(ds: readonly Drop[], lambda = 0): number {
@@ -136,7 +159,7 @@ export function simulate(ds: readonly Drop[], vosfor: number, strategy: Strategy
   for (const d of ds) cum.push((total += d.chance));
   const lam = strategy === "recycle" ? lambda : 0;
   const dissolve = ds.map((d) => dissolves(d, lam));
-  const plat = ds.map((d) => d.price ?? 0);
+  const plat = ds.map((d) => d.sale);
   const expectedPacks =
     packsFrom(vosfor) / Math.max(0.01, 1 - (strategy === "recycle" ? packYield(ds) : 0) / PACK_COST);
   const runs = Math.max(200, Math.min(2000, Math.floor(PULL_BUDGET / Math.max(1, expectedPacks * PULLS_PER_PACK))));
@@ -194,9 +217,10 @@ export type CollectionValue = {
 export function valueCollections(
   collections: readonly Collection[],
   prices: ReadonlyMap<string, Price>,
+  fuse = false,
 ): CollectionValue[] {
   return collections.map((c) => {
-    const ds = drops(c, prices);
+    const ds = drops(c, prices, fuse);
     const lambda = vosforValue(ds);
     const leg = ds.filter((d) => d.rarity === "Legendary").reduce((a, d) => a + d.chance, 0);
     return {

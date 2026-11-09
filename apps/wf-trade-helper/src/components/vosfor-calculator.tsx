@@ -5,6 +5,7 @@ import { useDeferredValue, useId, useState, type ReactNode } from "react";
 import { compact, pct, plat } from "@/lib/format";
 import {
   atLeastOne,
+  action,
   copyValue,
   dissolves,
   packsFor,
@@ -36,10 +37,11 @@ const perPack = (v: CollectionValue, s: Strategy) => (s === "recycle" ? v.recycl
 export function VosforCalculator({ prices }: { prices: Price[] }) {
   const [input, setInput] = useState("1000");
   const [strategy, setStrategy] = useState<Strategy>("recycle");
+  const [fuse, setFuse] = useState(false);
   const [picked, setPicked] = useState<string | null>(null);
   const id = useId();
 
-  const values = valueCollections(COLLECTIONS, new Map(prices.map((p) => [p.slug, p])));
+  const values = valueCollections(COLLECTIONS, new Map(prices.map((p) => [p.slug, p])), fuse);
   const ranked = [...values].sort((a, b) => perPack(b, strategy) - perPack(a, strategy));
   const best = ranked[0]!;
   const current = values.find((v) => v.id === picked) ?? best;
@@ -100,6 +102,21 @@ export function VosforCalculator({ prices }: { prices: Price[] }) {
           </div>
           <p className="text-muted mt-1 text-xs">{STRATEGIES.find((s) => s.id === strategy)!.hint}.</p>
         </fieldset>
+        <div>
+          <label className="flex min-h-9 cursor-pointer items-center gap-2 text-[13px] font-medium">
+            <input
+              type="checkbox"
+              checked={fuse}
+              onChange={(e) => setFuse(e.target.checked)}
+              aria-describedby={`${id}-fuse`}
+              className="size-4 accent-[var(--color-accent)]"
+            />
+            Fuse to max rank when it pays
+          </label>
+          <p id={`${id}-fuse`} className="text-muted mt-1 max-w-[260px] text-xs">
+            A kept copy is worth max-rank price ÷ copies needed (21 for R5, 10 for R3), if the max rank trades daily.
+          </p>
+        </div>
         <div className="ml-auto text-right">
           <div className="text-muted text-xs">Best collection</div>
           <div className="mt-0.5 text-lg font-semibold">{best.name}</div>
@@ -108,7 +125,7 @@ export function VosforCalculator({ prices }: { prices: Price[] }) {
       </section>
 
       <Ranking ranked={ranked} strategy={strategy} current={current.id} vosfor={vosfor} onPick={setPicked} />
-      <Details value={current} strategy={strategy} vosfor={deferred} />
+      <Details value={current} strategy={strategy} fuse={fuse} vosfor={deferred} />
     </>
   );
 }
@@ -208,7 +225,17 @@ function SortableHead({ active, children }: { active: boolean; children: ReactNo
   );
 }
 
-function Details({ value, strategy, vosfor }: { value: CollectionValue; strategy: Strategy; vosfor: number }) {
+function Details({
+  value,
+  strategy,
+  fuse,
+  vosfor,
+}: {
+  value: CollectionValue;
+  strategy: Strategy;
+  fuse: boolean;
+  vosfor: number;
+}) {
   const lambda = strategy === "recycle" ? value.lambda : 0;
   const out = simulate(value.drops, vosfor, strategy, value.lambda);
   const packs = Math.round(out.packs);
@@ -218,7 +245,8 @@ function Details({ value, strategy, vosfor }: { value: CollectionValue; strategy
       Number(dissolves(a, lambda)) - Number(dissolves(b, lambda)) ||
       b.chance * copyValue(b, lambda) - a.chance * copyValue(a, lambda),
   );
-  const toSell = rows.filter((d) => !dissolves(d, lambda));
+  const toKeep = rows.filter((d) => !dissolves(d, lambda));
+  const fusing = toKeep.filter((d) => d.fuses).length;
 
   return (
     <section aria-labelledby="details" className="border-line bg-panel min-w-0 rounded-[14px] border">
@@ -234,6 +262,13 @@ function Details({ value, strategy, vosfor }: { value: CollectionValue; strategy
             </>
           ) : (
             <>Every copy is sold at its rank-0 median; nothing is dissolved.</>
+          )}
+          {fuse && (
+            <>
+              {" "}
+              Copies marked Fuse are worth more as part of a max-rank arcane: keep them until you have the full set, or
+              buy the missing rank-0 copies.
+            </>
           )}
         </p>
       </div>
@@ -253,14 +288,14 @@ function Details({ value, strategy, vosfor }: { value: CollectionValue; strategy
         {plat(out.p50)}.
       </p>
 
-      {strategy === "recycle" && (
+      {(strategy === "recycle" || fusing > 0) && (
         <div className="border-accent/40 bg-accent/5 mx-[18px] mt-4 rounded-xl border px-4 py-3">
           <h3 className="text-accent text-[13px] font-semibold">
-            Sell these · {toSell.length} of {rows.length}
+            {fusing ? "Sell or fuse these" : "Sell these"} · {toKeep.length} of {rows.length}
           </h3>
-          {toSell.length ? (
-            <ul className="mt-2 flex flex-wrap gap-1.5" aria-label="Arcanes to sell">
-              {toSell.map((d) => (
+          {toKeep.length ? (
+            <ul className="mt-2 flex flex-wrap gap-1.5" aria-label="Arcanes to keep">
+              {toKeep.map((d) => (
                 <li key={d.slug}>
                   <Link
                     href={`/items/${d.slug}`}
@@ -268,7 +303,11 @@ function Details({ value, strategy, vosfor }: { value: CollectionValue; strategy
                   >
                     <ItemIcon name={d.name} thumb={d.thumb} size={20} />
                     {d.name}
-                    <span className="num text-ink font-normal">{d.price != null ? plat(d.price) : ""}</span>
+                    {d.fuses ? (
+                      <span className="num text-ink font-normal">fuse → R{d.maxRank}</span>
+                    ) : (
+                      <span className="num text-ink font-normal">{d.price != null ? plat(d.price) : ""}</span>
+                    )}
                   </Link>
                 </li>
               ))}
@@ -276,7 +315,9 @@ function Details({ value, strategy, vosfor }: { value: CollectionValue; strategy
           ) : (
             <p className="text-muted mt-1 text-xs">None: every copy is worth more as Vosfor.</p>
           )}
-          <p className="text-muted mt-2 text-xs">Dissolve everything else at Loid.</p>
+          <p className="text-muted mt-2 text-xs">
+            {strategy === "recycle" ? "Dissolve everything else at Loid." : "Sell everything else at rank 0."}
+          </p>
         </div>
       )}
 
@@ -321,7 +362,8 @@ function Details({ value, strategy, vosfor }: { value: CollectionValue; strategy
           </thead>
           <tbody>
             {rows.map((d) => {
-              const dissolve = dissolves(d, lambda);
+              const act = action(d, lambda);
+              const dissolve = act === "dissolve";
               return (
                 <tr
                   key={d.slug}
@@ -348,8 +390,15 @@ function Details({ value, strategy, vosfor }: { value: CollectionValue; strategy
                   <PriceCell price={d.maxPrice} vol={d.maxVol} rank={d.maxRank} />
                   <td className="num p-2.5 text-right">{d.yield}</td>
                   <td className="p-2.5 text-left">
-                    {dissolve ? (
+                    {act === "dissolve" ? (
                       <span className="text-muted">Dissolve</span>
+                    ) : act === "fuse" ? (
+                      <>
+                        <span className="border-accent text-accent inline-block rounded-full border px-2 py-0.5 text-xs font-semibold whitespace-nowrap">
+                          Fuse → R{d.maxRank}
+                        </span>
+                        <span className="num text-muted mt-0.5 block text-[11px]">{fine(d.sale)}/copy</span>
+                      </>
                     ) : (
                       <span className="bg-accent text-bg rounded-full px-2.5 py-0.5 text-xs font-semibold">Sell</span>
                     )}
@@ -365,7 +414,8 @@ function Details({ value, strategy, vosfor }: { value: CollectionValue; strategy
       </div>
       <p className="border-line text-muted mt-1 border-t px-[18px] pt-3 pb-4 text-xs">
         Per pull: chance this arcane fills one of the {PULLS_PER_PACK} slots. Plat / pack: its share of a pack&apos;s
-        expected value{strategy === "recycle" ? ", dissolved copies counted at their Vosfor's worth" : ""}.
+        expected value{strategy === "recycle" ? ", dissolved copies counted at their Vosfor's worth" : ""}
+        {fuse ? ", fused copies at max-rank price ÷ copies" : ""}.
       </p>
     </section>
   );
