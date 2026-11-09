@@ -212,7 +212,13 @@ function Details({ value, strategy, vosfor }: { value: CollectionValue; strategy
   const lambda = strategy === "recycle" ? value.lambda : 0;
   const out = simulate(value.drops, vosfor, strategy, value.lambda);
   const packs = Math.round(out.packs);
-  const rows = [...value.drops].sort((a, b) => b.chance * copyValue(b, lambda) - a.chance * copyValue(a, lambda));
+  // Copies to sell first, then the ones to dissolve; each group by its share of a pack's value.
+  const rows = [...value.drops].sort(
+    (a, b) =>
+      Number(dissolves(a, lambda)) - Number(dissolves(b, lambda)) ||
+      b.chance * copyValue(b, lambda) - a.chance * copyValue(a, lambda),
+  );
+  const toSell = rows.filter((d) => !dissolves(d, lambda));
 
   return (
     <section aria-labelledby="details" className="border-line bg-panel min-w-0 rounded-[14px] border">
@@ -246,6 +252,33 @@ function Details({ value, strategy, vosfor }: { value: CollectionValue; strategy
         {out.runs.toLocaleString("en-US")} simulated runs of {vosfor.toLocaleString("en-US")} Vosfor, median{" "}
         {plat(out.p50)}.
       </p>
+
+      {strategy === "recycle" && (
+        <div className="border-accent/40 bg-accent/5 mx-[18px] mt-4 rounded-xl border px-4 py-3">
+          <h3 className="text-accent text-[13px] font-semibold">
+            Sell these · {toSell.length} of {rows.length}
+          </h3>
+          {toSell.length ? (
+            <ul className="mt-2 flex flex-wrap gap-1.5" aria-label="Arcanes to sell">
+              {toSell.map((d) => (
+                <li key={d.slug}>
+                  <Link
+                    href={`/items/${d.slug}`}
+                    className="bg-accent/15 text-accent hover:bg-accent/25 inline-flex items-center gap-1.5 rounded-full py-1 pr-3 pl-1 text-xs font-medium"
+                  >
+                    <ItemIcon name={d.name} thumb={d.thumb} size={20} />
+                    {d.name}
+                    <span className="num text-ink font-normal">{d.price != null ? plat(d.price) : ""}</span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p className="text-muted mt-1 text-xs">None: every copy is worth more as Vosfor.</p>
+          )}
+          <p className="text-muted mt-2 text-xs">Dissolve everything else at Loid.</p>
+        </div>
+      )}
 
       <div className="mt-3 overflow-x-auto">
         <table className="w-full min-w-[820px] border-collapse">
@@ -287,8 +320,13 @@ function Details({ value, strategy, vosfor }: { value: CollectionValue; strategy
             {rows.map((d) => {
               const dissolve = dissolves(d, lambda);
               return (
-                <tr key={d.slug} className="border-line border-t hover:bg-[#161a23]">
-                  <td className="py-2 pr-2.5 pl-[18px]">
+                <tr
+                  key={d.slug}
+                  className={`border-line border-t ${dissolve ? "hover:bg-[#161a23]" : "bg-accent/[0.06] hover:bg-accent/10"}`}
+                >
+                  <td
+                    className={`py-2 pr-2.5 pl-[18px] ${dissolve ? "" : "shadow-[inset_3px_0_0_var(--color-accent)]"}`}
+                  >
                     <Link href={`/items/${d.slug}`} className="hover:text-accent flex items-center gap-2.5">
                       <ItemIcon name={d.name} thumb={d.thumb} size={28} />
                       <span className="flex flex-col">
@@ -317,7 +355,13 @@ function Details({ value, strategy, vosfor }: { value: CollectionValue; strategy
                     )}
                   </td>
                   <td className="num p-2.5 text-right">{d.yield}</td>
-                  <td className="p-2.5 text-left">{dissolve ? "Dissolve" : "Sell"}</td>
+                  <td className="p-2.5 text-left">
+                    {dissolve ? (
+                      <span className="text-muted">Dissolve</span>
+                    ) : (
+                      <span className="bg-accent text-bg rounded-full px-2.5 py-0.5 text-xs font-semibold">Sell</span>
+                    )}
+                  </td>
                   <td className="num py-2 pr-[18px] pl-2.5 text-right font-medium">
                     {fine(PULLS_PER_PACK * d.chance * copyValue(d, lambda))}
                   </td>

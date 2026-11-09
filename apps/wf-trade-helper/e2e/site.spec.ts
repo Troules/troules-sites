@@ -151,6 +151,8 @@ test.describe("vosfor calculator", () => {
     const details = page.getByRole("region", { name: "Eidolon Arcane Collection" });
     await expect(details.getByRole("row", { name: /Arcane Energize/ })).toContainText("Legendary");
     await expect(details.getByText("At least one Legendary")).toBeVisible();
+    await expect(details.getByRole("list", { name: "Arcanes to sell" }).getByRole("listitem").first()).toBeVisible();
+    await expect(details.getByRole("row").nth(1).getByRole("cell", { name: "Sell", exact: true })).toBeVisible();
 
     await page.getByText("Sell everything", { exact: true }).click();
     await expect(ranking.getByRole("columnheader", { name: /Sell all/ })).toHaveAttribute("aria-sort", "descending");
