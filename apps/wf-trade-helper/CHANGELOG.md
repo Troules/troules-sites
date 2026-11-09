@@ -1,5 +1,11 @@
 # @troules/wf-trade-helper
 
+## 0.2.0
+
+### Minor Changes
+
+- Live market data: a daily sweep of every item on the Troules VM loads warframe.market history into Supabase (schema `wf`), then triggers a rebuild that downloads the snapshot once, so the site stays static (ADR 0009, phase 2). Item pages linked from the home page are prerendered; the rest render on first visit. Ayatan sculptures are split by socketed stars instead of mixing two prices.
+
 ## 0.1.0
 
 ### Minor Changes

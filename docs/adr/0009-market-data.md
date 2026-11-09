@@ -1,7 +1,7 @@
 # 0009. Market data for wf-trade-helper
 
-- Status: accepted (phase 1: sample data; phase 2 waits for Supabase, troules-infra Phase 4)
-- Date: 2026-11-03
+- Status: accepted (phase 1: sample data, 2026-11-03; phase 2: daily Supabase sweep, 2026-11-09)
+- Date: 2026-11-03, amended 2026-11-09
 
 ## Context
 
@@ -34,10 +34,23 @@ market as a whole, not a single page. Facts checked on 2026-11-03:
    `.data/full/`, and `WF_DATA_DIR=.data/full` in `.env.development.local` makes `next dev` read it. Builds (CI,
    e2e, Vercel) never see it, so their numbers stay reproducible.
 
-3. **Phase 2, after Supabase: a daily sweep of all items into schema `wf`** (RLS on, anon may only `SELECT`). A
-   systemd timer on the VM, defined in troules-infra, writes with the secret key. The site reads with the publishable
-   key from Vercel env vars, inside the same `lib/market.ts` functions (`"use cache"`, `cacheLife("hours")`), and the
-   live `/top` books get a minutes-long cache.
+3. **Phase 2: a daily sweep of every item into Supabase schema `wf`** (`supabase/wf.sql`, RLS forced on every table).
+   - **Write:** a systemd timer on the VM (troules-infra, ansible role `wf_sweep`, 01:30 UTC) runs
+     `wfm_sweep.py sweep`: the full sweep, then one psql transaction as the login role **`wf_sweeper`**, which can only
+     read and write rows in `wf` (no DDL, no other schema; scope tests in troules-infra). Not the Supabase secret key:
+     that key bypasses RLS everywhere and never goes on the VM. `wf.daily` and `wf.hourly` keep every row ever seen
+     (each sweep rewrites only the rows of its 90-day / 48-hour window that changed); `wf.snapshot` holds one
+     `market` document, the same shape as `src/fixtures/market.json`.
+   - **Read: once per deployment, not per request.** After the upload the sweep calls a Vercel deploy hook. The
+     build's first step (`scripts/market-data.mjs`) downloads the snapshot with the publishable key (anon may only
+     `SELECT` `wf.snapshot`, through the Data API) into the git-ignored `src/generated/market.json`, which
+     `lib/market.ts` reads. Reading Supabase at runtime instead would cost ~15 MB per cache refresh, about 10 GB a month
+     against the free 5 GB of egress; one build a day is ~0.5 GB. The app's turbo `build` is uncached, since its input
+     changes without any file change. A Supabase error fails the build, so the last good deployment stays live.
+   - **Prerendering:** only the item pages the home page links to (every top-100 list and the rank-ups, ~370 with the
+     full catalog). All ~3,900 would add ~850 MB to each daily deployment; the others render on first visit.
+   - Without the Supabase env vars (CI, e2e, Lighthouse, local) the same step copies the committed sample, or
+     `WF_DATA_DIR`'s full local catalog for `next dev`.
 4. **The catalog is a snapshot.** `proxy.ts` 404s item slugs that aren't in `slugs.json`, the same way the blog handles
    unknown articles (ADR 0002). New game items appear after the next fixture refresh and deploy.
 5. **Product rules:** lists show each item at its **max rank** only (owner's choice), with PC + crossplay prices in
@@ -62,14 +75,18 @@ market as a whole, not a single page. Facts checked on 2026-11-03:
 
 ## Consequences
 
-- The repo stays secret-free in phase 1. Phase 2 adds the first runtime env vars (Vercel) and a VM secret file, which
-  counts as a security-control change: the owner confirms before it lands.
+- The repo stays secret-free. Phase 2 adds two Vercel build env vars (`WF_SUPABASE_URL`, `WF_SUPABASE_KEY`, the
+  publishable key) and two root-only VM credential files (the `wf_sweeper` pgpass line and the deploy hook URL); the
+  owner approved this design on 2026-11-09.
+- Ayatan sculptures have one v1 bucket per socketed-star count; the sweeper turns those into subtypes (`no stars`,
+  `2 cyan + 2 amber`), so they no longer mix two prices.
 - If v1 statistics disappear, the fallback is a daily snapshot of `/v2/orders/item/{slug}/top` (asking prices, not
   sales); the history then has to grow from that day.
-- Supabase Free is 500 MB. About 1.8M daily rows a year has to be measured after the first sweep; if it gets close,
-  roll rows older than a year into monthly ones.
+- Supabase Free is 500 MB. The first load was 281k daily and 58k hourly rows (85 MB with indexes and the snapshot);
+  about 1.7M daily rows a year. Every sweep prints the database size; if it gets close, roll rows older than a year
+  into monthly ones. Hourly rows are kept 60 days.
 - Item pages for unlisted slugs are App Shells, upgraded to cached pages after the first visit. That uses proxy and
   function invocations, which is fine for a personal tool at Hobby scale (1M a month).
-- v1 only returns the last 48 hours of hourly buckets, so each sweep sees every hour twice. The Supabase sweep should
-  keep hourly rows (a few weeks are enough) so hour-of-day profiles firm up over time.
+- v1 only returns the last 48 hours of hourly buckets, so each sweep sees every hour twice. `wf.hourly` keeps them
+  (60 days), but the snapshot still carries 48 hours: widening the hour profiles to the stored weeks is a follow-up.
 - Revisit when warframe.market publishes v2 statistics or opens OAuth.

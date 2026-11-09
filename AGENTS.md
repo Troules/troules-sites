@@ -6,17 +6,17 @@ changing a decision, and write a new ADR when you change one.
 
 ## Map
 
-| Path                                                   | What                                                                                                      |
-| ------------------------------------------------------ | --------------------------------------------------------------------------------------------------------- |
-| `apps/index`                                           | `troules.dynv6.net`: list of sites, liquid glass over the Cassiopeia A image                              |
-| `apps/blog`                                            | `blog.troules.dynv6.net`: Markdown articles in `apps/blog/content/<slug>/`                                |
-| `apps/wf-trade-helper`                                 | `wf-trade-helper.troules.dynv6.net`: Warframe market dashboard; sample data in `src/fixtures/` (ADR 0009) |
-| `packages/ui`                                          | Shared React: `Glass`/`GlassFilter` (liquid glass), `Telemetry` (Vercel Analytics + Speed Insights)       |
-| `packages/registry`                                    | The list of sites the index shows. **Add a site here when you add an app**                                |
-| `packages/next-config`                                 | `withTroules()`: security headers, React Compiler, Cache Components, workspace transpiling                |
-| `packages/eslint-config`, `packages/typescript-config` | Shared lint and TS presets (`next`, `library`)                                                            |
-| `skills/blog-article-creator`                          | Hermes skill that writes and publishes articles from Telegram                                             |
-| `.claude/skills`                                       | Agent skills for this repo, installed with `npx skills add … -a claude-code` (lock: `skills-lock.json`)   |
+| Path                                                   | What                                                                                                             |
+| ------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------- |
+| `apps/index`                                           | `troules.dynv6.net`: list of sites, liquid glass over the Cassiopeia A image                                     |
+| `apps/blog`                                            | `blog.troules.dynv6.net`: Markdown articles in `apps/blog/content/<slug>/`                                       |
+| `apps/wf-trade-helper`                                 | `wf-trade-helper.troules.dynv6.net`: Warframe market dashboard; daily Supabase snapshot, sample in CI (ADR 0009) |
+| `packages/ui`                                          | Shared React: `Glass`/`GlassFilter` (liquid glass), `Telemetry` (Vercel Analytics + Speed Insights)              |
+| `packages/registry`                                    | The list of sites the index shows. **Add a site here when you add an app**                                       |
+| `packages/next-config`                                 | `withTroules()`: security headers, React Compiler, Cache Components, workspace transpiling                       |
+| `packages/eslint-config`, `packages/typescript-config` | Shared lint and TS presets (`next`, `library`)                                                                   |
+| `skills/blog-article-creator`                          | Hermes skill that writes and publishes articles from Telegram                                                    |
+| `.claude/skills`                                       | Agent skills for this repo, installed with `npx skills add … -a claude-code` (lock: `skills-lock.json`)          |
 
 ## Next.js 16 is not the Next.js you know
 

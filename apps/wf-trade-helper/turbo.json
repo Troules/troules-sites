@@ -1,0 +1,10 @@
+{
+  "$schema": "https://turborepo.com/schema.json",
+  "extends": ["//"],
+  "tasks": {
+    "build": {
+      "cache": false,
+      "passThroughEnv": ["WF_SUPABASE_URL", "WF_SUPABASE_KEY", "WF_DATA_DIR"]
+    }
+  }
+}

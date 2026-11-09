@@ -8,7 +8,7 @@ import { ItemIcon } from "@/components/item-icon";
 import { Tabs } from "@/components/tabs";
 import { Timing } from "@/components/timing";
 import { compact, plat, trendText } from "@/lib/format";
-import { getItemMarket, getMeta, getTrackedSlugs } from "@/lib/market";
+import { getItemMarket, getMeta, getPrerenderSlugs } from "@/lib/market";
 import { variantLabel } from "@/lib/rank";
 import { matching, suggestPrice } from "@/lib/sell";
 import { hourProfile, signalsFor, volatility, weekdayProfile } from "@/lib/signals";
@@ -18,7 +18,7 @@ import { lastDays, variants, type Variant } from "@/lib/variants";
 // Items with market data are prerendered; any other catalog item gets the App Shell, then its own cached page
 // after the first visit. Unknown slugs never get here: proxy.ts answers them with a 404.
 export async function generateStaticParams() {
-  return (await getTrackedSlugs()).map((slug) => ({ slug }));
+  return (await getPrerenderSlugs()).map((slug) => ({ slug }));
 }
 
 export async function generateMetadata({ params }: PageProps<"/items/[slug]">): Promise<Metadata> {

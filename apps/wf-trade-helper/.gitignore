@@ -49,3 +49,6 @@ __pycache__/
 
 # full local market data (pnpm fixtures:full); only the sample in src/fixtures is committed
 /.data/
+
+# written by scripts/market-data.mjs before dev and build
+/src/generated/
