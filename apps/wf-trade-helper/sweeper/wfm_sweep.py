@@ -6,22 +6,28 @@ Standard library only, so it runs on the VM without a virtualenv. Commands:
   fixtures OUT_DIR SLUG...   write the sample data the site uses in CI and e2e (src/fixtures/, committed)
   fixtures OUT_DIR --all     the same for every catalog item (.data/full/, local only: about an hour at 2.3 req/s)
   clean DIR                  re-apply the outlier rule and summaries to DIR/market.json, without any request
+  upload DIR                 load DIR/market.json into Supabase schema `wf` (psql; connection from PG* env vars)
+  sweep DIR                  fixtures DIR --all, then upload, then call the Vercel deploy hook in $WF_DEPLOY_HOOK_FILE
 
-The daily Supabase sweep (all items, systemd timer on the VM) reuses the same client and summary code; see
-docs/adr/0009-market-data.md. API rules: https://github.com/42bytes-team/wfm-docs (3 requests/s, honest User-Agent,
+`sweep` is what the daily systemd timer on the VM runs (troules-infra, ansible role wf_sweep); see
+docs/adr/0009-market-data.md and supabase/wf.sql. API rules: https://github.com/42bytes-team/wfm-docs (3 requests/s, honest User-Agent,
 no concurrent connections).
 """
 
 from __future__ import annotations
 
 import argparse
+import csv
 import datetime as dt
 import http.client
 import json
 import os
 import statistics
+import subprocess
 import sys
+import tempfile
 import time
+import urllib.request
 from dataclasses import asdict, dataclass
 
 HOST = "api.warframe.market"
@@ -98,6 +104,16 @@ class DailyRow:
     wa: float
 
 
+def subtype_of(r: dict) -> str | None:
+    """The bucket's variant beyond rank. Ayatan sculptures have no subtype but one bucket per socketed-star count."""
+    if r.get("subtype"):
+        return r["subtype"]
+    if "cyan_stars" in r or "amber_stars" in r:
+        cyan, amber = r.get("cyan_stars") or 0, r.get("amber_stars") or 0
+        return f"{cyan} cyan + {amber} amber" if cyan or amber else "no stars"
+    return None
+
+
 def parse_daily(payload: dict) -> list[DailyRow]:
     """Completed-trade daily buckets (v1 statistics_closed.90days), one row per day, rank and subtype."""
     rows = payload["payload"]["statistics_closed"]["90days"]
@@ -105,7 +121,7 @@ def parse_daily(payload: dict) -> list[DailyRow]:
         DailyRow(
             day=r["datetime"][:10],
             rank=r.get("mod_rank"),
-            subtype=r.get("subtype"),
+            subtype=subtype_of(r),
             volume=int(r["volume"]),
             min=float(r["min_price"]),
             max=float(r["max_price"]),
@@ -122,7 +138,7 @@ def parse_hourly(payload: dict) -> list[list]:
     volume, median]. Only 48 hours exist, so hour-of-day profiles see each hour twice per sweep."""
     rows = payload["payload"]["statistics_closed"].get("48hours", [])
     return [
-        [r["datetime"][:13], r.get("mod_rank"), r.get("subtype"), int(r["volume"]), float(r["median"])]
+        [r["datetime"][:13], r.get("mod_rank"), subtype_of(r), int(r["volume"]), float(r["median"])]
         for r in rows
         if int(r["volume"]) > 0
     ]
@@ -326,6 +342,98 @@ def cmd_clean(directory: str) -> None:
     print(f"{dropped} outlier days dropped, {len(summaries)} summaries -> {path}")
 
 
+# Supabase upload. psql takes the connection from PGHOST, PGUSER, PGPASSWORD... (the systemd EnvironmentFile), so no
+# secret is ever in argv. One transaction: each item's last 90 days and 48 hours are made equal to this sweep (rows
+# that didn't change aren't rewritten, which keeps table bloat down on the 500 MB free tier), older rows stay, and
+# the site's snapshot document is swapped at the end.
+LOAD_SQL = r"""
+create temp table d (like wf.daily) on commit drop;
+\copy d from 'daily.csv' with (format csv, force_not_null (subtype))
+create temp table h (like wf.hourly) on commit drop;
+\copy h from 'hourly.csv' with (format csv, force_not_null (subtype))
+create temp table s (name text, body json) on commit drop;
+\copy s from 'snapshot.csv' with (format csv)
+delete from wf.daily w using (select slug, min(day) m from d group by slug) x
+  where w.slug = x.slug and w.day >= x.m and not exists
+    (select from d where (d.slug, d.rank, d.subtype, d.day) = (w.slug, w.rank, w.subtype, w.day));
+insert into wf.daily as w select * from d on conflict (slug, rank, subtype, day) do update
+  set volume = excluded.volume, min = excluded.min, max = excluded.max, median = excluded.median
+  where (w.volume, w.min, w.max, w.median) is distinct from (excluded.volume, excluded.min, excluded.max, excluded.median);
+delete from wf.hourly w using (select slug, min(hour) m from h group by slug) x
+  where w.slug = x.slug and w.hour >= x.m and not exists
+    (select from h where (h.slug, h.rank, h.subtype, h.hour) = (w.slug, w.rank, w.subtype, w.hour));
+insert into wf.hourly as w select * from h on conflict (slug, rank, subtype, hour) do update
+  set volume = excluded.volume, median = excluded.median
+  where (w.volume, w.median) is distinct from (excluded.volume, excluded.median);
+delete from wf.hourly where hour < now() - interval '60 days';
+insert into wf.snapshot (name, body, taken_at) select name, body, now() from s
+  on conflict (name) do update set body = excluded.body, taken_at = excluded.taken_at;
+select (select count(*) from d) as daily, (select count(*) from h) as hourly,
+       (select pg_size_pretty(pg_database_size(current_database()))) as db_size;
+"""
+
+MIN_UPLOAD_ITEMS = 1000  # a sweep that saw fewer items than this went wrong; don't replace the site's data with it
+
+
+def _first(seen: set, key: tuple) -> bool:
+    """Keep the first row per primary key: an unknown variant field in the API must not abort the whole load."""
+    if key in seen:
+        print(f"skip duplicate {key}: the API splits this item by a field the sweeper doesn't know", file=sys.stderr)
+        return False
+    seen.add(key)
+    return True
+
+
+def upload_files(market: dict, directory: str) -> None:
+    """Write the CSV files LOAD_SQL reads: rank None -> -1 and subtype None -> '' (key columns can't be null)."""
+    with open(os.path.join(directory, "daily.csv"), "w", newline="", encoding="utf-8") as f:
+        w, seen = csv.writer(f), set()
+        for slug, rows in market["history"].items():
+            for day, rank, sub, vol, lo, hi, med in rows:
+                if _first(seen, (slug, rank, sub, day)):
+                    w.writerow([slug, -1 if rank is None else rank, sub or "", day, vol, lo, hi, med])
+    with open(os.path.join(directory, "hourly.csv"), "w", newline="", encoding="utf-8") as f:
+        w, seen = csv.writer(f), set()
+        for slug, rows in market.get("hourly", {}).items():
+            for hour, rank, sub, vol, med in rows:
+                if _first(seen, (slug, rank, sub, hour)):
+                    w.writerow([slug, -1 if rank is None else rank, sub or "", f"{hour}:00Z", vol, med])
+    with open(os.path.join(directory, "snapshot.csv"), "w", newline="", encoding="utf-8") as f:
+        csv.writer(f).writerow(["market", json.dumps(market, ensure_ascii=False, separators=(",", ":"))])
+
+
+def cmd_upload(directory: str) -> None:
+    with open(os.path.join(directory, "market.json"), encoding="utf-8") as f:
+        market = json.load(f)
+    if len(market["history"]) < MIN_UPLOAD_ITEMS:
+        raise SystemExit(f"only {len(market['history'])} items in {directory}: not uploading")
+    if not os.environ.get("PGHOST"):
+        raise SystemExit("PGHOST is not set: upload reads the connection from PG* environment variables")
+    with tempfile.TemporaryDirectory() as tmp:
+        upload_files(market, tmp)
+        with open(os.path.join(tmp, "load.sql"), "w", encoding="utf-8") as f:
+            f.write(LOAD_SQL)
+        subprocess.run(["psql", "-X", "-q", "-1", "-v", "ON_ERROR_STOP=1", "-f", "load.sql"], cwd=tmp, check=True)
+    print(f"uploaded {len(market['history'])} items (as of {market['asOf']})")
+
+
+def deploy(hook: str) -> None:
+    """Ask Vercel for a fresh build, which downloads the new snapshot. The hook URL is a secret: never print it."""
+    if not hook.startswith("https://api.vercel.com/"):
+        raise SystemExit("the deploy hook is not a Vercel deploy hook URL")
+    with urllib.request.urlopen(urllib.request.Request(hook, method="POST"), timeout=30) as r:
+        print(f"deploy hook: HTTP {r.status}")
+
+
+def cmd_sweep(directory: str, client: Client) -> None:
+    cmd_fixtures(directory, None, client)
+    cmd_upload(directory)
+    # systemd passes the hook as a credential file (LoadCredential), so it is never in the environment or argv.
+    if path := os.environ.get("WF_DEPLOY_HOOK_FILE"):
+        with open(path, encoding="utf-8") as f:
+            deploy(f.read().strip())
+
+
 def main(argv: list[str] | None = None) -> int:
     p = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     sub = p.add_subparsers(dest="cmd", required=True)
@@ -335,6 +443,10 @@ def main(argv: list[str] | None = None) -> int:
     f.add_argument("--all", action="store_true", help="include every catalog item instead")
     c = sub.add_parser("clean", help="re-apply outlier filtering and summaries to stored data")
     c.add_argument("dir")
+    u = sub.add_parser("upload", help="load DIR/market.json into Supabase schema wf")
+    u.add_argument("dir")
+    w = sub.add_parser("sweep", help="sweep every item into DIR, upload it and trigger a site build")
+    w.add_argument("dir")
     args = p.parse_args(argv)
     if args.cmd == "fixtures" and not (args.all or args.slugs):
         p.error("fixtures needs SLUG... or --all")
@@ -342,6 +454,10 @@ def main(argv: list[str] | None = None) -> int:
         cmd_clean(args.dir)
     if args.cmd == "fixtures":
         cmd_fixtures(args.out_dir, None if args.all else args.slugs, Client())
+    if args.cmd == "upload":
+        cmd_upload(args.dir)
+    if args.cmd == "sweep":
+        cmd_sweep(args.dir, Client())
     return 0
 
 

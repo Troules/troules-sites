@@ -1,5 +1,10 @@
 import datetime as dt
+import csv
+import json
+import os
+import tempfile
 import unittest
+from unittest import mock
 
 import wfm_sweep as w
 
@@ -138,6 +143,44 @@ class HelpersTest(unittest.TestCase):
         self.assertEqual([x["platinum"] for x in merged["sell"]], [8, 9])
         self.assertEqual([x["platinum"] for x in merged["buy"]], [6, 5])
         self.assertNotIn("secret", str(merged))
+
+
+class SubtypeTest(unittest.TestCase):
+    def test_ayatan_star_counts_are_variants(self):
+        self.assertEqual(w.subtype_of({"subtype": "radiant"}), "radiant")
+        self.assertEqual(w.subtype_of({"cyan_stars": 2, "amber_stars": 2}), "2 cyan + 2 amber")
+        self.assertEqual(w.subtype_of({"cyan_stars": 0, "amber_stars": 0}), "no stars")
+        self.assertIsNone(w.subtype_of({"mod_rank": 3}))
+
+
+class UploadTest(unittest.TestCase):
+    market = {
+        "asOf": "2026-11-08",
+        "history": {"a": [["2026-11-08", None, None, 3, 9, 11, 10], ["2026-11-08", None, None, 1, 5, 5, 5]], "b": [["2026-11-08", 5, "radiant", 1, 50, 50, 50]]},
+        "hourly": {"a": [["2026-11-08T18", None, None, 2, 10]]},
+    }
+
+    def test_csv_rows_use_key_placeholders_and_skip_duplicate_keys(self):
+        with tempfile.TemporaryDirectory() as d, mock.patch("sys.stderr"):
+            w.upload_files(self.market, d)
+            read = lambda n: list(csv.reader(open(os.path.join(d, n), encoding="utf-8")))
+            self.assertEqual(read("daily.csv"), [["a", "-1", "", "2026-11-08", "3", "9", "11", "10"],
+                                                 ["b", "5", "radiant", "2026-11-08", "1", "50", "50", "50"]])
+            self.assertEqual(read("hourly.csv"), [["a", "-1", "", "2026-11-08T18:00Z", "2", "10"]])
+            [[name, body]] = read("snapshot.csv")
+            self.assertEqual((name, json.loads(body)), ("market", self.market))
+
+    def test_refuses_a_partial_sweep(self):
+        with tempfile.TemporaryDirectory() as d:
+            w.dump(os.path.join(d, "market.json"), self.market)
+            with self.assertRaises(SystemExit) as e:
+                w.cmd_upload(d)
+            self.assertIn("not uploading", str(e.exception))
+
+    def test_deploy_hook_must_be_vercel(self):
+        with mock.patch("urllib.request.urlopen") as urlopen, self.assertRaises(SystemExit):
+            w.deploy("https://example.com/hook")
+        urlopen.assert_not_called()
 
 
 if __name__ == "__main__":

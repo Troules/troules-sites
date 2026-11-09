@@ -109,9 +109,12 @@ test.describe("item page", () => {
 test.describe("search", () => {
   test("opens with Ctrl+K, finds an item and opens it with Enter", async ({ page }) => {
     await page.goto("/");
-    await page.keyboard.press("Control+k");
     const box = page.getByRole("combobox", { name: "Item name" });
-    await expect(box).toBeFocused();
+    // The shortcut listener attaches on hydration, which can trail the load event under a parallel run.
+    await expect(async () => {
+      await page.keyboard.press("Control+k");
+      await expect(box).toBeFocused({ timeout: 1000 });
+    }).toPass();
     await box.fill("wisp prime set");
     await expect(page.getByRole("option").first()).toHaveText(/Wisp Prime Set/);
     expect((await axe(page)).violations).toEqual([]);

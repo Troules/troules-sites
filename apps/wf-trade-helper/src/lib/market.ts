@@ -3,18 +3,16 @@ import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { cacheLife } from "next/cache";
 import catalogJson from "@/fixtures/catalog.json";
-import marketJson from "@/fixtures/market.json";
-import { toRows } from "./rank";
+import { SORTS, TOP_LIMIT, toRows, top } from "./rank";
 import { marketProfile, rankUps, signalIndex, type MarketProfile, type RankUp } from "./signals";
 import type { Book, CatalogItem, DailyRow, HourRow, Row, Summary } from "./types";
 import type { IndexEntry } from "./search";
 
 /**
- * Market data access. Builds read the committed sample in src/fixtures/ (regenerate: `pnpm fixtures`). Locally,
- * WF_DATA_DIR (set in .env.development.local, so `next dev` only) points at the full catalog from
- * `pnpm fixtures:full`, which is never committed. When the daily sweep lands (ADR 0009) these functions read
- * Supabase instead; their signatures stay the same, and "use cache" + cacheLife("hours") already matches a
- * once-a-day data source.
+ * Market data access. Everything comes from src/generated/market.json, which scripts/market-data.mjs writes before
+ * `next dev` and `next build`: the Supabase snapshot in production (refreshed by the daily sweep's deploy hook), the
+ * full local catalog with WF_DATA_DIR, or the committed sample (ADR 0009). It is read from disk rather than imported,
+ * so TypeScript never infers types from a 15 MB file; next.config.ts traces it into the server functions.
  */
 type Market = {
   asOf: string;
@@ -24,15 +22,18 @@ type Market = {
   /** Missing in data swept before hourly buckets were kept. */
   hourly?: Record<string, HourRow[]>;
   orders: Record<string, Book>;
+  /** Set by scripts/market-data.mjs; missing means the committed sample. */
+  source?: "supabase" | "local";
 };
 
-const DATA_DIR = process.env.WF_DATA_DIR;
+export const MARKET_FILE = "src/generated/market.json";
+
 const catalog = catalogJson as CatalogItem[];
-const market = (DATA_DIR ? JSON.parse(readFileSync(resolve(DATA_DIR, "market.json"), "utf8")) : marketJson) as Market;
+const market = JSON.parse(readFileSync(resolve(process.cwd(), MARKET_FILE), "utf8")) as Market;
 const hourly = market.hourly ?? {};
 const bySlug = new Map(catalog.map((c) => [c.slug, c]));
 
-export const IS_SAMPLE = !DATA_DIR;
+export const IS_SAMPLE = !market.source;
 
 export type MarketMeta = { asOf: string; fetchedAt: string; sample: boolean; tracked: number; catalogSize: number };
 
@@ -75,11 +76,24 @@ export async function getSearchIndex(): Promise<IndexEntry[]> {
   return catalog.map((c) => [c.slug, c.name, c.thumb, c.kind]);
 }
 
-/** Item slugs worth prerendering at build time: the ones with market data. */
+/** Every item with market data (the sitemap). */
 export async function getTrackedSlugs(): Promise<string[]> {
   "use cache";
   cacheLife("hours");
   return Object.keys(market.history);
+}
+
+/**
+ * Item pages prerendered at build time: the ones the home page links to (every top-100 list and the rank-ups).
+ * Prerendering all ~3,900 would add ~850 MB to every daily deployment; the rest render on first visit and stay
+ * cached.
+ */
+export async function getPrerenderSlugs(): Promise<string[]> {
+  "use cache";
+  cacheLife("hours");
+  const rows = await getRows();
+  const listed = SORTS.flatMap((s) => top(rows, s.id, TOP_LIMIT).map((r) => r.slug));
+  return [...new Set([...listed, ...(await getRankUps()).map((r) => r.slug)])];
 }
 
 export type ItemMarket = {
