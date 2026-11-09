@@ -15,3 +15,11 @@ export function initials(name: string): string {
     .join("")
     .slice(0, 2);
 }
+
+/** A probability as a percent: one decimal below 10%, "<0.1%" for tiny non-zero chances. */
+export function pct(p: number): string {
+  if (p <= 0) return "0%";
+  if (p < 0.001) return "<0.1%";
+  if (p >= 0.9995) return p >= 1 ? "100%" : ">99.9%";
+  return `${(p * 100).toFixed(p < 0.1 || p > 0.99 ? 1 : 0)}%`;
+}

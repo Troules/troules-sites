@@ -23,6 +23,11 @@ export async function Header() {
           </svg>
           WF Trade Helper
         </Link>
+        <nav aria-label="Tools">
+          <Link href="/vosfor" className="text-muted hover:text-ink text-[13px] font-medium">
+            Vosfor calculator
+          </Link>
+        </nav>
         <SearchPalette catalogSize={meta.catalogSize} />
         <div className="text-muted ml-auto flex flex-wrap gap-2 text-xs">
           <span className="border-line-strong rounded-full border px-2.5 py-1">PC · crossplay</span>

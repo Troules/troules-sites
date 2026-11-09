@@ -1,5 +1,11 @@
 # @troules/wf-trade-helper
 
+## 0.3.0
+
+### Minor Changes
+
+- Add the Vosfor calculator (`/vosfor`): ranks Loid's nine Arcane Collections by expected plat per pack, sell-all or sell-or-dissolve, with per-arcane drop odds, packs needed for a 90% chance, and a seeded simulation of your Vosfor.
+
 ## 0.2.0
 
 ### Minor Changes

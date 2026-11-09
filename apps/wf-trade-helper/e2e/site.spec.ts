@@ -132,6 +132,38 @@ test.describe("search", () => {
   });
 });
 
+test.describe("vosfor calculator", () => {
+  test("ranks the nine collections and simulates the chosen one", async ({ page }) => {
+    await page.goto("/");
+    await page.getByRole("link", { name: "Vosfor calculator" }).click();
+    await expect(page.getByRole("heading", { level: 1, name: "Vosfor calculator" })).toBeVisible();
+    const ranking = page.getByRole("region", { name: "Collections by expected plat" });
+    await expect(ranking.getByRole("row")).toHaveCount(10);
+    await expect(ranking.getByRole("columnheader", { name: /Sell or dissolve/ })).toHaveAttribute(
+      "aria-sort",
+      "descending",
+    );
+
+    await page.getByLabel("Vosfor you have").fill("2000");
+    await expect(page.getByText(/^= 10 packs/)).toBeVisible();
+
+    await ranking.getByRole("button", { name: /Eidolon/ }).click();
+    const details = page.getByRole("region", { name: "Eidolon Arcane Collection" });
+    await expect(details.getByRole("row", { name: /Arcane Energize/ })).toContainText("Legendary");
+    await expect(details.getByText("At least one Legendary")).toBeVisible();
+
+    await page.getByText("Sell everything", { exact: true }).click();
+    await expect(ranking.getByRole("columnheader", { name: /Sell all/ })).toHaveAttribute("aria-sort", "descending");
+    await expect(details.getByRole("columnheader", { name: "≥1 in 10 packs" })).toBeVisible();
+    await expect(details.getByRole("cell", { name: "Dissolve" })).toHaveCount(0);
+  });
+
+  test("has no detectable accessibility violations", async ({ page }) => {
+    await page.goto("/vosfor");
+    expect((await axe(page)).violations).toEqual([]);
+  });
+});
+
 test("sends security headers", async ({ request }) => {
   const res = await request.get("/");
   expect(res.headers()["x-content-type-options"]).toBe("nosniff");

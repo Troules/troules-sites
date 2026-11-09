@@ -7,6 +7,8 @@ import { SORTS, TOP_LIMIT, toRows, top } from "./rank";
 import { marketProfile, rankUps, signalIndex, type MarketProfile, type RankUp } from "./signals";
 import type { Book, CatalogItem, DailyRow, HourRow, Row, Summary } from "./types";
 import type { IndexEntry } from "./search";
+import type { Price } from "./vosfor";
+import { COLLECTIONS, slugOf } from "./vosfor-data";
 
 /**
  * Market data access. Everything comes from src/generated/market.json, which scripts/market-data.mjs writes before
@@ -68,6 +70,19 @@ export async function getMarketProfile(): Promise<MarketProfile> {
   "use cache";
   cacheLife("hours");
   return marketProfile(market.history, hourly);
+}
+
+/** Rank-0 7-day medians of every arcane Loid's collections can give: packs hand out unranked copies. */
+export async function getVosforPrices(): Promise<Price[]> {
+  "use cache";
+  cacheLife("hours");
+  const r0 = new Map(market.summaries.filter((s) => s.rank === 0 && s.subtype == null).map((s) => [s.slug, s]));
+  const names = new Set(COLLECTIONS.flatMap((c) => c.pools.flatMap((p) => p.arcanes)));
+  return [...names].map((name) => {
+    const slug = slugOf(name);
+    const s = r0.get(slug);
+    return { slug, name, thumb: bySlug.get(slug)?.thumb ?? null, price: s?.price7 ?? null, vol: s?.vol7 ?? 0 };
+  });
 }
 
 export async function getSearchIndex(): Promise<IndexEntry[]> {
