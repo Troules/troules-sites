@@ -132,6 +132,51 @@ test.describe("search", () => {
   });
 });
 
+test.describe("vosfor calculator", () => {
+  test("ranks the nine collections and simulates the chosen one", async ({ page }) => {
+    await page.goto("/");
+    await page.getByRole("link", { name: "Vosfor calculator" }).click();
+    await expect(page.getByRole("heading", { level: 1, name: "Vosfor calculator" })).toBeVisible();
+    const ranking = page.getByRole("region", { name: "Collections by expected plat" });
+    await expect(ranking.getByRole("row")).toHaveCount(10);
+    await expect(ranking.getByRole("columnheader", { name: /Sell or dissolve/ })).toHaveAttribute(
+      "aria-sort",
+      "descending",
+    );
+
+    await page.getByLabel("Vosfor you have").fill("2000");
+    await expect(page.getByText(/^= 10 packs/)).toBeVisible();
+
+    await ranking.getByRole("button", { name: /Eidolon/ }).click();
+    const details = page.getByRole("region", { name: "Eidolon Arcane Collection" });
+    await expect(details.getByRole("row", { name: /Arcane Energize/ })).toContainText("Legendary");
+    await expect(details.getByText("At least one Legendary")).toBeVisible();
+    await expect(details.getByRole("row", { name: /Arcane Energize/ })).toContainText(/R5 · [\d.]+\/day/);
+    await expect(details.getByRole("list", { name: "Arcanes to keep" }).getByRole("listitem").first()).toBeVisible();
+    await expect(details.getByRole("row").nth(1).getByRole("cell", { name: "Sell", exact: true })).toBeVisible();
+
+    // Sample: Arcane Reaper sells for 15p at rank 0, but R5 ÷ 21 copies ≈ 18p, so fusing pays; Energize does not.
+    await page.getByLabel("Fuse to max rank when it pays").check();
+    await expect(details.getByRole("row", { name: /Arcane Energize/ })).not.toContainText("Fuse");
+    await ranking.getByRole("button", { name: /Duviri/ }).click();
+    const duviri = page.getByRole("region", { name: "Duviri Arcane Collection" });
+    await expect(duviri.getByRole("row", { name: /Arcane Reaper/ })).toContainText("Fuse → R5");
+    await expect(duviri.getByRole("heading", { name: /^Sell or fuse these/ })).toBeVisible();
+    await page.getByLabel("Fuse to max rank when it pays").uncheck();
+    await ranking.getByRole("button", { name: /Eidolon/ }).click();
+
+    await page.getByText("Sell everything", { exact: true }).click();
+    await expect(ranking.getByRole("columnheader", { name: /Sell all/ })).toHaveAttribute("aria-sort", "descending");
+    await expect(details.getByRole("columnheader", { name: "≥1 in 10 packs" })).toBeVisible();
+    await expect(details.getByRole("cell", { name: "Dissolve" })).toHaveCount(0);
+  });
+
+  test("has no detectable accessibility violations", async ({ page }) => {
+    await page.goto("/vosfor");
+    expect((await axe(page)).violations).toEqual([]);
+  });
+});
+
 test("sends security headers", async ({ request }) => {
   const res = await request.get("/");
   expect(res.headers()["x-content-type-options"]).toBe("nosniff");

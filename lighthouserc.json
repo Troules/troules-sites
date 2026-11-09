@@ -6,7 +6,8 @@
         "http://localhost:3200/",
         "http://localhost:3200/how-this-blog-works",
         "http://localhost:3300/",
-        "http://localhost:3300/items/arcane_energize"
+        "http://localhost:3300/items/arcane_energize",
+        "http://localhost:3300/vosfor"
       ],
       "numberOfRuns": 3,
       "settings": { "preset": "desktop", "chromeFlags": "--no-sandbox --headless=new" }

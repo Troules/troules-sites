@@ -72,6 +72,14 @@ market as a whole, not a single page. Facts checked on 2026-11-03:
 9. **Regions are inferred, not measured.** Completed trades carry no location, and an order's `locale` is a
    language, not a continent. The "when to sell" panels compare evening windows in UTC (Europe 17–23, Americas
    01–07, Asia & Oceania 09–15, northern winter time) and say so on the page.
+10. **Vosfor calculator (`/vosfor`, added 2026-11-09): game data is hand-copied, prices are not.** No API exposes
+    Loid's Arcane Collection odds or the Vosfor dissolution yields, so `lib/vosfor-data.ts` copies them from the
+    Warframe wiki (read 2026-11-09; Ostron uses the wiki's prose split, 10/30/60, where its tables disagree). Unit
+    tests check that pools sum to 1 and every arcane maps to a catalog slug, so a renamed or missing arcane fails CI.
+    Each pull is valued at its **rank-0** 7-day median (packs give unranked copies). "Sell or dissolve" values
+    Vosfor as a fixed point (λ = pack value(λ) / 200) and dissolves copies worth less than yield × λ. An opt-in "fuse" toggle values a kept copy at max-rank median ÷ copies
+    needed (`copiesToMax`), only when the max rank trades at least once a day (`MIN_RANKUP_VOLUME.max`). The page is
+    static; the seeded Monte Carlo runs in the browser. Update the tables when a game update changes a collection.
 
 ## Consequences
 
