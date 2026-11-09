@@ -17,7 +17,7 @@ import {
 const slugs = new Set(catalog.map((c) => c.slug));
 const price = (slug: string, p: number | null): [string, Price] => [
   slug,
-  { slug, name: slug, thumb: null, price: p, vol: 10 },
+  { slug, name: slug, thumb: null, price: p, vol: 10, maxRank: 5, maxPrice: null, maxVol: 0 },
 ];
 
 describe("collection data", () => {

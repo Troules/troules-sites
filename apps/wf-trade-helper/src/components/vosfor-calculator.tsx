@@ -281,7 +281,7 @@ function Details({ value, strategy, vosfor }: { value: CollectionValue; strategy
       )}
 
       <div className="mt-3 overflow-x-auto">
-        <table className="w-full min-w-[820px] border-collapse">
+        <table className="w-full min-w-[920px] border-collapse">
           <caption className="sr-only">
             Arcanes in the {value.name} collection, by expected plat per pull, with drop chances
           </caption>
@@ -304,6 +304,9 @@ function Details({ value, strategy, vosfor }: { value: CollectionValue; strategy
               </th>
               <th scope="col" className="px-2.5 py-2 font-medium">
                 Rank 0 · trades/day
+              </th>
+              <th scope="col" className="px-2.5 py-2 font-medium">
+                Max rank · trades/day
               </th>
               <th scope="col" className="px-2.5 py-2 font-medium">
                 Vosfor
@@ -341,19 +344,8 @@ function Details({ value, strategy, vosfor }: { value: CollectionValue; strategy
                   <td className="num p-2.5 text-right">{pct(atLeastOne(d.chance))}</td>
                   <td className="num p-2.5 text-right">{packs ? pct(atLeastOne(d.chance, packs)) : "–"}</td>
                   <td className="num p-2.5 text-right">{packsFor(d.chance, 0.9).toLocaleString("en-US")}</td>
-                  <td className="num p-2.5 text-right">
-                    {d.price == null ? (
-                      <span className="text-muted">no trades</span>
-                    ) : (
-                      <>
-                        {plat(d.price)}
-                        <span className={`block text-[11px] ${d.vol < 1 ? "text-down" : "text-muted"}`}>
-                          {d.vol < 1 ? "thin · " : ""}
-                          {compact(d.vol)}/day
-                        </span>
-                      </>
-                    )}
-                  </td>
+                  <PriceCell price={d.price} vol={d.vol} />
+                  <PriceCell price={d.maxPrice} vol={d.maxVol} rank={d.maxRank} />
                   <td className="num p-2.5 text-right">{d.yield}</td>
                   <td className="p-2.5 text-left">
                     {dissolve ? (
@@ -376,6 +368,27 @@ function Details({ value, strategy, vosfor }: { value: CollectionValue; strategy
         expected value{strategy === "recycle" ? ", dissolved copies counted at their Vosfor's worth" : ""}.
       </p>
     </section>
+  );
+}
+
+/** A 7-day median with its trades per day; thin markets (under 1 trade a day) flagged in text, not only colour. */
+function PriceCell({ price, vol, rank }: { price: number | null; vol: number; rank?: number | null }) {
+  const tag = rank != null ? `R${rank} · ` : "";
+  return (
+    <td className="num p-2.5 text-right">
+      {price == null ? (
+        <span className="text-muted">{tag}no trades</span>
+      ) : (
+        <>
+          {plat(price)}
+          <span className={`block text-[11px] ${vol < 1 ? "text-down" : "text-muted"}`}>
+            {tag}
+            {vol < 1 ? "thin · " : ""}
+            {compact(vol)}/day
+          </span>
+        </>
+      )}
+    </td>
   );
 }
 

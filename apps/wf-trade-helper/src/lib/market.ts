@@ -76,12 +76,23 @@ export async function getMarketProfile(): Promise<MarketProfile> {
 export async function getVosforPrices(): Promise<Price[]> {
   "use cache";
   cacheLife("hours");
-  const r0 = new Map(market.summaries.filter((s) => s.rank === 0 && s.subtype == null).map((s) => [s.slug, s]));
+  const at = new Map(market.summaries.filter((s) => s.subtype == null).map((s) => [`${s.slug}|${s.rank}`, s]));
   const names = new Set(COLLECTIONS.flatMap((c) => c.pools.flatMap((p) => p.arcanes)));
   return [...names].map((name) => {
     const slug = slugOf(name);
-    const s = r0.get(slug);
-    return { slug, name, thumb: bySlug.get(slug)?.thumb ?? null, price: s?.price7 ?? null, vol: s?.vol7 ?? 0 };
+    const item = bySlug.get(slug);
+    const r0 = at.get(`${slug}|0`);
+    const max = item?.maxRank != null ? at.get(`${slug}|${item.maxRank}`) : undefined;
+    return {
+      slug,
+      name,
+      thumb: item?.thumb ?? null,
+      price: r0?.price7 ?? null,
+      vol: r0?.vol7 ?? 0,
+      maxRank: item?.maxRank ?? null,
+      maxPrice: max?.price7 ?? null,
+      maxVol: max?.vol7 ?? 0,
+    };
   });
 }
 

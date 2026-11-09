@@ -7,7 +7,18 @@ import { DISSOLVE_YIELD, PACK_COST, PULLS_PER_PACK, slugOf, type Collection, typ
  * That λ is a fixed point, found by iteration (see vosforValue).
  */
 
-export type Price = { slug: string; name: string; thumb: string | null; price: number | null; vol: number };
+export type Price = {
+  slug: string;
+  name: string;
+  thumb: string | null;
+  /** Rank 0: 7-day median (null without recent trades) and trades per day. */
+  price: number | null;
+  vol: number;
+  /** The same at the arcane's max rank (5, or 3 for older ones), for context: packs give rank 0. */
+  maxRank: number | null;
+  maxPrice: number | null;
+  maxVol: number;
+};
 
 export type Drop = Price & {
   rarity: Rarity;
@@ -24,7 +35,16 @@ export function drops(c: Collection, prices: ReadonlyMap<string, Price>): Drop[]
   return c.pools.flatMap((pool) =>
     pool.arcanes.map((name) => {
       const slug = slugOf(name);
-      const p = prices.get(slug) ?? { slug, name, thumb: null, price: null, vol: 0 };
+      const p = prices.get(slug) ?? {
+        slug,
+        name,
+        thumb: null,
+        price: null,
+        vol: 0,
+        maxRank: null,
+        maxPrice: null,
+        maxVol: 0,
+      };
       return {
         ...p,
         name,
