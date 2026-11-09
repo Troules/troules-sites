@@ -14,10 +14,10 @@
     "e2e": "playwright test"
   },
   "dependencies": {
-    "@shikijs/rehype": "^4.5.0",
+    "@shikijs/rehype": "^4.6.0",
     "@troules/registry": "workspace:*",
     "@troules/ui": "workspace:*",
-    "hast-util-to-jsx-runtime": "^2.3.6",
+    "hast-util-to-jsx-runtime": "^2.3.7",
     "hast-util-to-string": "^3.0.1",
     "image-size": "^2.0.2",
     "mermaid": "^12.2.0",
