@@ -1,6 +1,6 @@
 {
   "name": "@troules/wf-trade-helper",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "private": true,
   "scripts": {
     "dev": "node --env-file-if-exists=.env.development.local scripts/market-data.mjs && next dev -p 3002",

@@ -1,14 +1,16 @@
 import Link from "next/link";
 import { Glass } from "@troules/ui/glass";
 import { getMeta } from "@/lib/market";
+import { shortDate } from "@/lib/format";
 import { SearchPalette } from "./search-palette";
+import { SiteNav } from "./site-nav";
 
 export async function Header() {
   const meta = await getMeta();
   return (
     <Glass as="header" className="glass-bar border-line sticky top-0 z-10 border-b">
-      <div className="mx-auto flex max-w-[1240px] flex-wrap items-center gap-4 px-5 py-3.5">
-        <Link href="/" className="flex items-center gap-2.5 text-base font-semibold">
+      <div className="mx-auto flex h-14 max-w-[1240px] items-center gap-3 px-4 sm:gap-6 sm:px-5">
+        <Link href="/" className="flex shrink-0 items-center gap-2.5 text-base font-semibold">
           <svg
             width="22"
             height="22"
@@ -21,20 +23,20 @@ export async function Header() {
             <path d="M12 2l9 5v10l-9 5-9-5V7z" />
             <path d="M12 7l4.5 2.5v5L12 17l-4.5-2.5v-5z" />
           </svg>
-          WF Trade Helper
+          <span className="max-sm:sr-only">WF Trade Helper</span>
         </Link>
-        <nav aria-label="Tools">
-          <Link href="/vosfor" className="text-muted hover:text-ink text-[13px] font-medium">
-            Vosfor calculator
-          </Link>
-        </nav>
+        <SiteNav />
         <SearchPalette catalogSize={meta.catalogSize} />
-        <div className="text-muted ml-auto flex flex-wrap gap-2 text-xs">
-          <span className="border-line-strong rounded-full border px-2.5 py-1">PC · crossplay</span>
-          <span className="num border-line-strong rounded-full border px-2.5 py-1">
-            {meta.sample ? "Sample data" : "Data"} {meta.asOf}
+        <p className="text-muted ml-auto hidden shrink-0 items-center gap-2 text-xs md:flex">
+          {meta.sample ? (
+            <span className="text-down rounded bg-[color-mix(in_srgb,var(--color-down)_14%,transparent)] px-1.5 py-0.5 font-medium">
+              Sample
+            </span>
+          ) : null}
+          <span>
+            PC · crossplay · <time dateTime={meta.asOf}>{shortDate(meta.asOf)}</time>
           </span>
-        </div>
+        </p>
       </div>
     </Glass>
   );
@@ -49,7 +51,8 @@ export async function Footer() {
         <a href="https://warframe.market" className="text-accent underline underline-offset-2">
           warframe.market
         </a>{" "}
-        (PC, crossplay), last 7 days unless stated. Each item is ranked at its max rank.
+        (PC, crossplay), last 7 days unless stated, as of <time dateTime={meta.asOf}>{shortDate(meta.asOf)}</time>. Each
+        item is ranked at its max rank.
         {meta.sample
           ? ` This build shows a sample of ${meta.tracked} items fetched ${meta.fetchedAt.replace("T", " ")}; the daily sweep of all items comes next.`
           : null}
