@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 320" width="800" height="320" role="img">
+  <title>The three kinds of UI component libraries: foundations, specialists and designed components</title>
+  <rect width="800" height="320" fill="#0f172a"/>
+  <text x="400" y="42" text-anchor="middle" font-family="system-ui, sans-serif" font-size="22" font-weight="700" fill="#f8fafc">Three kinds of libraries to give Claude</text>
+
+  <rect x="20" y="70" width="240" height="220" rx="14" fill="#1e293b" stroke="#38bdf8" stroke-width="2"/>
+  <text x="140" y="106" text-anchor="middle" font-family="system-ui, sans-serif" font-size="20" font-weight="700" fill="#38bdf8">1. Foundations</text>
+  <text x="140" y="140" text-anchor="middle" font-family="system-ui, sans-serif" font-size="14" fill="#e2e8f0">Behavior: keyboard, focus,</text>
+  <text x="140" y="160" text-anchor="middle" font-family="system-ui, sans-serif" font-size="14" fill="#e2e8f0">accessibility</text>
+  <text x="140" y="204" text-anchor="middle" font-family="system-ui, sans-serif" font-size="15" font-weight="600" fill="#f8fafc">shadcn/ui · Base UI · Radix</text>
+  <text x="140" y="256" text-anchor="middle" font-family="system-ui, sans-serif" font-size="13" fill="#94a3b8">Use for most of the app</text>
+
+  <rect x="280" y="70" width="240" height="220" rx="14" fill="#1e293b" stroke="#a78bfa" stroke-width="2"/>
+  <text x="400" y="106" text-anchor="middle" font-family="system-ui, sans-serif" font-size="20" font-weight="700" fill="#a78bfa">2. Specialists</text>
+  <text x="400" y="140" text-anchor="middle" font-family="system-ui, sans-serif" font-size="14" fill="#e2e8f0">One component,</text>
+  <text x="400" y="160" text-anchor="middle" font-family="system-ui, sans-serif" font-size="14" fill="#e2e8f0">done really well</text>
+  <text x="400" y="204" text-anchor="middle" font-family="system-ui, sans-serif" font-size="15" font-weight="600" fill="#f8fafc">Sonner · Vaul · cmdk</text>
+  <text x="400" y="224" text-anchor="middle" font-family="system-ui, sans-serif" font-size="15" font-weight="600" fill="#f8fafc">NumberFlow</text>
+  <text x="400" y="256" text-anchor="middle" font-family="system-ui, sans-serif" font-size="13" fill="#94a3b8">Toasts, drawers, menus, numbers</text>
+
+  <rect x="540" y="70" width="240" height="220" rx="14" fill="#1e293b" stroke="#f472b6" stroke-width="2"/>
+  <text x="660" y="106" text-anchor="middle" font-family="system-ui, sans-serif" font-size="20" font-weight="700" fill="#f472b6">3. Designed</text>
+  <text x="660" y="140" text-anchor="middle" font-family="system-ui, sans-serif" font-size="14" fill="#e2e8f0">Finished, styled components</text>
+  <text x="660" y="160" text-anchor="middle" font-family="system-ui, sans-serif" font-size="14" fill="#e2e8f0">you copy in</text>
+  <text x="660" y="204" text-anchor="middle" font-family="system-ui, sans-serif" font-size="15" font-weight="600" fill="#f8fafc">Beautiful UI · Rare UI · Magic UI</text>
+  <text x="660" y="224" text-anchor="middle" font-family="system-ui, sans-serif" font-size="15" font-weight="600" fill="#f8fafc">Aceternity · 21st.dev</text>
+  <text x="660" y="256" text-anchor="middle" font-family="system-ui, sans-serif" font-size="13" fill="#94a3b8">One standout moment per page</text>
+</svg>
