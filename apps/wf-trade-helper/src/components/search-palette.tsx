@@ -74,11 +74,13 @@ export function SearchPalette({ catalogSize }: { catalogSize: number }) {
         type="button"
         onClick={open}
         aria-keyshortcuts="Control+K Meta+K"
-        className="border-line-strong text-muted hover:text-ink flex min-h-10 max-w-[460px] flex-[1_1_280px] cursor-pointer items-center gap-2.5 rounded-[10px] border bg-white/5 px-3 text-left text-sm"
+        className="border-line-strong text-muted hover:text-ink hover:border-muted/50 flex h-9 min-w-0 flex-1 cursor-pointer items-center gap-2.5 rounded-lg border bg-white/[0.04] px-3 text-left text-sm transition-colors sm:max-w-[420px]"
       >
         <SearchIcon />
-        <span className="flex-1">Search {catalogSize.toLocaleString("en-US")} items…</span>
-        <kbd className="num border-line-strong rounded-md border px-1.5 py-0.5 text-xs">⌘K</kbd>
+        <span className="min-w-0 flex-1 truncate">
+          Search <span className="max-sm:sr-only">{catalogSize.toLocaleString("en-US")} </span>items…
+        </span>
+        <kbd className="num border-line text-muted hidden rounded border px-1.5 text-[11px] leading-5 sm:block">⌘K</kbd>
       </button>
 
       <dialog

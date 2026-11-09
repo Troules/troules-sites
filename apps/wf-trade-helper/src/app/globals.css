@@ -40,10 +40,23 @@ body {
   outline-offset: 2px;
 }
 
-/* Flatter glass for a dense UI: smaller radius and blur than the index site's hero panels. */
+/* Flatter glass for a dense UI: smaller radius and blur than the index site's hero panels. The header spans the
+   viewport, so the floating-panel rim, diagonal sheen and drop shadow would frame it like a box: a flat dark tint
+   plus the bottom hairline reads as a bar instead. */
 .glass.glass-bar {
   --glass-radius: 0;
   --glass-blur: 14px;
+  background: rgb(11 13 18 / 0.72);
+  box-shadow: none;
+}
+.glass.glass-bar::before,
+.glass.glass-bar::after {
+  display: none;
+}
+@media (prefers-reduced-transparency: reduce) {
+  .glass.glass-bar {
+    background: var(--color-bg);
+  }
 }
 .glass.glass-dialog {
   --glass-radius: 16px;

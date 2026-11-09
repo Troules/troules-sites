@@ -23,3 +23,12 @@ export function pct(p: number): string {
   if (p >= 0.9995) return p >= 1 ? "100%" : ">99.9%";
   return `${(p * 100).toFixed(p < 0.1 || p > 0.99 ? 1 : 0)}%`;
 }
+
+/** "2026-11-07" → "Nov 7, 2026". Parsed as UTC so the day never shifts with the server's timezone. */
+export const shortDate = (iso: string) =>
+  new Date(`${iso.slice(0, 10)}T00:00:00Z`).toLocaleDateString("en-US", {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+    timeZone: "UTC",
+  });

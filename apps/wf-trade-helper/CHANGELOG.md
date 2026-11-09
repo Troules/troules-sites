@@ -1,5 +1,11 @@
 # @troules/wf-trade-helper
 
+## 0.3.1
+
+### Patch Changes
+
+- Tidy the header: a flat single-row bar instead of a framed glass panel, plain status text with a "Sample" badge in place of two pills, a Dashboard | Vosfor page switcher that marks the current page, and a compact search field on mobile. The data date moves into the footer too, so small screens still show it.
+
 ## 0.3.0
 
 ### Minor Changes
