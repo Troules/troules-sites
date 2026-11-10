@@ -74,7 +74,7 @@ export function SearchPalette({ catalogSize }: { catalogSize: number }) {
         type="button"
         onClick={open}
         aria-keyshortcuts="Control+K Meta+K"
-        className="border-line-strong text-muted hover:text-ink hover:border-muted/50 flex h-9 min-w-0 flex-1 cursor-pointer items-center gap-2.5 rounded-lg border bg-white/[0.04] px-3 text-left text-sm transition-colors sm:max-w-[420px]"
+        className="border-line-strong text-muted hover:text-ink hover:border-muted/50 flex h-9 w-full max-w-[360px] min-w-0 cursor-pointer items-center gap-2.5 rounded-lg border bg-white/[0.04] px-3 text-left text-sm transition-colors"
       >
         <SearchIcon />
         <span className="min-w-0 flex-1 truncate">

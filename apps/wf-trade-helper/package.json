@@ -1,6 +1,6 @@
 {
   "name": "@troules/wf-trade-helper",
-  "version": "0.3.1",
+  "version": "0.4.0",
   "private": true,
   "scripts": {
     "dev": "node --env-file-if-exists=.env.development.local scripts/market-data.mjs && next dev -p 3002",
@@ -12,6 +12,7 @@
     "e2e": "playwright test",
     "fixtures": "python3 sweeper/wfm_sweep.py fixtures src/fixtures $(node -p \"Object.keys(require('./src/fixtures/market.json').history).join(' ')\")",
     "fixtures:full": "python3 sweeper/wfm_sweep.py fixtures .data/full --all",
+    "catalog": "python3 sweeper/wfm_sweep.py catalog src/fixtures",
     "upload": "python3 sweeper/wfm_sweep.py upload .data/full"
   },
   "dependencies": {

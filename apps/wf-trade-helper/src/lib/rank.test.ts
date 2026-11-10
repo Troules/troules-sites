@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { biggestDrop, isMaxRank, toRows, top, variantLabel } from "./rank";
+import { biggestDrop, isMaxRank, movers, ofKind, pulse, toRows, top, variantLabel } from "./rank";
 import type { CatalogItem, Summary } from "./types";
 
 const item = (slug: string, maxRank: number | null): CatalogItem => ({
@@ -59,6 +59,43 @@ describe("top", () => {
   it("leaves thin markets out of the trend list and the drop tile", () => {
     expect(top(rows, "trend").map((r) => r.slug)).toEqual(["set"]);
     expect(biggestDrop(rows)?.slug).toBe("set");
+  });
+});
+
+describe("kinds, movers and pulse", () => {
+  const typed = new Map(
+    [
+      { ...item("arcane", 5), kind: "Arcane" },
+      { ...item("part", null), kind: "Part" },
+      { ...item("blueprint", null), kind: "Blueprint" },
+      { ...item("thin", null), kind: "Mod" },
+    ].map((c) => [c.slug, c]),
+  );
+  const rows = toRows(
+    [
+      sum("arcane", 5, { plat7: 900, trend7: 12 }),
+      sum("part", null, { plat7: 50, trend7: -30 }),
+      sum("blueprint", null, { plat7: 80, trend7: 0.4 }),
+      sum("thin", null, { plat7: 5, vol7: 0.5, trend7: 300 }),
+    ],
+    typed,
+  );
+
+  it("narrows a list to one item type", () => {
+    expect(ofKind(rows, "all")).toHaveLength(4);
+    expect(ofKind(rows, "parts").map((r) => r.slug)).toEqual(["part", "blueprint"]);
+    expect(top(rows, "plat", 10, "parts").map((r) => r.slug)).toEqual(["blueprint", "part"]);
+    expect(top(rows, "plat", 10, "relics")).toEqual([]);
+  });
+
+  it("lists the week's rises and drops among liquid items only", () => {
+    const m = movers(rows, 5);
+    expect(m.up.map((r) => r.slug)).toEqual(["arcane", "blueprint"]);
+    expect(m.down.map((r) => r.slug)).toEqual(["part"]);
+  });
+
+  it("sums the market and counts real moves", () => {
+    expect(pulse(rows)).toEqual({ plat: 1035, trades: 30.5, rising: 1, falling: 1, flat: 1 });
   });
 });
 

@@ -2,7 +2,19 @@
 
 import { useState } from "react";
 
-export function CopyButton({ text, label }: { text: string; label: string }) {
+/** Copies `text`; the button itself confirms ("Copied 109") for two seconds, read out to screen readers. */
+export function CopyButton({
+  text,
+  label,
+  copied: copiedLabel,
+  className = "btn flex-[1_1_120px]",
+}: {
+  text: string;
+  label: string;
+  /** What the button says after copying; defaults to "Copied <text>". */
+  copied?: string;
+  className?: string;
+}) {
   const [copied, setCopied] = useState(false);
   return (
     <button
@@ -13,12 +25,12 @@ export function CopyButton({ text, label }: { text: string; label: string }) {
           setCopied(true);
           setTimeout(() => setCopied(false), 2000);
         } catch {
-          // Clipboard blocked (permissions, insecure context): the price stays visible to copy by hand.
+          // Clipboard blocked (permissions, insecure context): the text stays visible to copy by hand.
         }
       }}
-      className="border-line-strong bg-chip text-ink min-h-11 flex-[1_1_120px] cursor-pointer rounded-[10px] border px-3 text-sm font-medium"
+      className={className}
     >
-      <span aria-live="polite">{copied ? `Copied ${text}` : label}</span>
+      <span aria-live="polite">{copied ? (copiedLabel ?? `Copied ${text}`) : label}</span>
     </button>
   );
 }

@@ -1,0 +1,1293 @@
+{
+  "acceltra_prime_set": [
+    ["acceltra_prime_barrel", 1],
+    ["acceltra_prime_blueprint", 1],
+    ["acceltra_prime_receiver", 1],
+    ["acceltra_prime_stock", 1]
+  ],
+  "aeolak_set": [
+    ["aeolak_barrel_blueprint", 1],
+    ["aeolak_receiver_blueprint", 1],
+    ["aeolak_stock_blueprint", 1]
+  ],
+  "afentis_prime_set": [
+    ["afentis_prime_barrel", 1],
+    ["afentis_prime_blade", 1],
+    ["afentis_prime_blueprint", 1],
+    ["afentis_prime_handle", 1]
+  ],
+  "afuris_prime_set": [
+    ["afuris_prime_barrel", 2],
+    ["afuris_prime_blueprint", 1],
+    ["afuris_prime_link", 1],
+    ["afuris_prime_receiver", 2]
+  ],
+  "agkuza_set": [
+    ["agkuza_blade", 1],
+    ["agkuza_guard", 1],
+    ["agkuza_handle", 1]
+  ],
+  "akarius_prime_set": [
+    ["akarius_prime_barrel", 2],
+    ["akarius_prime_blueprint", 1],
+    ["akarius_prime_link", 1],
+    ["akarius_prime_receiver", 2]
+  ],
+  "akbolto_prime_set": [
+    ["akbolto_prime_barrel", 2],
+    ["akbolto_prime_blueprint", 1],
+    ["akbolto_prime_link", 1],
+    ["akbolto_prime_receiver", 2]
+  ],
+  "akbronco_prime_set": [
+    ["akbronco_prime_blueprint", 1],
+    ["akbronco_prime_link", 1]
+  ],
+  "akjagara_prime_set": [
+    ["akjagara_prime_barrel", 2],
+    ["akjagara_prime_blueprint", 1],
+    ["akjagara_prime_link", 1],
+    ["akjagara_prime_receiver", 2]
+  ],
+  "aklex_prime_set": [
+    ["aklex_prime_blueprint", 1],
+    ["aklex_prime_link", 1]
+  ],
+  "akmagnus_prime_set": [
+    ["akmagnus_prime_blueprint", 1],
+    ["akmagnus_prime_link", 1]
+  ],
+  "aksomati_prime_set": [
+    ["aksomati_prime_barrel", 2],
+    ["aksomati_prime_blueprint", 1],
+    ["aksomati_prime_link", 1],
+    ["aksomati_prime_receiver", 2]
+  ],
+  "akstiletto_prime_set": [
+    ["akstiletto_prime_barrel", 2],
+    ["akstiletto_prime_blueprint", 1],
+    ["akstiletto_prime_link", 1],
+    ["akstiletto_prime_receiver", 2]
+  ],
+  "akvasto_prime_set": [
+    ["akvasto_prime_blueprint", 1],
+    ["akvasto_prime_link", 1]
+  ],
+  "alternox_prime_set": [
+    ["alternox_prime_barrel", 1],
+    ["alternox_prime_blueprint", 1],
+    ["alternox_prime_receiver", 1],
+    ["alternox_prime_stock", 1]
+  ],
+  "ambassador_set": [
+    ["ambassador_barrel", 1],
+    ["ambassador_blueprint", 1],
+    ["ambassador_receiver", 1],
+    ["ambassador_stock", 1]
+  ],
+  "amesha_set": [
+    ["amesha_harness", 1],
+    ["amesha_systems", 1],
+    ["amesha_wings", 1]
+  ],
+  "ankyros_prime_set": [
+    ["ankyros_prime_blade", 2],
+    ["ankyros_prime_blueprint", 1],
+    ["ankyros_prime_gauntlet", 2]
+  ],
+  "arum_spinosa_set": [
+    ["arum_spinosa_blueprint", 1],
+    ["arum_spinosa_guard", 2],
+    ["arum_spinosa_rivet", 1]
+  ],
+  "ash_prime_set": [
+    ["ash_prime_blueprint", 1],
+    ["ash_prime_chassis_blueprint", 1],
+    ["ash_prime_neuroptics_blueprint", 1],
+    ["ash_prime_systems_blueprint", 1]
+  ],
+  "astilla_prime_set": [
+    ["astilla_prime_barrel", 1],
+    ["astilla_prime_blueprint", 1],
+    ["astilla_prime_receiver", 1],
+    ["astilla_prime_stock", 1]
+  ],
+  "athodai_prime_set": [
+    ["athodai_prime_barrel", 1],
+    ["athodai_prime_blueprint", 1],
+    ["athodai_prime_receiver", 1]
+  ],
+  "athodai_set": [
+    ["athodai_barrel", 1],
+    ["athodai_blueprint", 1],
+    ["athodai_receiver", 1]
+  ],
+  "atlas_prime_set": [
+    ["atlas_prime_blueprint", 1],
+    ["atlas_prime_chassis_blueprint", 1],
+    ["atlas_prime_neuroptics_blueprint", 1],
+    ["atlas_prime_systems_blueprint", 1]
+  ],
+  "ballistica_prime_set": [
+    ["ballistica_prime_blueprint", 1],
+    ["ballistica_prime_lower_limb", 1],
+    ["ballistica_prime_receiver", 1],
+    ["ballistica_prime_string", 1],
+    ["ballistica_prime_upper_limb", 1]
+  ],
+  "banshee_prime_set": [
+    ["banshee_prime_blueprint", 1],
+    ["banshee_prime_chassis_blueprint", 1],
+    ["banshee_prime_neuroptics_blueprint", 1],
+    ["banshee_prime_systems_blueprint", 1]
+  ],
+  "baruuk_prime_set": [
+    ["baruuk_prime_blueprint", 1],
+    ["baruuk_prime_chassis_blueprint", 1],
+    ["baruuk_prime_neuroptics_blueprint", 1],
+    ["baruuk_prime_systems_blueprint", 1]
+  ],
+  "baza_prime_set": [
+    ["baza_prime_barrel", 1],
+    ["baza_prime_blueprint", 1],
+    ["baza_prime_receiver", 1],
+    ["baza_prime_stock", 1]
+  ],
+  "bo_prime_set": [
+    ["bo_prime_blueprint", 1],
+    ["bo_prime_handle", 1],
+    ["bo_prime_ornament", 2]
+  ],
+  "boar_prime_set": [
+    ["boar_prime_barrel", 1],
+    ["boar_prime_blueprint", 1],
+    ["boar_prime_receiver", 1],
+    ["boar_prime_stock", 1]
+  ],
+  "boltor_prime_set": [
+    ["boltor_prime_barrel", 1],
+    ["boltor_prime_blueprint", 1],
+    ["boltor_prime_receiver", 1],
+    ["boltor_prime_stock", 1]
+  ],
+  "bonewidow_set": [
+    ["bonewidow_capsule", 1],
+    ["bonewidow_casing", 1],
+    ["bonewidow_engine", 1],
+    ["bonewidow_weapon_pod", 1]
+  ],
+  "braton_prime_set": [
+    ["braton_prime_barrel", 1],
+    ["braton_prime_blueprint", 1],
+    ["braton_prime_receiver", 1],
+    ["braton_prime_stock", 1]
+  ],
+  "braton_vandal_set": [
+    ["braton_vandal_barrel", 1],
+    ["braton_vandal_blueprint", 1],
+    ["braton_vandal_receiver", 1],
+    ["braton_vandal_stock", 1]
+  ],
+  "broken_war_set": [
+    ["war_blade", 2],
+    ["war_hilt", 1]
+  ],
+  "bronco_prime_set": [
+    ["bronco_prime_barrel", 1],
+    ["bronco_prime_blueprint", 1],
+    ["bronco_prime_receiver", 1]
+  ],
+  "burston_prime_set": [
+    ["burston_prime_barrel", 1],
+    ["burston_prime_blueprint", 1],
+    ["burston_prime_receiver", 1],
+    ["burston_prime_stock", 1]
+  ],
+  "caliban_prime_set": [
+    ["caliban_prime_blueprint", 1],
+    ["caliban_prime_chassis_blueprint", 1],
+    ["caliban_prime_neuroptics_blueprint", 1],
+    ["caliban_prime_systems_blueprint", 1]
+  ],
+  "carmine_penta_set": [
+    ["carmine_penta_barrel", 1],
+    ["carmine_penta_blueprint", 1],
+    ["carmine_penta_receiver", 1],
+    ["carmine_penta_stock", 1]
+  ],
+  "carrier_prime_set": [
+    ["carrier_prime_blueprint", 1],
+    ["carrier_prime_carapace", 1],
+    ["carrier_prime_cerebrum", 1],
+    ["carrier_prime_systems", 1]
+  ],
+  "cedo_prime_set": [
+    ["cedo_prime_barrel", 1],
+    ["cedo_prime_blueprint", 1],
+    ["cedo_prime_receiver", 1],
+    ["cedo_prime_stock", 1]
+  ],
+  "cedo_set": [
+    ["cedo_barrel", 1],
+    ["cedo_blueprint", 1],
+    ["cedo_receiver", 1],
+    ["cedo_stock", 1]
+  ],
+  "centaur_set": [
+    ["centaur_aegis", 1],
+    ["centaur_blade", 1],
+    ["centaur_handle", 1]
+  ],
+  "cernos_prime_set": [
+    ["cernos_prime_blueprint", 1],
+    ["cernos_prime_grip", 1],
+    ["cernos_prime_lower_limb", 1],
+    ["cernos_prime_string", 1],
+    ["cernos_prime_upper_limb", 1]
+  ],
+  "chroma_prime_set": [
+    ["chroma_prime_blueprint", 1],
+    ["chroma_prime_chassis_blueprint", 1],
+    ["chroma_prime_neuroptics_blueprint", 1],
+    ["chroma_prime_systems_blueprint", 1]
+  ],
+  "cinta_set": [
+    ["cinta_blueprint", 1],
+    ["cinta_grip_blueprint", 1],
+    ["cinta_lower_limb_blueprint", 1],
+    ["cinta_string_blueprint", 1],
+    ["cinta_upper_limb_blueprint", 1]
+  ],
+  "citrine_prime_set": [
+    ["citrine_prime_blueprint", 1],
+    ["citrine_prime_chassis_blueprint", 1],
+    ["citrine_prime_neuroptics_blueprint", 1],
+    ["citrine_prime_systems_blueprint", 1]
+  ],
+  "cobra_and_crane_prime_set": [
+    ["cobra_and_crane_prime_blade", 1],
+    ["cobra_and_crane_prime_blueprint", 1],
+    ["cobra_and_crane_prime_guard", 1],
+    ["cobra_and_crane_prime_hilt", 1]
+  ],
+  "corinth_prime_set": [
+    ["corinth_prime_barrel", 1],
+    ["corinth_prime_blueprint", 1],
+    ["corinth_prime_receiver", 1],
+    ["corinth_prime_stock", 1]
+  ],
+  "cortege_set": [
+    ["cortege_barrel", 1],
+    ["cortege_receiver", 1],
+    ["cortege_stock", 1]
+  ],
+  "corufell_prime_set": [
+    ["corufell_prime_blueprint", 1],
+    ["corufell_prime_handle", 1],
+    ["corufell_prime_receiver", 1],
+    ["corufell_prime_stock", 1]
+  ],
+  "corufell_set": [
+    ["corufell_barrel", 1],
+    ["corufell_handle", 1],
+    ["corufell_receiver", 1]
+  ],
+  "corvas_prime_set": [
+    ["corvas_prime_barrel", 1],
+    ["corvas_prime_blueprint", 1],
+    ["corvas_prime_receiver", 1],
+    ["corvas_prime_stock", 1]
+  ],
+  "corvas_set": [
+    ["corvas_barrel", 1],
+    ["corvas_receiver", 1],
+    ["corvas_stock", 1]
+  ],
+  "cyngas_set": [
+    ["cyngas_barrel", 1],
+    ["cyngas_receiver", 1],
+    ["cyngas_stock", 1]
+  ],
+  "daikyu_prime_set": [
+    ["daikyu_prime_blueprint", 1],
+    ["daikyu_prime_grip", 1],
+    ["daikyu_prime_lower_limb", 1],
+    ["daikyu_prime_string", 1],
+    ["daikyu_prime_upper_limb", 1]
+  ],
+  "dakra_prime_set": [
+    ["dakra_prime_blade", 1],
+    ["dakra_prime_blueprint", 1],
+    ["dakra_prime_handle", 1]
+  ],
+  "damaged_necramech_set": [
+    ["damaged_necramech_casing", 1],
+    ["damaged_necramech_engine", 1],
+    ["damaged_necramech_pod", 1],
+    ["damaged_necramech_weapon_pod", 1]
+  ],
+  "damaged_necramech_weapon_set": [
+    ["damaged_necramech_weapon_barrel", 1],
+    ["damaged_necramech_weapon_receiver", 1],
+    ["damaged_necramech_weapon_stock", 1]
+  ],
+  "dera_vandal_set": [
+    ["dera_vandal_barrel", 1],
+    ["dera_vandal_blueprint", 1],
+    ["dera_vandal_receiver", 1],
+    ["dera_vandal_stock", 1]
+  ],
+  "destreza_prime_set": [
+    ["destreza_prime_blade", 1],
+    ["destreza_prime_blueprint", 1],
+    ["destreza_prime_handle", 1]
+  ],
+  "dethcube_prime_set": [
+    ["dethcube_prime_blueprint", 1],
+    ["dethcube_prime_carapace", 1],
+    ["dethcube_prime_cerebrum", 1],
+    ["dethcube_prime_systems", 1]
+  ],
+  "dual_decurion_set": [
+    ["decurion_barrel", 2],
+    ["decurion_receiver", 2]
+  ],
+  "dual_kamas_prime_set": [
+    ["dual_kamas_prime_blade", 2],
+    ["dual_kamas_prime_blueprint", 1],
+    ["dual_kamas_prime_handle", 2]
+  ],
+  "dual_keres_prime_set": [
+    ["dual_keres_prime_blade", 2],
+    ["dual_keres_prime_blueprint", 1],
+    ["dual_keres_prime_handle", 2]
+  ],
+  "dual_viciss_set": [
+    ["dual_viciss_blade", 2],
+    ["dual_viciss_hilt", 2]
+  ],
+  "dual_zoren_prime_set": [
+    ["dual_zoren_prime_blade", 2],
+    ["dual_zoren_prime_blueprint", 1],
+    ["dual_zoren_prime_handle", 2]
+  ],
+  "efv_5_jupiter_set": [
+    ["efv_5_jupiter_barrel", 1],
+    ["efv_5_jupiter_receiver", 1],
+    ["efv_5_jupiter_stock", 1]
+  ],
+  "efv_8_mars_set": [
+    ["efv_8_mars_barrel", 1],
+    ["efv_8_mars_receiver", 1],
+    ["efv_8_mars_stock", 1]
+  ],
+  "elytron_set": [
+    ["elytron_harness", 1],
+    ["elytron_systems", 1],
+    ["elytron_wings", 1]
+  ],
+  "ember_prime_set": [
+    ["ember_prime_blueprint", 1],
+    ["ember_prime_chassis_blueprint", 1],
+    ["ember_prime_neuroptics_blueprint", 1],
+    ["ember_prime_systems_blueprint", 1]
+  ],
+  "epitaph_prime_set": [
+    ["epitaph_prime_barrel", 1],
+    ["epitaph_prime_blueprint", 1],
+    ["epitaph_prime_receiver", 1]
+  ],
+  "epitaph_set": [
+    ["epitaph_barrel", 1],
+    ["epitaph_blueprint", 1],
+    ["epitaph_receiver", 1]
+  ],
+  "equinox_prime_set": [
+    ["equinox_prime_blueprint", 1],
+    ["equinox_prime_chassis_blueprint", 1],
+    ["equinox_prime_neuroptics_blueprint", 1],
+    ["equinox_prime_systems_blueprint", 1]
+  ],
+  "euphona_prime_set": [
+    ["euphona_prime_barrel", 1],
+    ["euphona_prime_blueprint", 1],
+    ["euphona_prime_receiver", 1]
+  ],
+  "fang_prime_set": [
+    ["fang_prime_blade", 2],
+    ["fang_prime_blueprint", 1],
+    ["fang_prime_handle", 2]
+  ],
+  "fluctus_set": [
+    ["fluctus_barrel", 1],
+    ["fluctus_limbs", 1],
+    ["fluctus_stock", 1]
+  ],
+  "fragor_prime_set": [
+    ["fragor_prime_blueprint", 1],
+    ["fragor_prime_handle", 1],
+    ["fragor_prime_head", 1]
+  ],
+  "frost_prime_set": [
+    ["frost_prime_blueprint", 1],
+    ["frost_prime_chassis_blueprint", 1],
+    ["frost_prime_neuroptics_blueprint", 1],
+    ["frost_prime_systems_blueprint", 1]
+  ],
+  "fulmin_prime_set": [
+    ["fulmin_prime_barrel", 1],
+    ["fulmin_prime_blueprint", 1],
+    ["fulmin_prime_receiver", 1],
+    ["fulmin_prime_stock", 1]
+  ],
+  "furax_wraith_set": [
+    ["furax_wraith_blueprint", 1],
+    ["furax_wraith_left_gauntlet", 1],
+    ["furax_wraith_right_gauntlet", 1]
+  ],
+  "galatine_prime_set": [
+    ["galatine_prime_blade", 1],
+    ["galatine_prime_blueprint", 1],
+    ["galatine_prime_handle", 1]
+  ],
+  "gara_prime_set": [
+    ["gara_prime_blueprint", 1],
+    ["gara_prime_chassis_blueprint", 1],
+    ["gara_prime_neuroptics_blueprint", 1],
+    ["gara_prime_systems_blueprint", 1]
+  ],
+  "garuda_prime_set": [
+    ["garuda_prime_blueprint", 1],
+    ["garuda_prime_chassis_blueprint", 1],
+    ["garuda_prime_neuroptics_blueprint", 1],
+    ["garuda_prime_systems_blueprint", 1]
+  ],
+  "gauss_prime_set": [
+    ["gauss_prime_blueprint", 1],
+    ["gauss_prime_chassis_blueprint", 1],
+    ["gauss_prime_neuroptics_blueprint", 1],
+    ["gauss_prime_systems_blueprint", 1]
+  ],
+  "ghoulsaw_set": [
+    ["ghoulsaw_blade", 1],
+    ["ghoulsaw_blueprint", 1],
+    ["ghoulsaw_chassis", 1],
+    ["ghoulsaw_engine", 1],
+    ["ghoulsaw_grip", 1]
+  ],
+  "glaive_prime_set": [
+    ["glaive_prime_blade", 2],
+    ["glaive_prime_blueprint", 1],
+    ["glaive_prime_disc", 1]
+  ],
+  "gorgon_wraith_set": [
+    ["gorgon_wraith_barrel", 1],
+    ["gorgon_wraith_blueprint", 1],
+    ["gorgon_wraith_receiver", 1],
+    ["gorgon_wraith_stock", 1]
+  ],
+  "gram_prime_set": [
+    ["gram_prime_blade", 1],
+    ["gram_prime_blueprint", 1],
+    ["gram_prime_handle", 1]
+  ],
+  "grendel_prime_set": [
+    ["grendel_prime_blueprint", 1],
+    ["grendel_prime_chassis_blueprint", 1],
+    ["grendel_prime_neuroptics_blueprint", 1],
+    ["grendel_prime_systems_blueprint", 1]
+  ],
+  "guandao_prime_set": [
+    ["guandao_prime_blade", 2],
+    ["guandao_prime_blueprint", 1],
+    ["guandao_prime_handle", 1]
+  ],
+  "gunsen_prime_set": [
+    ["gunsen_prime_blade", 2],
+    ["gunsen_prime_blueprint", 1],
+    ["gunsen_prime_handle", 2]
+  ],
+  "gyre_prime_set": [
+    ["gyre_prime_blueprint", 1],
+    ["gyre_prime_chassis_blueprint", 1],
+    ["gyre_prime_neuroptics_blueprint", 1],
+    ["gyre_prime_systems_blueprint", 1]
+  ],
+  "harrow_prime_set": [
+    ["harrow_prime_blueprint", 1],
+    ["harrow_prime_chassis_blueprint", 1],
+    ["harrow_prime_neuroptics_blueprint", 1],
+    ["harrow_prime_systems_blueprint", 1]
+  ],
+  "helios_prime_set": [
+    ["helios_prime_blueprint", 1],
+    ["helios_prime_carapace", 1],
+    ["helios_prime_cerebrum", 1],
+    ["helios_prime_systems", 1]
+  ],
+  "hespar_set": [
+    ["hespar_blade_blueprint", 1],
+    ["hespar_handle_blueprint", 1]
+  ],
+  "hikou_prime_set": [
+    ["hikou_prime_blueprint", 1],
+    ["hikou_prime_pouch", 2],
+    ["hikou_prime_stars", 2]
+  ],
+  "hildryn_prime_set": [
+    ["hildryn_prime_blueprint", 1],
+    ["hildryn_prime_chassis_blueprint", 1],
+    ["hildryn_prime_neuroptics_blueprint", 1],
+    ["hildryn_prime_systems_blueprint", 1]
+  ],
+  "hydroid_prime_set": [
+    ["hydroid_prime_blueprint", 1],
+    ["hydroid_prime_chassis_blueprint", 1],
+    ["hydroid_prime_neuroptics_blueprint", 1],
+    ["hydroid_prime_systems_blueprint", 1]
+  ],
+  "hystrix_prime_set": [
+    ["hystrix_prime_barrel", 1],
+    ["hystrix_prime_blueprint", 1],
+    ["hystrix_prime_receiver", 1]
+  ],
+  "imperator_vandal_set": [
+    ["imperator_vandal_barrel", 1],
+    ["imperator_vandal_blueprint", 1],
+    ["imperator_vandal_receiver", 1]
+  ],
+  "inaros_prime_set": [
+    ["inaros_prime_blueprint", 1],
+    ["inaros_prime_chassis_blueprint", 1],
+    ["inaros_prime_neuroptics_blueprint", 1],
+    ["inaros_prime_systems_blueprint", 1]
+  ],
+  "itzal_set": [
+    ["itzal_harness_blueprint", 1],
+    ["itzal_systems_blueprint", 1],
+    ["itzal_wings_blueprint", 1]
+  ],
+  "ivara_prime_set": [
+    ["ivara_prime_blueprint", 1],
+    ["ivara_prime_chassis_blueprint", 1],
+    ["ivara_prime_neuroptics_blueprint", 1],
+    ["ivara_prime_systems_blueprint", 1]
+  ],
+  "karak_wraith_set": [
+    ["karak_wraith_barrel", 1],
+    ["karak_wraith_blueprint", 1],
+    ["karak_wraith_receiver", 1],
+    ["karak_wraith_stock", 1]
+  ],
+  "karyst_prime_set": [
+    ["karyst_prime_blade", 1],
+    ["karyst_prime_blueprint", 1],
+    ["karyst_prime_handle", 1]
+  ],
+  "kaszas_set": [
+    ["kaszas_blade", 1],
+    ["kaszas_handle", 1]
+  ],
+  "kavasa_prime_kubrow_collar_set": [
+    ["kavasa_prime_band", 1],
+    ["kavasa_prime_buckle", 1],
+    ["kavasa_prime_kubrow_collar_blueprint", 1]
+  ],
+  "kestrel_prime_set": [
+    ["kestrel_prime_blade", 2],
+    ["kestrel_prime_blueprint", 1],
+    ["kestrel_prime_grip", 1]
+  ],
+  "khora_prime_set": [
+    ["khora_prime_blueprint", 1],
+    ["khora_prime_chassis_blueprint", 1],
+    ["khora_prime_neuroptics_blueprint", 1],
+    ["khora_prime_systems_blueprint", 1]
+  ],
+  "knell_prime_set": [
+    ["knell_prime_barrel", 1],
+    ["knell_prime_blueprint", 1],
+    ["knell_prime_receiver", 1]
+  ],
+  "kogake_prime_set": [
+    ["kogake_prime_blueprint", 1],
+    ["kogake_prime_boot", 2],
+    ["kogake_prime_gauntlet", 2]
+  ],
+  "kompressa_prime_set": [
+    ["kompressa_prime_barrel", 1],
+    ["kompressa_prime_blueprint", 1],
+    ["kompressa_prime_receiver", 1]
+  ],
+  "kronen_prime_set": [
+    ["kronen_prime_blade", 2],
+    ["kronen_prime_blueprint", 1],
+    ["kronen_prime_handle", 2]
+  ],
+  "larkspur_prime_set": [
+    ["larkspur_prime_barrel", 1],
+    ["larkspur_prime_blueprint", 1],
+    ["larkspur_prime_receiver", 1],
+    ["larkspur_prime_stock", 1]
+  ],
+  "lato_vandal_set": [
+    ["lato_vandal_barrel", 1],
+    ["lato_vandal_blueprint", 1],
+    ["lato_vandal_receiver", 1]
+  ],
+  "latron_prime_set": [
+    ["latron_prime_barrel", 1],
+    ["latron_prime_blueprint", 1],
+    ["latron_prime_receiver", 1],
+    ["latron_prime_stock", 1]
+  ],
+  "latron_wraith_set": [
+    ["latron_wraith_barrel", 1],
+    ["latron_wraith_blueprint", 1],
+    ["latron_wraith_receiver", 1],
+    ["latron_wraith_stock", 1]
+  ],
+  "lavos_prime_set": [
+    ["lavos_prime_blueprint", 1],
+    ["lavos_prime_chassis_blueprint", 1],
+    ["lavos_prime_neuroptics_blueprint", 1],
+    ["lavos_prime_systems_blueprint", 1]
+  ],
+  "lex_prime_set": [
+    ["lex_prime_barrel", 1],
+    ["lex_prime_blueprint", 1],
+    ["lex_prime_receiver", 1]
+  ],
+  "limbo_prime_set": [
+    ["limbo_prime_blueprint", 1],
+    ["limbo_prime_chassis_blueprint", 1],
+    ["limbo_prime_neuroptics_blueprint", 1],
+    ["limbo_prime_systems_blueprint", 1]
+  ],
+  "loki_prime_set": [
+    ["loki_prime_blueprint", 1],
+    ["loki_prime_chassis_blueprint", 1],
+    ["loki_prime_neuroptics_blueprint", 1],
+    ["loki_prime_systems_blueprint", 1]
+  ],
+  "mag_prime_set": [
+    ["mag_prime_blueprint", 1],
+    ["mag_prime_chassis_blueprint", 1],
+    ["mag_prime_neuroptics_blueprint", 1],
+    ["mag_prime_systems_blueprint", 1]
+  ],
+  "magnus_prime_set": [
+    ["magnus_prime_barrel", 1],
+    ["magnus_prime_blueprint", 1],
+    ["magnus_prime_receiver", 1]
+  ],
+  "mandonel_set": [
+    ["mandonel_barrel", 1],
+    ["mandonel_blueprint", 1],
+    ["mandonel_receiver", 1],
+    ["mandonel_stock", 1]
+  ],
+  "mantis_set": [
+    ["mantis_avionics_blueprint", 1],
+    ["mantis_engines_blueprint", 1],
+    ["mantis_fuselage_blueprint", 1]
+  ],
+  "masseter_prime_set": [
+    ["masseter_prime_blade", 1],
+    ["masseter_prime_blueprint", 1],
+    ["masseter_prime_handle", 1]
+  ],
+  "mesa_prime_set": [
+    ["mesa_prime_blueprint", 1],
+    ["mesa_prime_chassis_blueprint", 1],
+    ["mesa_prime_neuroptics_blueprint", 1],
+    ["mesa_prime_systems_blueprint", 1]
+  ],
+  "mirage_prime_set": [
+    ["mirage_prime_blueprint", 1],
+    ["mirage_prime_chassis_blueprint", 1],
+    ["mirage_prime_neuroptics_blueprint", 1],
+    ["mirage_prime_systems_blueprint", 1]
+  ],
+  "morgha_set": [
+    ["morgha_barrel", 1],
+    ["morgha_receiver", 1],
+    ["morgha_stock", 1]
+  ],
+  "nagantaka_prime_set": [
+    ["nagantaka_prime_barrel", 1],
+    ["nagantaka_prime_blueprint", 1],
+    ["nagantaka_prime_receiver", 1],
+    ["nagantaka_prime_stock", 1]
+  ],
+  "nami_skyla_prime_set": [
+    ["nami_skyla_prime_blade", 2],
+    ["nami_skyla_prime_blueprint", 1],
+    ["nami_skyla_prime_handle", 2]
+  ],
+  "nautilus_prime_set": [
+    ["nautilus_prime_blueprint", 1],
+    ["nautilus_prime_carapace", 1],
+    ["nautilus_prime_cerebrum", 1],
+    ["nautilus_prime_systems", 1]
+  ],
+  "nautilus_set": [
+    ["nautilus_blueprint", 1],
+    ["nautilus_carapace", 1],
+    ["nautilus_cerebrum", 1],
+    ["nautilus_systems", 1]
+  ],
+  "nekros_prime_set": [
+    ["nekros_prime_blueprint", 1],
+    ["nekros_prime_chassis_blueprint", 1],
+    ["nekros_prime_neuroptics_blueprint", 1],
+    ["nekros_prime_systems_blueprint", 1]
+  ],
+  "nezha_prime_set": [
+    ["nezha_prime_blueprint", 1],
+    ["nezha_prime_chassis_blueprint", 1],
+    ["nezha_prime_neuroptics_blueprint", 1],
+    ["nezha_prime_systems_blueprint", 1]
+  ],
+  "nidus_prime_set": [
+    ["nidus_prime_blueprint", 1],
+    ["nidus_prime_chassis_blueprint", 1],
+    ["nidus_prime_neuroptics_blueprint", 1],
+    ["nidus_prime_systems_blueprint", 1]
+  ],
+  "nightwave_set": [
+    ["nightwave_avionics_blueprint", 1],
+    ["nightwave_engines_blueprint", 1],
+    ["nightwave_fuselage_blueprint", 1]
+  ],
+  "nikana_prime_set": [
+    ["nikana_prime_blade", 1],
+    ["nikana_prime_blueprint", 1],
+    ["nikana_prime_hilt", 1]
+  ],
+  "ninkondi_prime_set": [
+    ["ninkondi_prime_blueprint", 1],
+    ["ninkondi_prime_chain", 1],
+    ["ninkondi_prime_handle", 2]
+  ],
+  "nova_prime_set": [
+    ["nova_prime_blueprint", 1],
+    ["nova_prime_chassis_blueprint", 1],
+    ["nova_prime_neuroptics_blueprint", 1],
+    ["nova_prime_systems_blueprint", 1]
+  ],
+  "nyx_prime_set": [
+    ["nyx_prime_blueprint", 1],
+    ["nyx_prime_chassis_blueprint", 1],
+    ["nyx_prime_neuroptics_blueprint", 1],
+    ["nyx_prime_systems_blueprint", 1]
+  ],
+  "oberon_prime_set": [
+    ["oberon_prime_blueprint", 1],
+    ["oberon_prime_chassis_blueprint", 1],
+    ["oberon_prime_neuroptics_blueprint", 1],
+    ["oberon_prime_systems_blueprint", 1]
+  ],
+  "octavia_prime_set": [
+    ["octavia_prime_blueprint", 1],
+    ["octavia_prime_chassis_blueprint", 1],
+    ["octavia_prime_neuroptics_blueprint", 1],
+    ["octavia_prime_systems_blueprint", 1]
+  ],
+  "odonata_prime_set": [
+    ["odonata_prime_blueprint", 1],
+    ["odonata_prime_harness_blueprint", 1],
+    ["odonata_prime_systems_blueprint", 1],
+    ["odonata_prime_wings_blueprint", 1]
+  ],
+  "okina_prime_set": [
+    ["okina_prime_blade", 2],
+    ["okina_prime_blueprint", 1],
+    ["okina_prime_handle", 2]
+  ],
+  "onorix_set": [
+    ["onorix_blade", 2],
+    ["onorix_handle", 1]
+  ],
+  "orthos_prime_set": [
+    ["orthos_prime_blade", 2],
+    ["orthos_prime_blueprint", 1],
+    ["orthos_prime_handle", 1]
+  ],
+  "pandero_prime_set": [
+    ["pandero_prime_barrel", 1],
+    ["pandero_prime_blueprint", 1],
+    ["pandero_prime_receiver", 1]
+  ],
+  "pangolin_prime_set": [
+    ["pangolin_prime_blade", 1],
+    ["pangolin_prime_blueprint", 1],
+    ["pangolin_prime_handle", 1]
+  ],
+  "panthera_prime_set": [
+    ["panthera_prime_barrel", 1],
+    ["panthera_prime_blueprint", 1],
+    ["panthera_prime_receiver", 1],
+    ["panthera_prime_stock", 1]
+  ],
+  "parallax_set": [
+    ["parallax_avionics_blueprint", 1],
+    ["parallax_engines_blueprint", 1],
+    ["parallax_fuselage_blueprint", 1]
+  ],
+  "paris_prime_set": [
+    ["paris_prime_blueprint", 1],
+    ["paris_prime_grip", 1],
+    ["paris_prime_lower_limb", 1],
+    ["paris_prime_string", 1],
+    ["paris_prime_upper_limb", 1]
+  ],
+  "pathocyst_set": [
+    ["pathocyst_blade", 2],
+    ["pathocyst_blueprint", 1],
+    ["pathocyst_subcortex", 1]
+  ],
+  "perigale_prime_set": [
+    ["perigale_prime_barrel", 1],
+    ["perigale_prime_blueprint", 1],
+    ["perigale_prime_receiver", 1],
+    ["perigale_prime_stock", 1]
+  ],
+  "perigale_set": [
+    ["perigale_barrel", 1],
+    ["perigale_receiver", 1],
+    ["perigale_stock", 1]
+  ],
+  "phaedra_set": [
+    ["phaedra_barrel", 1],
+    ["phaedra_receiver", 1],
+    ["phaedra_stock", 1]
+  ],
+  "phantasma_prime_set": [
+    ["phantasma_prime_barrel", 1],
+    ["phantasma_prime_blueprint", 1],
+    ["phantasma_prime_receiver", 1],
+    ["phantasma_prime_stock", 1]
+  ],
+  "prisma_shade_set": [
+    ["prisma_burst_laser", 1],
+    ["prisma_shade", 1]
+  ],
+  "protea_prime_set": [
+    ["protea_prime_blueprint", 1],
+    ["protea_prime_chassis_blueprint", 1],
+    ["protea_prime_neuroptics_blueprint", 1],
+    ["protea_prime_systems_blueprint", 1]
+  ],
+  "purgator_1_set": [
+    ["purgator_1_barrel", 1],
+    ["purgator_1_receiver", 1],
+    ["purgator_1_stock", 1]
+  ],
+  "pyrana_prime_set": [
+    ["pyrana_prime_barrel", 1],
+    ["pyrana_prime_blueprint", 1],
+    ["pyrana_prime_receiver", 1]
+  ],
+  "quassus_prime_set": [
+    ["quassus_prime_blade", 2],
+    ["quassus_prime_blueprint", 1],
+    ["quassus_prime_handle", 2]
+  ],
+  "rathbone_set": [
+    ["rathbone_handle", 1],
+    ["rathbone_head", 1]
+  ],
+  "rauta_set": [
+    ["rauta_barrel", 1],
+    ["rauta_receiver", 1],
+    ["rauta_stock", 1]
+  ],
+  "reaper_prime_set": [
+    ["reaper_prime_blade", 1],
+    ["reaper_prime_blueprint", 1],
+    ["reaper_prime_handle", 1]
+  ],
+  "reconifex_set": [
+    ["reconifex_barrel", 1],
+    ["reconifex_receiver", 1],
+    ["reconifex_stock", 1]
+  ],
+  "redeemer_prime_set": [
+    ["redeemer_prime_blade", 1],
+    ["redeemer_prime_blueprint", 1],
+    ["redeemer_prime_handle", 1]
+  ],
+  "revenant_prime_set": [
+    ["revenant_prime_blueprint", 1],
+    ["revenant_prime_chassis_blueprint", 1],
+    ["revenant_prime_neuroptics_blueprint", 1],
+    ["revenant_prime_systems_blueprint", 1]
+  ],
+  "rhino_prime_set": [
+    ["rhino_prime_blueprint", 1],
+    ["rhino_prime_chassis_blueprint", 1],
+    ["rhino_prime_neuroptics_blueprint", 1],
+    ["rhino_prime_systems_blueprint", 1]
+  ],
+  "riot_848_set": [
+    ["riot_848_barrel_blueprint", 1],
+    ["riot_848_receiver_blueprint", 1],
+    ["riot_848_stock_blueprint", 1]
+  ],
+  "rubico_prime_set": [
+    ["rubico_prime_barrel", 1],
+    ["rubico_prime_blueprint", 1],
+    ["rubico_prime_receiver", 1],
+    ["rubico_prime_stock", 1]
+  ],
+  "sarofang_prime_set": [
+    ["sarofang_prime_blade", 1],
+    ["sarofang_prime_blueprint", 1],
+    ["sarofang_prime_handle", 1]
+  ],
+  "sarofang_set": [
+    ["sarofang_blade", 1],
+    ["sarofang_handle", 1]
+  ],
+  "saryn_prime_set": [
+    ["saryn_prime_blueprint", 1],
+    ["saryn_prime_chassis_blueprint", 1],
+    ["saryn_prime_neuroptics_blueprint", 1],
+    ["saryn_prime_systems_blueprint", 1]
+  ],
+  "scimitar_set": [
+    ["scimitar_avionics_blueprint", 1],
+    ["scimitar_engines_blueprint", 1],
+    ["scimitar_fuselage_blueprint", 1]
+  ],
+  "scindo_prime_set": [
+    ["scindo_prime_blade", 1],
+    ["scindo_prime_blueprint", 1],
+    ["scindo_prime_handle", 1]
+  ],
+  "scourge_prime_set": [
+    ["scourge_prime_barrel", 1],
+    ["scourge_prime_blade", 1],
+    ["scourge_prime_blueprint", 1],
+    ["scourge_prime_handle", 1]
+  ],
+  "sevagoth_prime_set": [
+    ["sevagoth_prime_blueprint", 1],
+    ["sevagoth_prime_chassis_blueprint", 1],
+    ["sevagoth_prime_neuroptics_blueprint", 1],
+    ["sevagoth_prime_systems_blueprint", 1]
+  ],
+  "shade_prime_set": [
+    ["shade_prime_blueprint", 1],
+    ["shade_prime_carapace", 1],
+    ["shade_prime_cerebrum", 1],
+    ["shade_prime_systems", 1]
+  ],
+  "shedu_set": [
+    ["shedu_barrel", 1],
+    ["shedu_chassis", 1],
+    ["shedu_handle", 1],
+    ["shedu_receiver", 1]
+  ],
+  "sheev_set": [
+    ["sheev_blade", 1],
+    ["sheev_blueprint", 1],
+    ["sheev_heatsink", 1],
+    ["sheev_hilt", 1]
+  ],
+  "sicarus_prime_set": [
+    ["sicarus_prime_barrel", 1],
+    ["sicarus_prime_blueprint", 1],
+    ["sicarus_prime_receiver", 1]
+  ],
+  "silva_and_aegis_prime_set": [
+    ["silva_and_aegis_prime_blade", 1],
+    ["silva_and_aegis_prime_blueprint", 1],
+    ["silva_and_aegis_prime_guard", 1],
+    ["silva_and_aegis_prime_hilt", 1]
+  ],
+  "snipetron_vandal_set": [
+    ["snipetron_vandal_barrel", 1],
+    ["snipetron_vandal_blueprint", 1],
+    ["snipetron_vandal_receiver", 1],
+    ["snipetron_vandal_stock", 1]
+  ],
+  "soma_prime_set": [
+    ["soma_prime_barrel", 1],
+    ["soma_prime_blueprint", 1],
+    ["soma_prime_receiver", 1],
+    ["soma_prime_stock", 1]
+  ],
+  "spectra_vandal_set": [
+    ["spectra_vandal_barrel", 1],
+    ["spectra_vandal_blueprint", 1],
+    ["spectra_vandal_chassis", 1],
+    ["spectra_vandal_handle", 1]
+  ],
+  "spira_prime_set": [
+    ["spira_prime_blade", 2],
+    ["spira_prime_blueprint", 1],
+    ["spira_prime_pouch", 2]
+  ],
+  "sporothrix_set": [
+    ["sporothrix_barrel", 1],
+    ["sporothrix_blueprint", 1],
+    ["sporothrix_receiver", 1],
+    ["sporothrix_stock", 1]
+  ],
+  "stahlta_set": [
+    ["stahlta_barrel", 1],
+    ["stahlta_receiver", 1],
+    ["stahlta_stock", 1]
+  ],
+  "steflos_prime_set": [
+    ["steflos_prime_barrel", 1],
+    ["steflos_prime_blueprint", 1],
+    ["steflos_prime_receiver", 1],
+    ["steflos_prime_stock", 1]
+  ],
+  "steflos_set": [
+    ["steflos_barrel", 1],
+    ["steflos_receiver", 1],
+    ["steflos_stock", 1]
+  ],
+  "stradavar_prime_set": [
+    ["stradavar_prime_barrel", 1],
+    ["stradavar_prime_blueprint", 1],
+    ["stradavar_prime_receiver", 1],
+    ["stradavar_prime_stock", 1]
+  ],
+  "stropha_set": [
+    ["stropha_barrel", 1],
+    ["stropha_blade", 1],
+    ["stropha_receiver", 1],
+    ["stropha_stock", 1]
+  ],
+  "strun_prime_set": [
+    ["strun_prime_barrel", 1],
+    ["strun_prime_blueprint", 1],
+    ["strun_prime_receiver", 1],
+    ["strun_prime_stock", 1]
+  ],
+  "strun_wraith_set": [
+    ["strun_wraith_barrel", 1],
+    ["strun_wraith_blueprint", 1],
+    ["strun_wraith_receiver", 1],
+    ["strun_wraith_stock", 1]
+  ],
+  "styanax_prime_set": [
+    ["styanax_prime_blueprint", 1],
+    ["styanax_prime_chassis_blueprint", 1],
+    ["styanax_prime_neuroptics_blueprint", 1],
+    ["styanax_prime_systems_blueprint", 1]
+  ],
+  "sybaris_prime_set": [
+    ["sybaris_prime_barrel", 1],
+    ["sybaris_prime_blueprint", 1],
+    ["sybaris_prime_receiver", 1],
+    ["sybaris_prime_stock", 1]
+  ],
+  "tatsu_prime_set": [
+    ["tatsu_prime_blade", 1],
+    ["tatsu_prime_blueprint", 1],
+    ["tatsu_prime_handle", 1]
+  ],
+  "tekko_prime_set": [
+    ["tekko_prime_blade", 2],
+    ["tekko_prime_blueprint", 1],
+    ["tekko_prime_gauntlet", 2]
+  ],
+  "tenora_prime_set": [
+    ["tenora_prime_barrel", 1],
+    ["tenora_prime_blueprint", 1],
+    ["tenora_prime_receiver", 1],
+    ["tenora_prime_stock", 1]
+  ],
+  "tiberon_prime_set": [
+    ["tiberon_prime_barrel", 1],
+    ["tiberon_prime_blueprint", 1],
+    ["tiberon_prime_receiver", 1],
+    ["tiberon_prime_stock", 1]
+  ],
+  "tigris_prime_set": [
+    ["tigris_prime_barrel", 1],
+    ["tigris_prime_blueprint", 1],
+    ["tigris_prime_receiver", 1],
+    ["tigris_prime_stock", 1]
+  ],
+  "tipedo_prime_set": [
+    ["tipedo_prime_blueprint", 1],
+    ["tipedo_prime_handle", 1],
+    ["tipedo_prime_ornament", 2]
+  ],
+  "titania_prime_set": [
+    ["titania_prime_blueprint", 1],
+    ["titania_prime_chassis_blueprint", 1],
+    ["titania_prime_neuroptics_blueprint", 1],
+    ["titania_prime_systems_blueprint", 1]
+  ],
+  "trinity_prime_set": [
+    ["trinity_prime_blueprint", 1],
+    ["trinity_prime_chassis_blueprint", 1],
+    ["trinity_prime_neuroptics_blueprint", 1],
+    ["trinity_prime_systems_blueprint", 1]
+  ],
+  "trumna_prime_set": [
+    ["trumna_prime_barrel", 1],
+    ["trumna_prime_blueprint", 1],
+    ["trumna_prime_receiver", 1],
+    ["trumna_prime_stock", 1]
+  ],
+  "twin_vipers_wraith_set": [
+    ["twin_vipers_wraith_barrels", 1],
+    ["twin_vipers_wraith_blueprint", 1],
+    ["twin_vipers_wraith_link", 1],
+    ["twin_vipers_wraith_receivers", 1]
+  ],
+  "vadarya_prime_set": [
+    ["vadarya_prime_barrel", 1],
+    ["vadarya_prime_blueprint", 1],
+    ["vadarya_prime_receiver", 1],
+    ["vadarya_prime_stock", 1]
+  ],
+  "valkyr_prime_set": [
+    ["valkyr_prime_blueprint", 1],
+    ["valkyr_prime_chassis_blueprint", 1],
+    ["valkyr_prime_neuroptics_blueprint", 1],
+    ["valkyr_prime_systems_blueprint", 1]
+  ],
+  "vasto_prime_set": [
+    ["vasto_prime_barrel", 1],
+    ["vasto_prime_blueprint", 1],
+    ["vasto_prime_receiver", 1]
+  ],
+  "vauban_prime_set": [
+    ["vauban_prime_blueprint", 1],
+    ["vauban_prime_chassis_blueprint", 1],
+    ["vauban_prime_neuroptics_blueprint", 1],
+    ["vauban_prime_systems_blueprint", 1]
+  ],
+  "vectis_prime_set": [
+    ["vectis_prime_barrel", 1],
+    ["vectis_prime_blueprint", 1],
+    ["vectis_prime_receiver", 1],
+    ["vectis_prime_stock", 1]
+  ],
+  "velocitus_set": [
+    ["velocitus_barrel", 1],
+    ["velocitus_receiver", 1],
+    ["velocitus_stock", 1]
+  ],
+  "velox_prime_set": [
+    ["velox_prime_barrel", 1],
+    ["velox_prime_blueprint", 1],
+    ["velox_prime_receiver", 1]
+  ],
+  "velox_set": [
+    ["velox_barrel", 1],
+    ["velox_receiver", 1]
+  ],
+  "venato_prime_set": [
+    ["venato_prime_blade", 1],
+    ["venato_prime_blueprint", 1],
+    ["venato_prime_handle", 1]
+  ],
+  "venka_prime_set": [
+    ["venka_prime_blades", 2],
+    ["venka_prime_blueprint", 1],
+    ["venka_prime_gauntlet", 2]
+  ],
+  "vesper_77_set": [
+    ["vesper_77_barrel", 1],
+    ["vesper_77_handle", 1],
+    ["vesper_77_receiver", 1]
+  ],
+  "voidrig_set": [
+    ["voidrig_capsule", 1],
+    ["voidrig_casing", 1],
+    ["voidrig_engine", 1],
+    ["voidrig_weapon_pod", 1]
+  ],
+  "volnus_prime_set": [
+    ["volnus_prime_blueprint", 1],
+    ["volnus_prime_handle", 1],
+    ["volnus_prime_head", 1]
+  ],
+  "volt_prime_set": [
+    ["volt_prime_blueprint", 1],
+    ["volt_prime_chassis_blueprint", 1],
+    ["volt_prime_neuroptics_blueprint", 1],
+    ["volt_prime_systems_blueprint", 1]
+  ],
+  "voruna_prime_set": [
+    ["voruna_prime_blueprint", 1],
+    ["voruna_prime_chassis_blueprint", 1],
+    ["voruna_prime_neuroptics_blueprint", 1],
+    ["voruna_prime_systems_blueprint", 1]
+  ],
+  "wisp_prime_set": [
+    ["wisp_prime_blueprint", 1],
+    ["wisp_prime_chassis_blueprint", 1],
+    ["wisp_prime_neuroptics_blueprint", 1],
+    ["wisp_prime_systems_blueprint", 1]
+  ],
+  "wolf_sledge_set": [
+    ["wolf_sledge_blueprint", 1],
+    ["wolf_sledge_handle", 1],
+    ["wolf_sledge_head", 1],
+    ["wolf_sledge_motor", 1]
+  ],
+  "wukong_prime_set": [
+    ["wukong_prime_blueprint", 1],
+    ["wukong_prime_chassis_blueprint", 1],
+    ["wukong_prime_neuroptics_blueprint", 1],
+    ["wukong_prime_systems_blueprint", 1]
+  ],
+  "wyrm_prime_set": [
+    ["wyrm_prime_blueprint", 1],
+    ["wyrm_prime_carapace", 1],
+    ["wyrm_prime_cerebrum", 1],
+    ["wyrm_prime_systems", 1]
+  ],
+  "xaku_prime_set": [
+    ["xaku_prime_blueprint", 1],
+    ["xaku_prime_chassis_blueprint", 1],
+    ["xaku_prime_neuroptics_blueprint", 1],
+    ["xaku_prime_systems_blueprint", 1]
+  ],
+  "xiphos_set": [
+    ["xiphos_avionics_blueprint", 1],
+    ["xiphos_engines_blueprint", 1],
+    ["xiphos_fuselage_blueprint", 1]
+  ],
+  "yareli_prime_set": [
+    ["yareli_prime_blueprint", 1],
+    ["yareli_prime_chassis_blueprint", 1],
+    ["yareli_prime_neuroptics_blueprint", 1],
+    ["yareli_prime_systems_blueprint", 1]
+  ],
+  "zakti_prime_set": [
+    ["zakti_prime_barrel", 1],
+    ["zakti_prime_blueprint", 1],
+    ["zakti_prime_receiver", 1]
+  ],
+  "zephyr_prime_set": [
+    ["zephyr_prime_blueprint", 1],
+    ["zephyr_prime_chassis_blueprint", 1],
+    ["zephyr_prime_neuroptics_blueprint", 1],
+    ["zephyr_prime_systems_blueprint", 1]
+  ],
+  "zhuge_prime_set": [
+    ["zhuge_prime_barrel", 1],
+    ["zhuge_prime_blueprint", 1],
+    ["zhuge_prime_grip", 1],
+    ["zhuge_prime_receiver", 1],
+    ["zhuge_prime_string", 1]
+  ],
+  "zylok_prime_set": [
+    ["zylok_prime_barrel", 1],
+    ["zylok_prime_blueprint", 1],
+    ["zylok_prime_receiver", 1]
+  ]
+}

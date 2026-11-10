@@ -55,7 +55,7 @@ export function VosforCalculator({ prices }: { prices: Price[] }) {
     <>
       <section
         aria-label="Your Vosfor"
-        className="border-line bg-panel flex flex-wrap items-end gap-x-8 gap-y-4 rounded-[14px] border p-[18px]"
+        className="border-line bg-panel flex flex-wrap items-end gap-x-8 gap-y-4 rounded-[10px] border p-[18px]"
       >
         <div>
           <label htmlFor={`${id}-vosfor`} className="text-muted block text-xs">
@@ -145,7 +145,7 @@ function Ranking({
 }) {
   const packs = packsFrom(vosfor);
   return (
-    <section aria-labelledby="collections" className="border-line bg-panel min-w-0 rounded-[14px] border">
+    <section aria-labelledby="collections" className="border-line bg-panel min-w-0 rounded-[10px] border">
       <div className="px-[18px] pt-4">
         <h2 id="collections" className="text-base font-semibold">
           Collections by expected plat
@@ -178,7 +178,7 @@ function Ranking({
               const total = strategy === "recycle" ? vosfor * v.lambda : packs * v.sellPack;
               const selected = v.id === current;
               return (
-                <tr key={v.id} className={`border-line border-t ${selected ? "bg-raised" : "hover:bg-[#161a23]"}`}>
+                <tr key={v.id} className={`border-line border-t ${selected ? "bg-raised" : "hover:bg-raised/60"}`}>
                   <td className="py-2 pr-2.5 pl-[18px]">
                     <button
                       type="button"
@@ -249,7 +249,7 @@ function Details({
   const fusing = toKeep.filter((d) => d.fuses).length;
 
   return (
-    <section aria-labelledby="details" className="border-line bg-panel min-w-0 rounded-[14px] border">
+    <section aria-labelledby="details" className="border-line bg-panel min-w-0 rounded-[10px] border">
       <div className="px-[18px] pt-4">
         <h2 id="details" className="text-base font-semibold">
           {value.name} Arcane Collection
@@ -367,7 +367,7 @@ function Details({
               return (
                 <tr
                   key={d.slug}
-                  className={`border-line border-t ${dissolve ? "hover:bg-[#161a23]" : "bg-accent/[0.06] hover:bg-accent/10"}`}
+                  className={`border-line border-t ${dissolve ? "hover:bg-raised/60" : "bg-accent/[0.06] hover:bg-accent/10"}`}
                 >
                   <td
                     className={`py-2 pr-2.5 pl-[18px] ${dissolve ? "" : "shadow-[inset_3px_0_0_var(--color-accent)]"}`}

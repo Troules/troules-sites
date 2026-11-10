@@ -5,6 +5,7 @@ Standard library only, so it runs on the VM without a virtualenv. Commands:
 
   fixtures OUT_DIR SLUG...   write the sample data the site uses in CI and e2e (src/fixtures/, committed)
   fixtures OUT_DIR --all     the same for every catalog item (.data/full/, local only: about an hour at 2.3 req/s)
+  catalog OUT_DIR            refresh only the item list and the parts of every set (catalog, slugs, sets): ~240 requests
   clean DIR                  re-apply the outlier rule and summaries to DIR/market.json, without any request
   upload DIR                 load DIR/market.json into Supabase schema `wf` (psql; connection from PG* env vars)
   sweep DIR                  fixtures DIR --all, then upload, then call the Vercel deploy hook in $WF_DEPLOY_HOOK_FILE
@@ -248,7 +249,14 @@ def catalog_entry(item: dict) -> dict:
         "kind": kind_of(item.get("tags", [])),
         "maxRank": item.get("maxRank"),
         "subtypes": item.get("subtypes"),
+        "ducats": item.get("ducats"),  # what Baro's kiosk pays for a prime part; None for everything else
     }
+
+
+def parse_set(payload: dict) -> list[list]:
+    """[[part slug, quantity in the set]] from /v2/item/{slug}/set, without the set itself, sorted by slug."""
+    parts = [[i["slug"], i.get("quantityInSet", 1)] for i in payload["data"]["items"] if not i.get("setRoot")]
+    return sorted(parts)
 
 
 def anonymize_order(o: dict) -> dict:
@@ -320,6 +328,27 @@ def cmd_fixtures(out_dir: str, slugs: list[str] | None, client: Client) -> None:
          "summaries": summaries, "history": history, "hourly": hourly, "orders": orders},
     )
     print(f"{len(catalog)} catalog items, {len(summaries)} summaries for {len(history)} items -> {out_dir}")
+
+
+def cmd_catalog(out_dir: str, client: Client) -> None:
+    """Write catalog.json, slugs.json and sets.json: the game data the site commits, without any market request.
+
+    Set compositions are not in /v2/items, so each set costs one request; the daily sweep does not need them.
+    """
+    items = client.get("/v2/items")["data"]
+    catalog = sorted((catalog_entry(i) for i in items), key=lambda c: c["slug"])
+    known = {c["slug"] for c in catalog}
+    sets = {}
+    for slug in sorted(i["slug"] for i in items if "set" in i.get("tags", [])):
+        res = client.get(f"/v2/item/{slug}/set")
+        parts = [p for p in parse_set(res) if p[0] in known] if res else []
+        if parts:
+            sets[slug] = parts
+    os.makedirs(out_dir, exist_ok=True)
+    dump(os.path.join(out_dir, "catalog.json"), catalog)
+    dump(os.path.join(out_dir, "slugs.json"), [c["slug"] for c in catalog])
+    dump(os.path.join(out_dir, "sets.json"), sets)
+    print(f"{len(catalog)} catalog items, {len(sets)} sets -> {out_dir}")
 
 
 def cmd_clean(directory: str) -> None:
@@ -441,6 +470,8 @@ def main(argv: list[str] | None = None) -> int:
     f.add_argument("out_dir")
     f.add_argument("slugs", nargs="*", help="item slugs to include")
     f.add_argument("--all", action="store_true", help="include every catalog item instead")
+    g = sub.add_parser("catalog", help="refresh the item list and set compositions only")
+    g.add_argument("out_dir")
     c = sub.add_parser("clean", help="re-apply outlier filtering and summaries to stored data")
     c.add_argument("dir")
     u = sub.add_parser("upload", help="load DIR/market.json into Supabase schema wf")
@@ -450,6 +481,8 @@ def main(argv: list[str] | None = None) -> int:
     args = p.parse_args(argv)
     if args.cmd == "fixtures" and not (args.all or args.slugs):
         p.error("fixtures needs SLUG... or --all")
+    if args.cmd == "catalog":
+        cmd_catalog(args.out_dir, Client())
     if args.cmd == "clean":
         cmd_clean(args.dir)
     if args.cmd == "fixtures":

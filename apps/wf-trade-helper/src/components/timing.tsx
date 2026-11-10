@@ -1,4 +1,5 @@
 import { ProfileChart } from "@/components/charts";
+import { LocalHours } from "@/components/local-hours";
 import { REGIONS, WEEKDAYS, regionIndex, type Bucket } from "@/lib/signals";
 
 const HOUR_TICKS = Array.from({ length: 24 }, (_, h) => (h % 3 ? "" : String(h).padStart(2, "0")));
@@ -42,8 +43,8 @@ export function Timing({
   const eu = idx.find((r) => r.id === "europe")!.pct;
   const noHours = hours.every((b) => b.trades === 0);
   return (
-    <section aria-labelledby={id} className="border-line bg-panel rounded-[14px] border px-[18px] py-4">
-      <h2 id={id} className="text-base font-semibold">
+    <section aria-labelledby={id} className="panel px-[18px] py-4">
+      <h2 id={id} className="text-lg font-semibold">
         When to sell · {scope}
       </h2>
       {noHours ? (
@@ -81,9 +82,11 @@ function RegionTiles({ idx, eu }: { idx: RegionRow[]; eu: number | null }) {
   return (
     <ul className="mt-3 grid grid-cols-[repeat(auto-fit,minmax(170px,1fr))] gap-2.5">
       {idx.map((r) => (
-        <li key={r.id} className="border-line rounded-[10px] border px-3 py-2.5">
-          <div className="text-muted text-xs">
-            {r.label} · {String(r.from).padStart(2, "0")}–{String(r.to).padStart(2, "0")} UTC
+        <li key={r.id} className="border-line rounded-[8px] border px-3 py-2.5">
+          <div className="text-xs">{r.label}</div>
+          <div className="num text-muted text-[11px]">
+            {String(r.from).padStart(2, "0")}:00–{String(r.to).padStart(2, "0")}:00 UTC
+            <LocalHours from={r.from} to={r.to} />
           </div>
           <div className="num mt-1 text-lg">
             {r.pct == null ? (

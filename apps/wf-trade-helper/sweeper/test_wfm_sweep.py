@@ -145,6 +145,38 @@ class HelpersTest(unittest.TestCase):
         self.assertNotIn("secret", str(merged))
 
 
+class CatalogTest(unittest.TestCase):
+    ITEMS = [
+        {"slug": "dual_kamas_prime_set", "tags": ["prime", "set"], "ducats": 305,
+         "i18n": {"en": {"name": "Dual Kamas Prime Set", "thumb": "t.png"}}},
+        {"slug": "dual_kamas_prime_blade", "tags": ["prime", "component"], "ducats": 100,
+         "i18n": {"en": {"name": "Dual Kamas Prime Blade"}}},
+        {"slug": "streamline", "tags": ["mod"], "maxRank": 5, "i18n": {"en": {"name": "Streamline"}}},
+    ]
+    SET = {"data": {"items": [
+        {"slug": "dual_kamas_prime_set", "setRoot": True},
+        {"slug": "dual_kamas_prime_blade", "setRoot": False, "quantityInSet": 2},
+        {"slug": "gone_from_the_catalog", "setRoot": False},
+    ]}}
+
+    def test_keeps_ducats_and_reads_set_parts(self):
+        self.assertEqual(w.catalog_entry(self.ITEMS[1])["ducats"], 100)
+        self.assertIsNone(w.catalog_entry(self.ITEMS[2])["ducats"])
+        self.assertEqual(w.parse_set(self.SET), [["dual_kamas_prime_blade", 2], ["gone_from_the_catalog", 1]])
+
+    def test_catalog_command_asks_once_per_set_and_drops_unknown_parts(self):
+        client = mock.Mock()
+        client.get.side_effect = lambda path: {"data": self.ITEMS} if path == "/v2/items" else self.SET
+        with tempfile.TemporaryDirectory() as d, mock.patch("builtins.print"):
+            w.cmd_catalog(d, client)
+            with open(os.path.join(d, "sets.json"), encoding="utf-8") as f:
+                self.assertEqual(json.load(f), {"dual_kamas_prime_set": [["dual_kamas_prime_blade", 2]]})
+            with open(os.path.join(d, "slugs.json"), encoding="utf-8") as f:
+                self.assertEqual(len(json.load(f)), 3)
+        self.assertEqual([c.args[0] for c in client.get.call_args_list],
+                         ["/v2/items", "/v2/item/dual_kamas_prime_set/set"])
+
+
 class SubtypeTest(unittest.TestCase):
     def test_ayatan_star_counts_are_variants(self):
         self.assertEqual(w.subtype_of({"subtype": "radiant"}), "radiant")

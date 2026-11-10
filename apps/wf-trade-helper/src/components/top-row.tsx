@@ -7,8 +7,8 @@ import { volatility } from "@/lib/signals";
 import type { Row } from "@/lib/types";
 
 /**
- * Header and row of the top-100 table. No "use client": the first 10 rows render on the server, and MoreRows
- * renders the lazily loaded ones with the same component in the browser.
+ * Header and row of the top-100 table, rendered by TopBoard (on the server for the first paint, then in the
+ * browser as more rows load).
  *
  * The table never scrolls sideways: it lives in a size container, and the least useful columns drop out as that
  * container narrows (the column the list is sorted by always stays).
@@ -67,22 +67,22 @@ export function TopRow({ row: r, n, sort }: { row: Row; n: number; sort: Sort })
       r.cv90 == null ? (
         <span className="text-muted">—</span>
       ) : (
-        <span className="flex flex-col font-sans">
-          <span className="text-[13px]">{volatility(r.cv90).label}</span>
+        <span className="flex flex-col">
+          <span className="text-[13px] [font-stretch:92%]">{volatility(r.cv90).label}</span>
           <span className="text-muted text-[11px]">±{Math.round(r.cv90 * 100)}%</span>
         </span>
       ),
     spark: <Sparkline values={r.spark30} label={`${r.name}: daily median over the last 30 days`} />,
   };
   return (
-    <tr className="border-line border-t hover:bg-[#161a23]">
+    <tr className="border-line hover:bg-raised/60 border-t">
       <td className="num text-muted py-2.5 pr-2 pl-[18px]">{n}</td>
       <td className="px-2 py-2.5">
         <Link href={`/items/${r.slug}`} className="hover:text-accent flex items-center gap-2.5">
           <ItemIcon name={r.name} thumb={r.thumb} />
           <span className="flex min-w-0 flex-col">
             <span className="font-medium">{r.name}</span>
-            <span className="num text-muted text-xs">{variantLabel(r, r.maxRank)}</span>
+            <span className="text-muted text-xs">{variantLabel(r, r.maxRank)}</span>
           </span>
         </Link>
       </td>
@@ -109,7 +109,7 @@ function Position({ row }: { row: Row }) {
   return (
     <span className="flex flex-col items-end">
       <span className={pct >= 80 ? "text-up" : pct <= 20 ? "text-down" : ""}>{pct}%</span>
-      <span className="text-muted text-[11px]">
+      <span className="text-muted text-[11px] [font-variant-numeric:normal]">
         {Math.round(row.lo90!).toLocaleString("en-US")}–{plat(row.hi90!)}
       </span>
     </span>
