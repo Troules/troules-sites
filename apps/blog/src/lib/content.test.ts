@@ -1,10 +1,15 @@
 // @vitest-environment jsdom
 // Validates every article in content/: this is the gate Hermes's pull requests must pass.
+import { Blob as NodeBlob } from "node:buffer";
 import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import type { Root } from "hast";
 import { visit } from "unist-util-visit";
 import { describe, expect, it, vi } from "vitest";
+
+// jsdom (needed by Mermaid) replaces Node's Blob with one that has no .stream(). Shiki >= 4.6 inflates its inlined
+// Wasm with `new Blob([...]).stream()`, so give the highlighter Node's real Blob back.
+globalThis.Blob = NodeBlob as typeof Blob;
 
 vi.mock("server-only", () => ({}));
 vi.mock("next/cache", () => ({ cacheLife: () => {} }));
