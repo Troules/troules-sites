@@ -33,6 +33,7 @@ flowchart LR
 | Domains               | dynv6 zone `troules.dynv6.net` → Vercel                                               | [0007](adr/0007-domains-dynv6.md)                |
 | Index design          | Liquid glass as progressive enhancement                                               | [0008](adr/0008-liquid-glass.md)                 |
 | Market data           | wf-trade-helper: VM sweep of warframe.market, sample fixtures until Supabase          | [0009](adr/0009-market-data.md)                  |
+| Dependency updates    | Dependabot patch/minor auto-merged once required checks pass; majors manual           | [0010](adr/0010-dependabot-automerge.md)         |
 
 ## Limits that matter (free tiers, checked 2026-10)
 

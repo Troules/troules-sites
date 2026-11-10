@@ -1,0 +1,33 @@
+name: Dependabot auto-merge
+
+# Turns on GitHub auto-merge for low-risk Dependabot PRs (ADR 0010). It only *queues* the merge: GitHub squash-merges
+# once every required check on main's ruleset is green, so nothing here can skip CI. Majors, and minors of
+# Next/React, stay manual.
+on: pull_request
+
+permissions: {}
+
+jobs:
+  enable:
+    name: Enable auto-merge
+    if: github.event.pull_request.user.login == 'dependabot[bot]' && github.repository == 'Troules/troules-sites'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # merge
+      pull-requests: write # enable auto-merge
+    steps:
+      - id: meta
+        # Also verifies the PR's commits really come from Dependabot.
+        uses: dependabot/fetch-metadata@25dd0e34f4fe68f24cc83900b1fe3fe149efef98 # v3.1.0
+      - name: Patch, or minor outside Next/React
+        # update-type is the highest change in the PR, so one major in a group keeps the whole PR manual.
+        if: >-
+          steps.meta.outputs.update-type == 'version-update:semver-patch' ||
+          (steps.meta.outputs.update-type == 'version-update:semver-minor' &&
+           steps.meta.outputs.dependency-group != 'next-react' &&
+           !contains(steps.meta.outputs.dependency-names, 'next') &&
+           !contains(steps.meta.outputs.dependency-names, 'react'))
+        run: gh pr merge --auto --squash "$PR_URL"
+        env:
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

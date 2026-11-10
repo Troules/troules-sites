@@ -35,7 +35,8 @@ updates:
           ]
       content:
         update-types: ["minor", "patch"]
-        patterns: ["unified", "remark-*", "rehype-*", "@shikijs/*", "mermaid", "hast-*", "unist-*", "yaml", "zod"]
+        patterns:
+          ["unified", "remark-*", "rehype-*", "shiki", "@shikijs/*", "mermaid", "hast-*", "unist-*", "yaml", "zod"]
   - package-ecosystem: github-actions
     directory: /
     schedule: { interval: weekly, day: monday }
