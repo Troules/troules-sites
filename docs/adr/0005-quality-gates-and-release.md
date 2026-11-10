@@ -16,7 +16,7 @@ pre-push lint + typecheck + unit tests (Turbo-cached).
 | Content guard             | `hermes/*` branches only touch `apps/blog/content/`                                                                                                                                                                                                                 |
 | Changeset                 | code changes in `apps/` or `packages/` need a changeset                                                                                                                                                                                                             |
 | PR title                  | Conventional Commits (squash merges use it)                                                                                                                                                                                                                         |
-| Dependency review         | blocks new deps with moderate+ advisories or GPL/AGPL licences                                                                                                                                                                                                      |
+| Dependency review         | blocks new deps with moderate+ advisories or GPL/AGPL licences (required, ADR 0010)                                                                                                                                                                                 |
 
 **Release**: every code PR is a release. The author runs `pnpm changeset` then `pnpm version-packages` (bumps each
 `package.json`, writes `CHANGELOG.md`); the `Changeset` job fails code PRs without a bump. After the merge,
@@ -39,8 +39,9 @@ default setup (public repo); lockfile frozen in CI. Agent skills pinned by hash 
 Known accepted risk: `web-design-guidelines` fetches its rules from vercel-labs' `main` at run time.
 
 **Ruleset on main**: PR required (0 approvals: single maintainer), squash merge only, required checks `Lint, types,
-tests, build`, `Content guard`, `Changeset`, `PR title (Conventional Commits)`; linear history; no force push or
-deletion; **no bypass actors** (not even admins: Hermes's token belongs to the admin account).
+tests, build`, `Content guard`, `Changeset`, `PR title (Conventional Commits)`, `Dependency review` (since ADR 0010);
+linear history; no force push or deletion; **no bypass actors** (not even admins: Hermes's token belongs to the admin
+account).
 
 ## Consequences
 
