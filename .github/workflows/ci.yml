@@ -122,3 +122,6 @@ jobs:
         with:
           fail-on-severity: moderate
           deny-licenses: AGPL-3.0, GPL-3.0
+          # elkjs (bundled by mermaid) is "EPL-2.0 OR GPL-3.0-or-later" since 0.12; we use it under EPL-2.0, as before.
+          # This exempts elkjs from every licence rule: re-check its licence when mermaid bumps it (ADR 0005).
+          allow-dependencies-licenses: pkg:npm/elkjs
