@@ -37,6 +37,10 @@ Dependabot groups only bundle minor/patch updates, so every major gets its own P
 `minimumReleaseAge` 7 days and an install-script allow-list; Dependabot weekly, grouped, 7-day cooldown; CodeQL
 default setup (public repo); lockfile frozen in CI. Agent skills pinned by hash in `skills-lock.json`.
 Known accepted risk: `web-design-guidelines` fetches its rules from vercel-labs' `main` at run time.
+Licence exception (2026-11-10): `elkjs` (bundled by mermaid) became `EPL-2.0 OR GPL-3.0-or-later` in 0.12, which
+`deny-licenses` flags because one alternative is GPL. We use it under EPL-2.0, as with 0.9.3, so Dependency review
+lists it in `allow-dependencies-licenses`. That input exempts it from every licence rule, so re-check elkjs's licence
+when mermaid moves it.
 
 **Ruleset on main**: PR required (0 approvals: single maintainer), squash merge only, required checks `Lint, types,
 tests, build`, `Content guard`, `Changeset`, `PR title (Conventional Commits)`, `Dependency review` (since ADR 0010);
