@@ -14,8 +14,8 @@ strictPeerDependencies: true
 
 # One version per dependency across every site: upgrade here, not in each package.json.
 catalog:
-  next: 16.4.3
-  eslint-config-next: 16.4.3
+  next: 16.4.5
+  eslint-config-next: 16.4.5
   react: 19.3.1
   react-dom: 19.3.1
   "@types/react": ^19
