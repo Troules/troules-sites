@@ -16,16 +16,16 @@ export default async function VosforPage() {
   const priced = prices.filter((p) => p.price != null).length;
 
   return (
-    <main className="mx-auto flex max-w-[1240px] flex-col gap-5 px-5 pt-6 pb-6">
+    <main className="mx-auto flex max-w-[1240px] flex-col gap-5 px-4 pt-6 pb-6 sm:px-5">
       <nav aria-label="Breadcrumb" className="text-muted text-xs">
-        <Link href="/" className="text-accent underline underline-offset-2">
-          Dashboard
+        <Link href="/" className="link">
+          Market
         </Link>{" "}
         / Vosfor calculator
       </nav>
       <div>
-        <h1 className="text-2xl font-semibold">Vosfor calculator</h1>
-        <p className="text-muted mt-1.5 max-w-[760px] text-[13px] leading-relaxed">
+        <h1 className="text-[32px] leading-tight font-semibold">Vosfor calculator</h1>
+        <p className="text-muted mt-1.5 max-w-[72ch] leading-relaxed">
           Loid sells nine Arcane Collections for {PACK_COST} Vosfor and {PACK_CREDITS.toLocaleString("en-US")} credits
           each. A pack gives {PULLS_PER_PACK} unranked arcanes, each drawn on its own. This page values every pull at
           its rank-0 7-day median on warframe.market and shows which collection pays the most plat for the Vosfor you

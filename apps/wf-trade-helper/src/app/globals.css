@@ -1,22 +1,24 @@
 @import "tailwindcss";
 @import "@troules/ui/glass.css";
 
-/* Trading-terminal palette from the approved mockup. Rises are blue and drops orange (not green/red), and every
-   delta also carries ▲/▼ text, so colour is never the only signal. */
+/* Void-dark palette. Rises are blue and drops orange (not green/red), and every delta also carries ▲/▼ text, so
+   colour is never the only signal. One family, Saira, in two widths: regular for reading, condensed for headings
+   and for every number, so dense tables stay narrow without shrinking the type. */
 @theme {
-  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
-  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
-  --color-bg: #0b0d12;
-  --color-panel: #12151c;
-  --color-raised: #1c2230;
-  --color-line: #222734;
-  --color-line-strong: #2c3340;
-  --color-chip: #263043;
-  --color-ink: #e7eaf0;
-  --color-muted: #9aa3b2;
+  --font-sans: var(--font-saira), ui-sans-serif, system-ui, sans-serif;
+  --color-bg: #07090f;
+  --color-panel: #0f1320;
+  --color-raised: #171c2c;
+  --color-line: #1f2638;
+  --color-line-strong: #2d3650;
+  --color-chip: #222b44;
+  --color-ink: #e8ebf3;
+  --color-muted: #9aa4b9;
   --color-accent: #8fd3ff;
   --color-up: #6cb6ff;
   --color-down: #ffa657;
+  --radius-panel: 10px;
+  --radius-control: 7px;
 }
 
 :root {
@@ -26,18 +28,100 @@
 
 body {
   min-height: 100dvh;
-  background: var(--color-bg);
   color: var(--color-ink);
+  font-stretch: 92%;
+  /* The one decorative moment: a faint glow behind the header, like light leaking out of the Void. It is fixed and
+     tiny in paint cost (two gradients), and sits under every panel. */
+  background:
+    radial-gradient(900px 420px at 18% -140px, rgb(84 104 230 / 0.2), transparent 70%),
+    radial-gradient(700px 360px at 92% -160px, rgb(143 211 255 / 0.1), transparent 70%), var(--color-bg);
+  background-attachment: fixed;
 }
 
+h1,
+h2,
+h3 {
+  font-stretch: 80%;
+  letter-spacing: 0.01em;
+}
+
+/* Every figure: condensed and tabular, so columns line up and a 6-digit plat total fits a phone. */
 .num {
-  font-family: var(--font-mono);
+  font-stretch: 78%;
   font-variant-numeric: tabular-nums;
+  letter-spacing: 0.01em;
 }
 
 :focus-visible {
   outline: 2px solid var(--color-accent);
   outline-offset: 2px;
+}
+
+@layer components {
+  .panel {
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-panel);
+    background: var(--color-panel);
+  }
+
+  /* Text links inside prose and tables. */
+  .link {
+    color: var(--color-accent);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    text-decoration-color: rgb(143 211 255 / 0.45);
+  }
+  .link:hover {
+    text-decoration-color: currentColor;
+  }
+
+  .btn {
+    display: inline-flex;
+    min-height: 2.5rem;
+    cursor: pointer;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    border: 1px solid var(--color-line-strong);
+    border-radius: var(--radius-control);
+    background: var(--color-chip);
+    padding: 0 0.9rem;
+    font-weight: 500;
+    color: var(--color-ink);
+    transition:
+      background-color 0.12s,
+      border-color 0.12s;
+  }
+  .btn:hover {
+    border-color: rgb(154 164 185 / 0.6);
+    background: #2a3554;
+  }
+  .btn:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
+  .btn-primary {
+    border-color: transparent;
+    background: var(--color-accent);
+    font-weight: 600;
+    color: var(--color-bg);
+  }
+  .btn-primary:hover {
+    border-color: transparent;
+    background: #b4e2ff;
+  }
+
+  .field {
+    min-height: 2.5rem;
+    border: 1px solid var(--color-line-strong);
+    border-radius: var(--radius-control);
+    background: var(--color-bg);
+    padding: 0 0.75rem;
+    color: var(--color-ink);
+  }
+  .field::placeholder {
+    color: var(--color-muted);
+  }
 }
 
 /* Flatter glass for a dense UI: smaller radius and blur than the index site's hero panels. The header spans the
@@ -46,7 +130,7 @@ body {
 .glass.glass-bar {
   --glass-radius: 0;
   --glass-blur: 14px;
-  background: rgb(11 13 18 / 0.72);
+  background: rgb(7 9 15 / 0.74);
   box-shadow: none;
 }
 .glass.glass-bar::before,
@@ -59,11 +143,29 @@ body {
   }
 }
 .glass.glass-dialog {
-  --glass-radius: 16px;
+  --glass-radius: 14px;
   --glass-blur: 18px;
-  background: rgb(22 26 35 / 0.88);
+  background: rgb(19 24 39 / 0.9);
 }
 
 dialog::backdrop {
-  background: rgb(5 6 10 / 0.6);
+  background: rgb(4 5 9 / 0.66);
+}
+
+/* A row that was just added to the stash flashes once, so the eye finds it. An answer to an action, not ambient. */
+@keyframes added {
+  from {
+    background-color: rgb(143 211 255 / 0.16);
+  }
+}
+.just-added {
+  animation: added 1.2s ease-out;
+}
+@media (prefers-reduced-motion: reduce) {
+  .just-added {
+    animation: none;
+  }
+  * {
+    transition-duration: 0s !important;
+  }
 }

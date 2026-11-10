@@ -8,7 +8,12 @@ export type CatalogItem = {
   kind: string;
   maxRank: number | null;
   subtypes: string[] | null;
+  /** What Baro Ki'Teer's kiosk pays for it (prime parts and sets); null or missing for everything else. */
+  ducats?: number | null;
 };
+
+/** Set slug → [part slug, copies of it in the set], from `pnpm catalog` (src/fixtures/sets.json). */
+export type SetParts = Record<string, [string, number][]>;
 
 /** Last-7-days numbers for one (item, rank, subtype), from completed trades. */
 export type Summary = {

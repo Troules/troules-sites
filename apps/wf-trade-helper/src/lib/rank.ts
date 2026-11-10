@@ -56,20 +56,70 @@ const POOL: Partial<Record<Sort, (r: Row) => boolean>> = {
   high: (r) => r.pos90 != null && r.vol7 >= MIN_TREND_VOLUME,
 };
 
-export function top(rows: Row[], sort: Sort, n = 10): Row[] {
-  const pool = POOL[sort] ? rows.filter(POOL[sort]) : rows;
+/**
+ * Item types the lists can be narrowed to. Arcanes move so much platinum that they fill every unfiltered list;
+ * the filter is how a player finds the best-selling mods or prime sets. The ids are URL segments (/top/<sort>/<kind>).
+ */
+export const KINDS = [
+  { id: "all", label: "All", kinds: null },
+  { id: "arcanes", label: "Arcanes", kinds: ["Arcane"] },
+  { id: "mods", label: "Mods", kinds: ["Mod"] },
+  { id: "sets", label: "Sets", kinds: ["Set"] },
+  { id: "parts", label: "Parts", kinds: ["Part", "Blueprint"] },
+  { id: "relics", label: "Relics", kinds: ["Relic"] },
+  { id: "other", label: "Other", kinds: ["Item", "Weapon", "Warframe"] },
+] as const;
+
+export type KindId = (typeof KINDS)[number]["id"];
+
+export function ofKind(rows: Row[], kind: KindId): Row[] {
+  const kinds: readonly string[] | null = KINDS.find((k) => k.id === kind)?.kinds ?? null;
+  return kinds ? rows.filter((r) => kinds.includes(r.kind)) : rows;
+}
+
+export function top(rows: Row[], sort: Sort, n = 10, kind: KindId = "all"): Row[] {
+  const typed = ofKind(rows, kind);
+  const pool = POOL[sort] ? typed.filter(POOL[sort]) : typed;
   // Many items share the same percentile, so plat/day breaks ties: the liquid ones are the ones you can sell.
   return [...pool]
     .sort((a, b) => KEY[sort](b) - KEY[sort](a) || b.plat7 - a.plat7 || a.name.localeCompare(b.name))
     .slice(0, n);
 }
 
+const moving = (r: Row): r is Row & { trend7: number } => r.trend7 != null && r.vol7 >= MIN_TREND_VOLUME;
+
+/** The week's biggest rises and drops among liquid items (a 0% week is neither). */
+export function movers(rows: Row[], n = 5): { up: Row[]; down: Row[] } {
+  const pool = rows.filter(moving).sort((a, b) => b.trend7 - a.trend7 || b.plat7 - a.plat7);
+  return {
+    up: pool.filter((r) => r.trend7 > 0).slice(0, n),
+    down: pool
+      .filter((r) => r.trend7 < 0)
+      .reverse()
+      .slice(0, n),
+  };
+}
+
 /** Biggest 7-day drop, for the summary tiles. */
 export function biggestDrop(rows: Row[]): Row | undefined {
-  return rows
-    .filter((r) => r.trend7 != null && r.vol7 >= MIN_TREND_VOLUME)
-    .sort((a, b) => a.trend7! - b.trend7!)
-    .at(0);
+  return movers(rows, 1).down[0];
+}
+
+export type Pulse = { plat: number; trades: number; rising: number; falling: number; flat: number };
+
+/** The market in one line: platinum and trades per day over every listed item, and how many prices moved. */
+export function pulse(rows: Row[]): Pulse {
+  const p: Pulse = { plat: 0, trades: 0, rising: 0, falling: 0, flat: 0 };
+  for (const r of rows) {
+    p.plat += r.plat7;
+    p.trades += r.vol7;
+    if (!moving(r)) continue;
+    // Under 1% in a week is the median wobbling, not a move.
+    if (r.trend7 >= 1) p.rising++;
+    else if (r.trend7 <= -1) p.falling++;
+    else p.flat++;
+  }
+  return p;
 }
 
 export function variantLabel(r: Pick<Summary, "rank" | "subtype">, maxRank: number | null): string {

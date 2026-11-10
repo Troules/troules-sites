@@ -1,5 +1,20 @@
 # @troules/wf-trade-helper
 
+## 0.4.0
+
+### Minor Changes
+
+- A bigger, more useful WF Trade Helper:
+  
+  - **My stash** (`/stash`): list what you want to sell, kept in your browser only. It shows what the lot is worth at this week's medians, which lines sit near their 90-day high ("Sell now") or low ("Hold"), and writes the trade-chat message (`WTS [Arcane Energize] R5 121p …`). Item pages get an "Add to my stash" button and a ready-made WTS line; the header shows how many lines you hold.
+  - **Set or parts** (`/sets`, and a panel on every set and part page): each set's price against the sum of its parts, counting parts needed twice.
+  - **Ducats for Baro** (`/ducats`): prime parts by ducats per plat, the parts worth too much to trade in, and a shopping list with a WTB message for the ducats you need.
+  - **Top 100 by item type**: filter any sort to arcanes, mods, sets, parts, relics or other, so the lists are no longer all arcanes.
+  - **Price history you can read**: hover, touch or use the arrow keys to get each day's median, range and trades; the 7-day median is drawn as a reference line.
+  - **Movers this week**, a market-mood bar (rising / steady / falling), and "when to sell" windows shown in your own time zone.
+  - New look: Saira in two widths (condensed for headings and every number), a darker Void palette, one row of navigation that scrolls on phones, and no table wider than a 320px screen.
+  - Sweeper: `pnpm catalog` refreshes the item list with ducat values and every set's parts (`src/fixtures/sets.json`); the sample now includes the parts of seven sets.
+
 ## 0.3.1
 
 ### Patch Changes

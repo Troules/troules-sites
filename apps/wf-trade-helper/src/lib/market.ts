@@ -3,9 +3,13 @@ import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { cacheLife } from "next/cache";
 import catalogJson from "@/fixtures/catalog.json";
-import { SORTS, TOP_LIMIT, toRows, top } from "./rank";
+import setsJson from "@/fixtures/sets.json";
+import { ducatRows, type DucatRow } from "./ducats";
+import { isMaxRank, movers, SORTS, TOP_LIMIT, toRows, top } from "./rank";
+import { setOfPart, setRows, type SetRow } from "./sets";
 import { marketProfile, rankUps, signalIndex, type MarketProfile, type RankUp } from "./signals";
-import type { Book, CatalogItem, DailyRow, HourRow, Row, Summary } from "./types";
+import type { PriceIndex, PriceVariant } from "./stash";
+import type { Book, CatalogItem, DailyRow, HourRow, Row, SetParts, Summary } from "./types";
 import type { IndexEntry } from "./search";
 import type { Price } from "./vosfor";
 import { COLLECTIONS, slugOf } from "./vosfor-data";
@@ -34,6 +38,8 @@ const catalog = catalogJson as CatalogItem[];
 const market = JSON.parse(readFileSync(resolve(process.cwd(), MARKET_FILE), "utf8")) as Market;
 const hourly = market.hourly ?? {};
 const bySlug = new Map(catalog.map((c) => [c.slug, c]));
+const sets = setsJson as unknown as SetParts;
+const partToSet = setOfPart(sets);
 
 export const IS_SAMPLE = !market.source;
 
@@ -96,6 +102,71 @@ export async function getVosforPrices(): Promise<Price[]> {
   });
 }
 
+/** Prime parts and sets with a ducat value and a daily market (unsorted: the page ranks them both ways). */
+export async function getDucats(): Promise<DucatRow[]> {
+  "use cache";
+  cacheLife("hours");
+  return ducatRows(await getRows(), (slug) => bySlug.get(slug)?.ducats);
+}
+
+/** Every set with its parts and their prices. */
+export async function getSets(): Promise<SetRow[]> {
+  "use cache";
+  cacheLife("hours");
+  return setRows(sets, await getRows(), bySlug);
+}
+
+/** The set an item belongs to (or is), for the "set and parts" panel of item pages. */
+export async function getSetOf(slug: string): Promise<SetRow | null> {
+  "use cache";
+  cacheLife("hours");
+  const set = sets[slug] ? slug : partToSet.get(slug);
+  if (!set) return null;
+  return setRows({ [set]: sets[set]! }, await getRows(), bySlug)[0] ?? null;
+}
+
+const round = (n: number, digits: number) => Number(n.toFixed(digits));
+
+/**
+ * Every priced (item, rank, subtype) as a compact tuple, for the stash page (/prices.json). Max rank first, so
+ * the first variant is the one the lists show.
+ */
+export async function getPriceIndex(): Promise<PriceIndex> {
+  "use cache";
+  cacheLife("hours");
+  const signals = signalIndex(market.history);
+  const index: Record<string, { max: boolean; v: PriceVariant }[]> = {};
+  for (const s of market.summaries) {
+    const item = bySlug.get(s.slug);
+    if (!item) continue;
+    const pos = signals(s).pos90;
+    (index[s.slug] ??= []).push({
+      max: isMaxRank(s, item),
+      v: [
+        s.rank,
+        s.subtype,
+        round(s.price7, 1),
+        round(s.vol7, 1),
+        s.trend7 == null ? null : round(s.trend7, 1),
+        pos == null ? null : round(pos, 2),
+      ],
+    });
+  }
+  return Object.fromEntries(
+    Object.entries(index).map(([slug, vs]) => [
+      slug,
+      vs
+        .sort(
+          (a, b) =>
+            Number(b.max) - Number(a.max) ||
+            (b.v[0] ?? -1) - (a.v[0] ?? -1) ||
+            (a.v[1] ?? "").localeCompare(b.v[1] ?? ""),
+        )
+        .map((x) => x.v),
+    ]),
+  );
+}
+
 export async function getSearchIndex(): Promise<IndexEntry[]> {
   "use cache";
   cacheLife("hours");
@@ -110,7 +181,8 @@ export async function getTrackedSlugs(): Promise<string[]> {
 }
 
 /**
- * Item pages prerendered at build time: the ones the home page links to (every top-100 list and the rank-ups).
+ * Item pages prerendered at build time: the ones the home page links to (every unfiltered top-100 list, the
+ * rank-ups and the movers).
  * Prerendering all ~3,900 would add ~850 MB to every daily deployment; the rest render on first visit and stay
  * cached.
  */
@@ -119,7 +191,14 @@ export async function getPrerenderSlugs(): Promise<string[]> {
   cacheLife("hours");
   const rows = await getRows();
   const listed = SORTS.flatMap((s) => top(rows, s.id, TOP_LIMIT).map((r) => r.slug));
-  return [...new Set([...listed, ...(await getRankUps()).map((r) => r.slug)])];
+  const moving = movers(rows);
+  return [
+    ...new Set([
+      ...listed,
+      ...(await getRankUps()).map((r) => r.slug),
+      ...[...moving.up, ...moving.down].map((r) => r.slug),
+    ]),
+  ];
 }
 
 export type ItemMarket = {

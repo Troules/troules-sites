@@ -1,7 +1,8 @@
 # 0009. Market data for wf-trade-helper
 
-- Status: accepted (phase 1: sample data, 2026-11-03; phase 2: daily Supabase sweep, 2026-11-09)
-- Date: 2026-11-03, amended 2026-11-09
+- Status: accepted (phase 1: sample data, 2026-11-03; phase 2: daily Supabase sweep, 2026-11-09; stash, sets,
+  ducats and item-type lists, 2026-11-10)
+- Date: 2026-11-03, amended 2026-11-09 and 2026-11-10
 
 ## Context
 
@@ -26,8 +27,8 @@ market as a whole, not a single page. Facts checked on 2026-11-03:
 2. **Phase 1, now: committed sample data.** `pnpm --filter @troules/wf-trade-helper fixtures` writes the following into
    `src/fixtures/`:
    - `catalog.json` and `slugs.json`: the full item list;
-   - `market.json`: summaries, 90-day history, 48-hour hourly buckets and `/top` books for about 45 items, with
-     player names and ids removed.
+   - `market.json`: summaries, 90-day history, 48-hour hourly buckets and `/top` books for about 75 items (some
+     sets come with all their parts, so the set and ducat pages have real rows), with player names and ids removed.
 
    The site, CI, e2e and Lighthouse all run on this sample, with no network and no secrets. **Only the sample is
    committed**: `pnpm fixtures:full` writes every item (about 15 MB, an hour of polite requests) to the git-ignored
@@ -80,6 +81,35 @@ market as a whole, not a single page. Facts checked on 2026-11-03:
     Vosfor as a fixed point (λ = pack value(λ) / 200) and dissolves copies worth less than yield × λ. An opt-in "fuse" toggle values a kept copy at max-rank median ÷ copies
     needed (`copiesToMax`), only when the max rank trades at least once a day (`MIN_RANKUP_VOLUME.max`). The page is
     static; the seeded Monte Carlo runs in the browser. Update the tables when a game update changes a collection.
+
+11. **Game data the sweep does not carry is committed, and refreshed by hand (added 2026-11-10).**
+    `pnpm --filter @troules/wf-trade-helper catalog` (`wfm_sweep.py catalog`) rewrites `catalog.json` (now with each
+    prime part's `ducats`, which `/v2/items` already lists), `slugs.json` and `sets.json`: set slug → `[part, copies
+in the set]`. Set compositions exist only per set (`/v2/item/{slug}/set`, 234 requests, ~90 s), so they are not
+    part of the daily sweep; like the catalog itself (decision 4), a new prime set shows up after the next refresh
+    and deploy. A unit test checks that every committed set names catalog items with whole quantities.
+12. **Three more views are computed from the same snapshot, with no new request and no new table:**
+    - **Item-type lists.** Arcanes fill every unfiltered top list, so each sort also exists per type (arcanes,
+      mods, sets, parts, relics, other) as static JSON, `/top/<sort>/<kind>`: 30 small files built with the site,
+      fetched when a reader picks a type. The first ten unfiltered rows of every sort still ship in the HTML.
+    - **Set or parts (`/sets`, and a panel on each set's and part's page).** Set median minus Σ copies × part
+      median. A row is ranked only when the set and every part trade at least once a day, and a gap under 3p or 5%
+      of the set price counts as "same either way" (two medians are not that precise).
+    - **Ducats (`/ducats`).** Ducats per plat for parts trading at least once a day, the reverse list (plat given
+      up per 100 ducats), and a shopping list for a target that buys the cheapest ducats first, at most one day's
+      trades of each part: roughly what the market hands over at the median without bidding it up.
+13. **"My stash" never leaves the browser.** The list a player wants to sell is stored in `localStorage`
+    (`wf-stash-v1`: slug, rank, subtype, quantity; at most 200 lines) and read defensively, since anything can be
+    in there. No account, no cookie, no request carries it, so there is nothing to secure server-side and nothing
+    that runs per visit. Prices come from one static file, `/prices.json` (every priced item, rank and subtype as
+    a six-number tuple, about 100 KB gzipped with the full catalog), fetched only by readers who open the stash
+    or already have one. The stash verdicts reuse the list signals: "sell now" at the 80th percentile of the last
+    90 days, "hold" at the 20th, "falling" at −10% on the month before, "thin" under one trade a day. Trade-chat
+    messages (`WTS [Item] R5 120p`) are built in the browser; the square brackets are what links an item in game.
+    The cost: a stash does not follow the player to another device. Sync waits for warframe.market OAuth, like
+    order posting.
+14. **Prerendering still follows the home page:** the unfiltered top lists, the rank-ups and now the week's movers.
+    Items reached only through `/sets`, `/ducats` or a type filter render on first visit, like the rest.
 
 ## Consequences
 

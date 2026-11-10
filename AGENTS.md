@@ -10,7 +10,7 @@ changing a decision, and write a new ADR when you change one.
 | ------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------- |
 | `apps/index`                                           | `troules.dynv6.net`: list of sites, liquid glass over the Cassiopeia A image                                     |
 | `apps/blog`                                            | `blog.troules.dynv6.net`: Markdown articles in `apps/blog/content/<slug>/`                                       |
-| `apps/wf-trade-helper`                                 | `wf-trade-helper.troules.dynv6.net`: Warframe market dashboard + Vosfor calculator; Supabase snapshot (ADR 0009) |
+| `apps/wf-trade-helper`                                 | `wf-trade-helper.troules.dynv6.net`: Warframe market, stash + set, ducat, Vosfor tools; Supabase data (ADR 0009) |
 | `packages/ui`                                          | Shared React: `Glass`/`GlassFilter` (liquid glass), `Telemetry` (Vercel Analytics + Speed Insights)              |
 | `packages/registry`                                    | The list of sites the index shows. **Add a site here when you add an app**                                       |
 | `packages/next-config`                                 | `withTroules()`: security headers, React Compiler, Cache Components, workspace transpiling                       |
