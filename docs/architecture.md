@@ -11,6 +11,7 @@ flowchart LR
   subgraph Vercel["Vercel Hobby (team troules-projects)"]
     pi["project troules-index (root apps/index)"]
     pb["project troules-blog (root apps/blog)"]
+    pp["project papy-eydoux (root apps/papy-eydoux, papy-eydoux.vercel.app)"]
   end
   dns["dynv6 zone troules.dynv6.net"]
   tg["Owner on Telegram"] <--> hermes["Hermes (VM / lab)"]
@@ -34,6 +35,7 @@ flowchart LR
 | Index design          | Liquid glass as progressive enhancement                                               | [0008](adr/0008-liquid-glass.md)                 |
 | Market data           | wf-trade-helper: VM sweep of warframe.market, sample fixtures until Supabase          | [0009](adr/0009-market-data.md)                  |
 | Dependency updates    | Dependabot patch/minor auto-merged once required checks pass; majors manual           | [0010](adr/0010-dependabot-automerge.md)         |
+| Standalone sites      | Same monorepo, own `*.vercel.app` domain, not in the registry/index (`papy-eydoux`)   | [0011](adr/0011-standalone-sites.md)             |
 
 ## Limits that matter (free tiers, checked 2026-10)
 
@@ -47,4 +49,5 @@ flowchart LR
 
 ## Ports (local)
 
-`dev`: index 3000, blog 3001, wf-trade-helper 3002. `start` for e2e/Lighthouse: index 3100, blog 3200, wf-trade-helper 3300.
+`dev`: index 3000, blog 3001, wf-trade-helper 3002, papy-eydoux 3003. `start` for e2e/Lighthouse: index 3100, blog 3200,
+wf-trade-helper 3300, papy-eydoux 3400.

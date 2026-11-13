@@ -19,3 +19,6 @@
    Enable Web Analytics and Speed Insights in the project.
 5. **Domain**: Vercel › Project › Domains › add `<name>.troules.dynv6.net`; create the CNAME it shows in the dynv6 zone.
 6. Set the registry status to `live`, PR, merge. Write an ADR if the site brings a new kind of decision.
+
+**Standalone site** (not part of the Troules constellation, ADR 0011): do step 1, skip the registry in step 2 (keep
+the uptime probe and Lighthouse lines), do step 4, and skip step 5: the site lives on `<project>.vercel.app`.
