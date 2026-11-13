@@ -1,0 +1,362 @@
+@import "tailwindcss";
+
+/* Tokens: a black sky, museum-label ivory, gilt from an old picture frame. */
+@theme {
+  --font-display: var(--font-bodoni), "Bodoni 72", Didot, serif;
+  --font-sans: var(--font-work), ui-sans-serif, system-ui, sans-serif;
+  --color-sky: #000000;
+  --color-ivory: #ede6d6;
+  --color-dust: #9a948a;
+  --color-gilt: #c9a45c;
+}
+
+:root {
+  color-scheme: dark;
+  background: var(--color-sky);
+  color: var(--color-ivory);
+  font-family: var(--font-sans);
+  /* The vertical carousel: each slide snaps to the top of the viewport. */
+  scroll-snap-type: y mandatory;
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-gilt);
+  outline-offset: 4px;
+}
+
+/* ---------- Sky ---------- */
+
+.starfield {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+}
+
+.twinkle {
+  animation: twinkle 5s ease-in-out infinite;
+}
+
+@keyframes twinkle {
+  50% {
+    opacity: 0.15;
+  }
+}
+
+/* ---------- Slides ---------- */
+
+.slide {
+  box-sizing: border-box;
+  min-height: 100dvh;
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+  padding: 2.5rem 2.5rem 2rem 1rem;
+}
+
+@media (min-width: 1024px) {
+  .slide {
+    /* Room for the time rail on the left. */
+    padding: 3rem 4rem 3rem 12rem;
+  }
+}
+
+/* Hero */
+.hero {
+  display: grid;
+  grid-template-rows: 1fr auto;
+  align-items: center;
+}
+
+.hero-inner {
+  max-width: 52rem;
+}
+
+.hero h1 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(3rem, 9vw, 7.5rem);
+  line-height: 0.95;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+
+.lead {
+  max-width: 34rem;
+  margin: 2rem 0 0;
+  font-size: 1.125rem;
+  line-height: 1.6;
+  color: var(--color-dust);
+}
+
+.scroll-hint {
+  justify-self: start;
+  display: inline-flex;
+  align-items: center;
+  gap: 1rem;
+  font-size: 0.875rem;
+  color: var(--color-dust);
+  text-decoration: none;
+}
+
+.scroll-hint:hover {
+  color: var(--color-ivory);
+}
+
+/* A moment: framed image + museum label (cartel). */
+.moment {
+  display: grid;
+  align-content: center;
+  gap: 1.5rem;
+}
+
+@media (min-width: 1024px) {
+  .moment {
+    grid-template-columns: minmax(0, 1fr) minmax(17rem, 24rem);
+    align-items: center;
+    gap: 3.5rem;
+  }
+}
+
+.frame {
+  margin: 0;
+  justify-self: center;
+  /* Gilt hairline set off from the picture, like a gallery frame. */
+  padding: 0.5rem;
+  border: 1px solid color-mix(in srgb, var(--color-gilt) 70%, transparent);
+  background: #000;
+  max-width: 100%;
+}
+
+.frame img {
+  display: block;
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: 40dvh;
+}
+
+@media (min-width: 1024px) {
+  .frame img {
+    max-height: calc(100dvh - 8rem);
+  }
+}
+
+.cartel {
+  max-width: 34rem;
+}
+
+.date {
+  margin: 0;
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 400;
+  font-size: clamp(2rem, 4.2vw, 3.5rem);
+  line-height: 1.05;
+  color: var(--color-gilt);
+  text-wrap: balance;
+}
+
+.ago {
+  margin: 0.4rem 0 0;
+  font-size: 0.875rem;
+  color: var(--color-dust);
+}
+
+.cartel h2 {
+  margin: 1.5rem 0 0;
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: 1.625rem;
+  line-height: 1.2;
+}
+
+.place {
+  margin: 0.35rem 0 0;
+  font-size: 0.875rem;
+  font-style: italic;
+  color: var(--color-dust);
+}
+
+.description {
+  margin: 1rem 0 0;
+  font-size: 0.9375rem;
+  line-height: 1.6;
+}
+
+@media (min-width: 1024px) {
+  .description {
+    font-size: 1rem;
+  }
+}
+
+.position {
+  margin: 1.25rem 0 0;
+  font-size: 0.75rem;
+  color: var(--color-dust);
+  font-variant-numeric: tabular-nums;
+}
+
+@media (min-width: 1024px) {
+  .position {
+    display: none; /* the rail already shows where we are */
+  }
+}
+
+/* Ending */
+.ending {
+  display: grid;
+  place-items: center;
+  text-align: center;
+}
+
+.ending h1,
+.ending h2 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 400;
+  font-size: clamp(2.5rem, 6vw, 4.5rem);
+  color: var(--color-gilt);
+}
+
+.ending p {
+  margin: 1rem auto 0;
+  max-width: 30rem;
+  color: var(--color-dust);
+  line-height: 1.6;
+}
+
+.ending a {
+  display: inline-block;
+  margin-top: 2.5rem;
+  color: var(--color-ivory);
+  text-underline-offset: 0.3em;
+}
+
+/* ---------- Time rail ---------- */
+
+.rail {
+  position: fixed;
+  z-index: 10;
+  top: 50%;
+  right: 0.5rem;
+  transform: translateY(-50%);
+}
+
+.rail ol {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.rail a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  /* 24px target on phones, per WCAG 2.2 target size. */
+  min-width: 24px;
+  height: min(3.6dvh, 1.75rem);
+  min-height: 24px;
+  color: var(--color-dust);
+  text-decoration: none;
+}
+
+.rail-tick {
+  display: block;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: currentColor;
+  opacity: 0.6;
+  transition:
+    width 0.2s,
+    opacity 0.2s;
+}
+
+/* Phones: dots only, but the label stays the link's accessible name. */
+.rail-label {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  font-size: 0.75rem;
+  white-space: nowrap;
+}
+
+.rail a:hover,
+.rail a[aria-current] {
+  color: var(--color-gilt);
+}
+
+.rail a[aria-current] .rail-tick {
+  opacity: 1;
+  width: 6px;
+  height: 6px;
+}
+
+@media (max-width: 1023px) {
+  .rail a {
+    height: min(3.2dvh, 1.5rem);
+    min-height: 0;
+  }
+}
+
+@media (min-width: 1024px) {
+  .rail {
+    right: auto;
+    left: 2.5rem;
+    border-left: 1px solid color-mix(in srgb, var(--color-dust) 35%, transparent);
+  }
+
+  .rail a {
+    justify-content: flex-start;
+    margin-left: -2px;
+  }
+
+  .rail-tick {
+    width: 3px;
+    height: 3px;
+    border-radius: 0;
+  }
+
+  .rail a[aria-current] .rail-tick {
+    width: 1.25rem;
+    height: 1px;
+  }
+
+  .rail-label {
+    position: static;
+    width: auto;
+    height: auto;
+    overflow: visible;
+    clip-path: none;
+  }
+}
+
+/* ---------- Preferences ---------- */
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    scroll-behavior: auto;
+  }
+
+  .twinkle {
+    animation: none;
+  }
+
+  .rail-tick {
+    transition: none;
+  }
+}

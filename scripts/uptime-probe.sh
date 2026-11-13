@@ -14,4 +14,5 @@ probe() {
 probe "https://troules.dynv6.net/" "Troules"
 probe "https://blog.troules.dynv6.net/" "Field notes"
 probe "https://blog.troules.dynv6.net/feed.xml" "<rss"
+probe "https://papy-eydoux.vercel.app/" "Papy Eydoux"
 exit $fail

@@ -206,6 +206,9 @@ catalogs:
     react-dom:
       specifier: 19.3.1
       version: 19.3.1
+    sharp:
+      specifier: 0.35.5
+      version: 0.35.5
     tailwindcss:
       specifier: ^4.3.4
       version: 4.3.4
@@ -423,6 +426,67 @@ importers:
       eslint:
         specifier: 'catalog:'
         version: 9.39.5(jiti@2.7.0)(supports-color@7.2.0)
+      tailwindcss:
+        specifier: 'catalog:'
+        version: 4.3.4
+      typescript:
+        specifier: 'catalog:'
+        version: 5.9.3
+      vitest:
+        specifier: 'catalog:'
+        version: 5.1.0(@types/node@24.19.2)(jsdom@30.1.3)(vite@8.3.5(@types/node@24.19.2)(jiti@2.7.0)(yaml@2.9.1))
+
+  apps/papy-eydoux:
+    dependencies:
+      '@troules/ui':
+        specifier: workspace:*
+        version: link:../../packages/ui
+      next:
+        specifier: 'catalog:'
+        version: 16.4.5(@babel/core@7.29.7(supports-color@7.2.0))(@playwright/test@1.64.1)(@types/node@24.19.2)(babel-plugin-react-compiler@1.0.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      react:
+        specifier: 'catalog:'
+        version: 19.3.1
+      react-dom:
+        specifier: 'catalog:'
+        version: 19.3.1(react@19.3.1)
+    devDependencies:
+      '@axe-core/playwright':
+        specifier: 'catalog:'
+        version: 4.14.0(playwright-core@1.64.1)
+      '@playwright/test':
+        specifier: 'catalog:'
+        version: 1.64.1
+      '@tailwindcss/turbopack':
+        specifier: 'catalog:'
+        version: 4.3.3
+      '@troules/eslint-config':
+        specifier: workspace:*
+        version: link:../../packages/eslint-config
+      '@troules/next-config':
+        specifier: workspace:*
+        version: link:../../packages/next-config
+      '@troules/typescript-config':
+        specifier: workspace:*
+        version: link:../../packages/typescript-config
+      '@types/node':
+        specifier: 'catalog:'
+        version: 24.19.2
+      '@types/react':
+        specifier: 'catalog:'
+        version: 19.3.0
+      '@types/react-dom':
+        specifier: 'catalog:'
+        version: 19.3.0(@types/react@19.3.0)
+      babel-plugin-react-compiler:
+        specifier: 'catalog:'
+        version: 1.0.0
+      eslint:
+        specifier: 'catalog:'
+        version: 9.39.5(jiti@2.7.0)(supports-color@7.2.0)
+      sharp:
+        specifier: 'catalog:'
+        version: 0.35.5(@types/node@24.19.2)
       tailwindcss:
         specifier: 'catalog:'
         version: 4.3.4
@@ -5958,8 +6022,7 @@ snapshots:
       '@iconify/types': 2.0.0
       import-meta-resolve: 4.2.0
 
-  '@img/colour@1.1.0':
-    optional: true
+  '@img/colour@1.1.0': {}
 
   '@img/sharp-darwin-arm64@0.35.5':
     optionalDependencies:
@@ -10058,7 +10121,6 @@ snapshots:
       '@img/sharp-win32-ia32': 0.35.5
       '@img/sharp-win32-x64': 0.35.5
       '@types/node': 24.19.2
-    optional: true
 
   shebang-command@2.0.0:
     dependencies:
