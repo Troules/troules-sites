@@ -24,7 +24,7 @@ catalog:
   typescript: 5.9.3
   eslint: ^9.39.5
   tailwindcss: ^4.3.4
-  "@tailwindcss/turbopack": ^4.3.3
+  "@tailwindcss/turbopack": ^4.3.5
   babel-plugin-react-compiler: 1.0.0
   vitest: ^5.1.0
   "@playwright/test": 1.65.0
