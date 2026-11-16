@@ -72,7 +72,7 @@ In his example, the agent records "user's birthday, boyfriend James" in the work
 
 ### 3. Reflect and consolidate
 
-In the Generative Agents simulation, the episodic memory stream is topped up with *reflections*: higher-level statements about what happened. Retrieval scores memories on recency, importance and relevance. An ablation showed reflection was one of the key components for believable behaviour. Reflexion showed a similar effect: stored reflections beat stored raw traces.
+In the Generative Agents simulation, the episodic memory stream is topped up with *reflections*: higher-level statements about what happened. Retrieval favours memories that are recent, important and relevant. An ablation showed reflection was one of the key components for believable behaviour. Ryan also recalls from an earlier lecture that storing reflections on why past traces were useful beat stuffing the raw traces into the context.
 
 ### 4. Maintain memory while idle
 
