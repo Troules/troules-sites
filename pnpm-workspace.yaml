@@ -30,5 +30,5 @@ catalog:
   "@playwright/test": 1.65.0
   "@axe-core/playwright": ^4.14.0
   "@vercel/analytics": ^2.0.1
-  "@vercel/speed-insights": ^2.0.0
+  "@vercel/speed-insights": ^2.1.0
   sharp: 0.35.5
