@@ -19,7 +19,7 @@
     "@troules/ui": "workspace:*",
     "hast-util-to-jsx-runtime": "^2.3.7",
     "hast-util-to-string": "^3.0.1",
-    "image-size": "^2.0.2",
+    "image-size": "^2.1.0",
     "mermaid": "^12.3.0",
     "next": "catalog:",
     "react": "catalog:",
